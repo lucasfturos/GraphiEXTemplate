@@ -8,21 +8,14 @@
 #include <functional>
 #include <memory>
 
-struct CustomVertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 uv;
-};
-
-template <typename VertexType> class Mesh {
+template <typename VertexType, typename FaceType> class Mesh {
   public:
     Mesh(const std::vector<VertexType> &vertices,
-         const std::vector<GLuint> &indices,
-         const std::string &vertexShaderPath,
+         const std::vector<GLuint> &faces, const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
         : va(std::make_shared<VertexArray>()),
           vb(std::make_shared<VertexBuffer<VertexType>>(vertices)),
-          ib(std::make_shared<IndexBuffer>(indices)),
+          ib(std::make_shared<IndexBuffer>(faces)),
           shader(
               std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
           hasTexture(false) {}

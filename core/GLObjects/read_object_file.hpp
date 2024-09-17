@@ -1,18 +1,11 @@
 #pragma once
 
+#include "Common/util.hpp"
+
 #include <fstream>
-#include <glm/glm.hpp>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vector>
-
-struct ObjectProgramSource {
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::ivec3> faces;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> textures;
-};
 
 class ReadObjectFile {
   private:
@@ -29,5 +22,5 @@ class ReadObjectFile {
   public:
     ReadObjectFile(const std::string &filePath);
 
-    ObjectProgramSource sources() const;
+    MeshDataObj getMeshData() const;
 };

@@ -33,7 +33,7 @@ void Objects::update() {
         break;
     }
 
-    mesh = std::make_shared<Mesh<glm::vec3>>(
+    mesh = std::make_shared<Mesh<glm::vec3, glm::ivec3>>(
         vertices, indices, "assets/shader/Objects/vertex.shader",
         "assets/shader/Objects/fragment.shader");
     mesh->setup<GLfloat>({3});
@@ -46,7 +46,7 @@ void Objects::run() {
         return;
     }
 
-    Mesh<glm::vec3>::UniformsMap uniforms = {
+    Mesh<glm::vec3, glm::ivec3>::UniformsMap uniforms = {
         {"uMVP",
          [this](std::shared_ptr<Shader> shader) {
              glm::mat4 model = glm::mat4(1.0f);

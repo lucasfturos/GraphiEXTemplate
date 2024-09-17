@@ -91,6 +91,6 @@ void ReadObjectFile::loadFile(const std::string &filePath) {
     file.close();
 }
 
-ObjectProgramSource ReadObjectFile::sources() const {
+MeshDataObj ReadObjectFile::getMeshData() const {
     return {vertices, faces, normals, textures};
 }

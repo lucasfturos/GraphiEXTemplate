@@ -9,6 +9,7 @@ set(CORE_HEADERS
     ControlPanel/control_panel.hpp
     # GLObjects
     GLObjects/read_object_file.hpp
+    GLObjects/texture.hpp
     GLObjects/vertex_buffer_layout.hpp
 )
 
@@ -18,20 +19,26 @@ set(CORE_SOURCES
     ControlPanel/gui.cpp
     # GLObjects
     GLObjects/read_object_file.cpp
+    GLObjects/texture.cpp
     GLObjects/vertex_buffer_layout.cpp
 )
 
 find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(assimp REQUIRED)
 
 add_library(Core_lib STATIC 
     ${CORE_HEADERS}
     ${CORE_SOURCES}
 )
 
-target_include_directories(Core_lib PUBLIC
+target_include_directories(Core_lib PRIVATE
+    ${ASSIMP_INCLUDE_DIRS}
     ${OPENGL_INCLUDE_DIRS}
+)
+
+target_include_directories(Core_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
@@ -40,6 +47,8 @@ target_link_libraries(Core_lib PUBLIC
 )
 
 target_link_libraries(Core_lib PRIVATE
+    # Assimp
+    ${ASSIMP_LIBRARIES}
     # OpenGL
     glm::glm
     GLEW::GLEW
