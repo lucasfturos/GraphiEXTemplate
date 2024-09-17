@@ -16,18 +16,19 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(RESOURCES_DIRECTORY 
-  "${CMAKE_SOURCE_DIR}/assets"
+    "${CMAKE_SOURCE_DIR}/assets"
 )
 
 file(COPY ${RESOURCES_DIRECTORY} 
-  DESTINATION ${CMAKE_BINARY_DIR}
+    DESTINATION ${CMAKE_BINARY_DIR}
 )
 
 add_compile_options(
     -Wall -Wextra -Wpedantic -Werror -pedantic -g -Ofast 
 )
 
-add_subdirectory(src)
+add_subdirectory(core)
 add_subdirectory(external)
+add_subdirectory(src)
 
 # -------------------------------------------------------------------

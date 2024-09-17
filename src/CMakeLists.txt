@@ -5,20 +5,11 @@ cmake_minimum_required(VERSION 3.4...3.25 FATAL_ERROR)
 # -------------------------------------------------------------------
 
 set(SRC_HEADER
-    # ControlPanel
-    ControlPanel/control_panel.hpp
-    # GLObjects
-    GLObjects/vertex_buffer_layout.hpp
     # Render
     Render/render.hpp
 )
 
 set(SRC_SOURCE
-    # ControlPanel
-    ControlPanel/control_panel.cpp
-    ControlPanel/gui.cpp
-    # GLObjects
-    GLObjects/vertex_buffer_layout.cpp
     # Render
     Render/event.cpp
     Render/render.cpp
@@ -40,10 +31,10 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${SDL2_INCLUDE_DIRS}
     ${OPENGL_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
+    Core_lib
     External_lib
 )
 
