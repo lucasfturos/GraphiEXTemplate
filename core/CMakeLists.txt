@@ -8,6 +8,7 @@ set(CORE_HEADERS
     # ControlPanel
     ControlPanel/control_panel.hpp
     # GLObjects
+    GLObjects/read_object_file.hpp
     GLObjects/vertex_buffer_layout.hpp
 )
 
@@ -16,6 +17,7 @@ set(CORE_SOURCES
     ControlPanel/control_panel.cpp
     ControlPanel/gui.cpp
     # GLObjects
+    GLObjects/read_object_file.cpp
     GLObjects/vertex_buffer_layout.cpp
 )
 

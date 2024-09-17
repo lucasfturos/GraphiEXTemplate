@@ -2,6 +2,7 @@
 
 Render::Render()
     : window(nullptr), context(nullptr),
+      objects(std::make_shared<Objects>(viewDefaultMat, projDefaultMat)),
       controlPanel(std::make_shared<ControlPanel>()), quit(false) {
     setupWindow();
     initOpenGL();
@@ -10,7 +11,10 @@ Render::Render()
 
 Render::~Render() { destroyWindow(); }
 
-void Render::setup() { controlPanel->setup(); }
+void Render::setup() {
+    controlPanel->setup();
+    objects->setup();
+}
 
 void Render::draw() {
     ImGui_ImplOpenGL3_NewFrame();
@@ -18,22 +22,26 @@ void Render::draw() {
     ImGui::NewFrame();
 
     controlPanel->run();
+    objects->setObjectType(controlPanel->getObjectType());
+
+    objects->run();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Render::run() {
-    // static float t = 0;
+    static float t = 0;
 
     setup();
-    // Uint32 lastTime = SDL_GetTicks();
+    Uint32 lastTime = SDL_GetTicks();
 
     while (!quit) {
-        // Uint32 currentTime = SDL_GetTicks();
-        // float deltaTime = (currentTime - lastTime) / 1000.0f;
-        // lastTime = currentTime;
-        // t += deltaTime;
+        Uint32 currentTime = SDL_GetTicks();
+        float deltaTime = (currentTime - lastTime) / 1000.0f;
+        lastTime = currentTime;
+        t += deltaTime;
+        objects->setTime(t);
 
         frameStart = SDL_GetTicks();
         handleEvents();
