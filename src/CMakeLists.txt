@@ -5,6 +5,8 @@ cmake_minimum_required(VERSION 3.4...3.25 FATAL_ERROR)
 # -------------------------------------------------------------------
 
 set(SRC_HEADER
+    # Model
+    Model/model_render.hpp
     # Objects
     Objects/objects.hpp
     # Render
@@ -12,6 +14,8 @@ set(SRC_HEADER
 )
 
 set(SRC_SOURCE
+    # Model
+    Model/model_render.cpp
     # Objects
     Objects/objects.cpp
     # Render

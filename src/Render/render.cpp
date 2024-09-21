@@ -3,6 +3,8 @@
 Render::Render()
     : window(nullptr), context(nullptr),
       objects(std::make_shared<Objects>(viewDefaultMat, projDefaultMat)),
+      modelRender(std::make_shared<ModelRender>(
+          "assets/model/spot.obj", viewDefaultMat, projDefaultMat)),
       controlPanel(std::make_shared<ControlPanel>()), quit(false) {
     setupWindow();
     initOpenGL();
@@ -13,6 +15,7 @@ Render::~Render() { destroyWindow(); }
 
 void Render::setup() {
     controlPanel->setup();
+    modelRender->setup();
     objects->setup();
 }
 
@@ -22,8 +25,10 @@ void Render::draw() {
     ImGui::NewFrame();
 
     controlPanel->run();
-    objects->setObjectType(controlPanel->getObjectType());
 
+    modelRender->run();
+
+    objects->setObjectType(controlPanel->getObjectType());
     objects->run();
 
     ImGui::Render();
@@ -41,6 +46,8 @@ void Render::run() {
         float deltaTime = (currentTime - lastTime) / 1000.0f;
         lastTime = currentTime;
         t += deltaTime;
+
+        modelRender->setTime(t);
         objects->setTime(t);
 
         frameStart = SDL_GetTicks();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ControlPanel/control_panel.hpp"
+#include "Model/model_render.hpp"
 #include "Objects/objects.hpp"
 
 #include "imgui_impl_opengl3.h"
@@ -33,6 +34,7 @@ class Render {
     SDL_Window *window;
     SDL_GLContext context;
     std::shared_ptr<Objects> objects;
+    std::shared_ptr<ModelRender> modelRender;
     std::shared_ptr<ControlPanel> controlPanel;
 
     bool quit;
