@@ -10,6 +10,8 @@ set(CORE_HEADERS
     # GLObjects
     GLObjects/texture.hpp
     GLObjects/vertex_buffer_layout.hpp
+    # Render
+    Render/render.hpp
 )
 
 set(CORE_SOURCES
@@ -19,6 +21,10 @@ set(CORE_SOURCES
     # GLObjects
     GLObjects/texture.cpp
     GLObjects/vertex_buffer_layout.cpp
+    # Render
+    Render/event.cpp
+    Render/render.cpp
+    Render/setup.cpp    
 )
 
 find_package(OpenGL REQUIRED)

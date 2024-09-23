@@ -1,10 +1,9 @@
 #include "model_render.hpp"
 #include <iostream>
 
-ModelRender::ModelRender(const std::string &filepath, glm::mat4 view,
-                         glm::mat4 projection)
-    : modelLoader(std::make_shared<ModelLoader>(filepath)), viewMat(view),
-      projMat(projection), modelMat(glm::mat4(1.0f)) {}
+ModelRender::ModelRender(const std::string &filepath)
+    : modelLoader(std::make_shared<ModelLoader>(filepath)),
+      modelMat(glm::mat4(1.0f)) {}
 
 void ModelRender::setup() {
     vertices = modelLoader->getVertices();

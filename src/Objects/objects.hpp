@@ -8,13 +8,18 @@
 #include <memory>
 
 class Objects {
+  protected:
+    const glm::mat4 viewMat =
+        glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+                    glm::vec3(0.0f, 1.0f, 0.0f));
+    const glm::mat4 projMat =
+        glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f);
+
   private:
     std::shared_ptr<Cylinder> cylinder;
     std::shared_ptr<Sphere> sphere;
     ObjectType objectType;
 
-    glm::mat4 viewMat;
-    glm::mat4 projMat;
     float t;
 
   private:
@@ -26,7 +31,7 @@ class Objects {
     void update();
 
   public:
-    Objects(glm::mat4, glm::mat4);
+    Objects();
 
     void setObjectType(ObjectType type) {
         if (objectType != type) {

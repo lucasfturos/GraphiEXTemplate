@@ -2,10 +2,10 @@
 #include "Common/cube.hpp"
 #include "Common/plane.hpp"
 
-Objects::Objects(glm::mat4 view, glm::mat4 projection)
+Objects::Objects()
     : cylinder(std::make_shared<Cylinder>(8, 2, 2, 20)),
       sphere(std::make_shared<Sphere>(5, 20)), objectType(ObjectType::None),
-      viewMat(view), projMat(projection), t(0.0f) {}
+      t(0.0f) {}
 
 void Objects::update() {
     vertices.clear();

@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ControlPanel/control_panel.hpp"
-#include "Model/model_render.hpp"
-#include "Objects/objects.hpp"
+#include "scene.hpp"
 
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl2.h"
@@ -33,11 +32,9 @@ class Render {
   private:
     SDL_Window *window;
     SDL_GLContext context;
-    std::shared_ptr<Objects> objects;
-    std::shared_ptr<ModelRender> modelRender;
-    std::shared_ptr<ControlPanel> controlPanel;
-
     bool quit;
+    std::shared_ptr<Scene> currentScene;
+    std::shared_ptr<ControlPanel> controlPanel;
 
   private:
     Uint32 frameStart;
@@ -53,12 +50,11 @@ class Render {
     // Event
     void handleEvents();
 
-    void setup();
-    void draw();
-
   public:
-    Render();
+    Render(std::shared_ptr<Scene> scene, std::shared_ptr<ControlPanel> controlPanel);
     ~Render();
+
+    void setScene(std::shared_ptr<Scene> scene) { currentScene = scene; }
 
     void run();
 };

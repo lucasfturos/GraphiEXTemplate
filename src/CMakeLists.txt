@@ -9,8 +9,6 @@ set(SRC_HEADER
     Model/model_render.hpp
     # Objects
     Objects/objects.hpp
-    # Render
-    Render/render.hpp
 )
 
 set(SRC_SOURCE
@@ -18,10 +16,6 @@ set(SRC_SOURCE
     Model/model_render.cpp
     # Objects
     Objects/objects.cpp
-    # Render
-    Render/event.cpp
-    Render/render.cpp
-    Render/setup.cpp
     # Main
     main.cpp
 )
