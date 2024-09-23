@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Common/cylinder.hpp"
+#include "Common/sphere.hpp"
 #include "Common/util.hpp"
 #include "GLObjects/mesh.hpp"
-#include "cylinder.hpp"
-#include "sphere.hpp"
 
 #include <memory>
 

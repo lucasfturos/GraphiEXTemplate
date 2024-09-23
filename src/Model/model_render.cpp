@@ -4,7 +4,7 @@
 ModelRender::ModelRender(const std::string &filepath, glm::mat4 view,
                          glm::mat4 projection)
     : modelLoader(std::make_shared<ModelLoader>(filepath)), viewMat(view),
-      projMat(projection), modelMat(glm::mat4(1.0f)), t(0.0f) {}
+      projMat(projection), modelMat(glm::mat4(1.0f)) {}
 
 void ModelRender::setup() {
     vertices = modelLoader->getVertices();
@@ -29,10 +29,11 @@ void ModelRender::run() {
              glm::vec3 scale(5.0f);
              model = glm::scale(model, scale);
 
-             float angle = t * glm::radians(90.0f);
-             glm::mat4 rotationMatrix = glm::rotate(
-                 glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f));
-             model *= rotationMatrix;
+             glm::mat4 rotationMatrixX = glm::rotate(
+                 glm::mat4(1.0f), rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
+             glm::mat4 rotationMatrixY = glm::rotate(
+                 glm::mat4(1.0f), -rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
+             model *= rotationMatrixX * rotationMatrixY;
 
              glm::mat4 mvp = projMat * viewMat * model;
              shader->setUniformMat4f("uMVP", mvp);

@@ -1,4 +1,5 @@
 #include "control_panel.hpp"
+#include "imgui.h"
 
 void ControlPanel::initFont() {
     ImGui::GetIO().Fonts->Clear();
@@ -35,4 +36,90 @@ void ControlPanel::styleWidget() {
     style.Colors[ImGuiCol_Header] = ImVec4(0.12f, 0.12f, 0.12f, 1.0f);
     style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.24f, 0.24f, 0.24f, 1.0f);
     style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.31f, 0.31f, 0.31f, 1.0f);
+}
+
+void ControlPanel::mainWindow() {
+    ImGui::Begin("Control Panel", nullptr,
+                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+    ImGui::SetWindowPos(ImVec2(0, 0));
+    ImGui::SetWindowSize(ImVec2(windowWidth, windowHeight));
+
+    ImGui::PushItemWidth(200);
+    std::vector<const char *> objectTypeNames = {"None", "Sphere", "Cylinder",
+                                                 "Plane", "Cube"};
+    int currentType = static_cast<int>(objectType);
+    if (ImGui::Combo(" ", &currentType, objectTypeNames.data(),
+                     objectTypeNames.size())) {
+        objectType = static_cast<ObjectType>(currentType);
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    if (ImGui::Button("Default")) {
+        objectType = ObjectType::None;
+    }
+
+    if (ImGui::Button("Gizmo Window")) {
+        showGizmoWindow = !showGizmoWindow;
+    }
+
+    ImGui::End();
+}
+
+void ControlPanel::gizmoWindow() {
+    if (showGizmoWindow) {
+        ImGui::Begin("Gizmo", &showGizmoWindow,
+                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::SetWindowPos(
+            ImVec2(ImGui::GetIO().DisplaySize.x - gizmoWidth, 0));
+        ImGui::SetWindowSize(ImVec2(gizmoWidth, gizmoHeight));
+
+        ImVec2 windowSize = ImGui::GetContentRegionAvail();
+        framebuffer->rescaleFrameBuffer(windowSize.x, windowSize.y);
+
+        framebuffer->bind();
+
+        glViewport(0, 0, windowSize.x, windowSize.y);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        ImVec2 windowPos = ImGui::GetWindowPos();
+        ImVec2 windowMax =
+            ImVec2(windowPos.x + windowSize.x, windowPos.y + windowSize.y);
+
+        if (ImGui::IsMouseHoveringRect(windowPos, windowMax)) {
+            if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+                ImVec2 mouseDelta =
+                    ImGui::GetMouseDragDelta(ImGuiMouseButton_Left);
+                rotation.x += mouseDelta.x * 0.03f;
+                rotation.y += mouseDelta.y * 0.03f;
+                ImGui::ResetMouseDragDelta();
+            }
+        }
+
+        Mesh<glm::vec3, GLuint>::UniformsMap uniforms = {
+            {"uMVP", [this, windowSize](std::shared_ptr<Shader> shader) {
+                 glm::mat4 model = glm::mat4(1.0f);
+                 model = glm::rotate(model, rotation.x,
+                                     glm::vec3(0.0f, 1.0f, 0.0f));
+                 model = glm::rotate(model, rotation.y,
+                                     glm::vec3(1.0f, 0.0f, 0.0f));
+
+                 glm::mat4 view = glm::translate(glm::mat4(1.0f),
+                                                 glm::vec3(0.0f, 0.0f, -5.0f));
+
+                 glm::mat4 projection = glm::perspective(
+                     glm::radians(45.0f), windowSize.x / windowSize.y, 0.1f,
+                     100.0f);
+
+                 glm::mat4 mvp = projection * view * model;
+                 shader->setUniformMat4f("uMVP", mvp);
+             }}};
+
+        cubeMesh->setUniforms(uniforms);
+        cubeMesh->draw();
+        framebuffer->unbind();
+
+        ImGui::Image(reinterpret_cast<void *>(framebuffer->getTexture()),
+                     windowSize);
+        ImGui::End();
+    }
 }

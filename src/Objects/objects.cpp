@@ -1,6 +1,6 @@
 #include "objects.hpp"
-#include "cube.hpp"
-#include "plane.hpp"
+#include "Common/cube.hpp"
+#include "Common/plane.hpp"
 
 Objects::Objects(glm::mat4 view, glm::mat4 projection)
     : cylinder(std::make_shared<Cylinder>(8, 2, 2, 20)),

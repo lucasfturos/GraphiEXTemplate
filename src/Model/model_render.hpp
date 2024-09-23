@@ -14,7 +14,7 @@ class ModelRender {
     glm::mat4 viewMat;
     glm::mat4 projMat;
     glm::mat4 modelMat;
-    float t;
+    glm::vec2 rotation;
 
     std::vector<GLuint> indices;
     std::vector<glm::vec3> vertices;
@@ -23,8 +23,8 @@ class ModelRender {
     ModelRender(const std::string &filepath, glm::mat4 view,
                 glm::mat4 projection);
 
-    void setTime(float time) { t = time; }
-
+    void setRotation(glm::vec2 rot) { rotation = rot; }
+    
     void setup();
     void run();
 };

@@ -1,31 +1,25 @@
 #include "control_panel.hpp"
-#include <vector>
+#include "Common/cube.hpp"
 
-ControlPanel::ControlPanel() : objectType(ObjectType::None) {}
+ControlPanel::ControlPanel()
+    : objectType(ObjectType::None), showGizmoWindow(true), rotation(0.0f) {}
 
 void ControlPanel::setup() {
     styleWidget();
     initFont();
+    setupGizmo();
+}
+
+void ControlPanel::setupGizmo() {
+    cubeMesh = std::make_shared<Mesh<glm::vec3, GLuint>>(
+        cubeVertices, cubeIndices, "assets/shader/Gizmo/vertex.shader",
+        "assets/shader/Gizmo/fragment.shader");
+    cubeMesh->setup<float>({3});
+
+    framebuffer = std::make_shared<FrameBuffer>(gizmoWidth, gizmoHeight);
 }
 
 void ControlPanel::run() {
-    ImGui::Begin("Control Panel");
-    ImGui::SetWindowPos(ImVec2(0, 0));
-    ImGui::SetWindowSize(ImVec2(width, height));
-
-    ImGui::PushItemWidth(200);
-    std::vector<const char *> objectTypeNames = {"None", "Sphere", "Cylinder",
-                                                 "Plane", "Cube"};
-    int currentType = static_cast<int>(objectType);
-    if (ImGui::Combo(" ", &currentType, objectTypeNames.data(),
-                     objectTypeNames.size())) {
-        objectType = static_cast<ObjectType>(currentType);
-    }
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
-    if (ImGui::Button("Default")) {
-        objectType = ObjectType::None;
-    }
-
-    ImGui::End();
+    mainWindow();
+    gizmoWindow();
 }

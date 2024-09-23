@@ -20,16 +20,17 @@ void Render::setup() {
 }
 
 void Render::draw() {
+    modelRender->setRotation(controlPanel->getRotation());
+
+    modelRender->run();
+    objects->setObjectType(controlPanel->getObjectType());
+    objects->run();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
     controlPanel->run();
-
-    modelRender->run();
-
-    objects->setObjectType(controlPanel->getObjectType());
-    objects->run();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -47,7 +48,6 @@ void Render::run() {
         lastTime = currentTime;
         t += deltaTime;
 
-        modelRender->setTime(t);
         objects->setTime(t);
 
         frameStart = SDL_GetTicks();
