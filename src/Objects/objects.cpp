@@ -3,8 +3,8 @@
 #include "Common/plane.hpp"
 
 Objects::Objects()
-    : cylinder(std::make_shared<Cylinder>(8, 2, 2, 20)),
-      sphere(std::make_shared<Sphere>(5, 20)), objectType(ObjectType::None),
+    : cylinder(std::make_shared<Cylinder>(2.0, 0.5, 0.5, 20)),
+      sphere(std::make_shared<Sphere>(1.0, 20)), objectType(ObjectType::None),
       t(0.0f) {}
 
 void Objects::update() {
@@ -51,8 +51,11 @@ void Objects::run() {
          [this](std::shared_ptr<Shader> shader) {
              glm::mat4 model = glm::mat4(1.0f);
 
-             glm::vec3 scale(1.0f);
+             glm::vec3 scale(3.0f);
              model = glm::scale(model, scale);
+
+             glm::vec3 translation(3.0f, 0.0f, 0.0f);
+             model = glm::translate(model, translation);
 
              float angle = t * glm::radians(90.0f);
              glm::mat4 rotationMatrix = glm::rotate(
