@@ -11,22 +11,10 @@ class SimpleScene : public Scene {
     std::shared_ptr<Objects> objects;
 
   public:
-    SimpleScene(std::shared_ptr<ModelRender> modelRender,
-                std::shared_ptr<Objects> objects,
-                std::shared_ptr<ControlPanel> controlPanel)
-        : Scene(controlPanel), modelRender(modelRender), objects(objects) {}
+    SimpleScene(std::shared_ptr<ModelRender>, std::shared_ptr<Objects>,
+                std::shared_ptr<ControlPanel>);
 
-    void setup() override {
-        modelRender->setup();
-        objects->setup();
-    }
-
-    void render(float time) override {
-        modelRender->setRotation(controlPanel->getRotation());
-        modelRender->run();
-
-        objects->setTime(time);
-        objects->setObjectType(controlPanel->getObjectType());
-        objects->run();
-    }
+    void setup() override;
+    void update(float) override;
+    void render() override;
 };

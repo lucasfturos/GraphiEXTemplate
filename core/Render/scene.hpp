@@ -13,5 +13,6 @@ class Scene {
         : controlPanel(controlPanel) {}
     virtual ~Scene() = default;
     virtual void setup() = 0;
-    virtual void render(float deltaTime) = 0;
+    virtual void update(float /* deltaTime */) = 0;
+    virtual void render() = 0;
 };

@@ -9,6 +9,8 @@ set(SRC_HEADER
     Model/model_render.hpp
     # Objects
     Objects/objects.hpp
+    # Simple Scene
+    SimpleScene/simple_scene.hpp
 )
 
 set(SRC_SOURCE
@@ -16,6 +18,8 @@ set(SRC_SOURCE
     Model/model_render.cpp
     # Objects
     Objects/objects.cpp
+    # Simple Scene
+    SimpleScene/simple_scene.cpp
     # Main
     main.cpp
 )

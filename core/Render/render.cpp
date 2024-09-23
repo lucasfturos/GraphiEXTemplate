@@ -29,7 +29,8 @@ void Render::run() {
 
         clear();
 
-        currentScene->render(t);
+        currentScene->update(t);
+        currentScene->render();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame();
