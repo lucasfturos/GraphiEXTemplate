@@ -11,6 +11,17 @@ Render::Render(std::shared_ptr<Scene> scene,
 
 Render::~Render() { destroyWindow(); }
 
+void Render::update(float time) {
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    float aspectRatio =
+        static_cast<float>(windowWidth) / static_cast<float>(windowHeight);
+
+    glm::mat4 projMat =
+        glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+    currentScene->update(time, projMat);
+}
+
 void Render::run() {
     static float t = 0.0;
 
@@ -28,8 +39,7 @@ void Render::run() {
         handleEvents();
 
         clear();
-
-        currentScene->update(t);
+        update(t);
         currentScene->render();
 
         ImGui_ImplOpenGL3_NewFrame();

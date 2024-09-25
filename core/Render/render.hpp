@@ -23,12 +23,6 @@ class Render {
     const Uint32 frameDelay = 1000.0 / fps;
     const std::string title = "Render";
 
-    const glm::mat4 viewDefaultMat =
-        glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-                    glm::vec3(0.0f, 1.0f, 0.0f));
-    const glm::mat4 projDefaultMat =
-        glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f);
-
   private:
     SDL_Window *window;
     SDL_GLContext context;
@@ -39,6 +33,8 @@ class Render {
   private:
     Uint32 frameStart;
     Uint32 frameTime;
+
+    void update(float);
 
     // Setup
     void clear();
@@ -51,7 +47,8 @@ class Render {
     void handleEvents();
 
   public:
-    Render(std::shared_ptr<Scene> scene, std::shared_ptr<ControlPanel> controlPanel);
+    Render(std::shared_ptr<Scene> scene,
+           std::shared_ptr<ControlPanel> controlPanel);
     ~Render();
 
     void setScene(std::shared_ptr<Scene> scene) { currentScene = scene; }

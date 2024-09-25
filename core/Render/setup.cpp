@@ -8,7 +8,10 @@ void checkOpenGLErrors() {
 }
 
 void Render::clear() {
-    glViewport(0, 0, screenWidth, screenHeight);
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    glViewport(0, 0, windowWidth, windowHeight);
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     checkOpenGLErrors();
 }
@@ -44,9 +47,10 @@ void Render::setupWindow() {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_CORE);
 
-        window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED,
-                                  SDL_WINDOWPOS_UNDEFINED, screenWidth,
-                                  screenHeight, SDL_WINDOW_OPENGL);
+        window =
+            SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
+                             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
         if (!window)
             throw std::runtime_error("Error creating window: " +
                                      std::string(SDL_GetError()));

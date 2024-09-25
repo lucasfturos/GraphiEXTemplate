@@ -13,6 +13,6 @@ class Scene {
         : controlPanel(controlPanel) {}
     virtual ~Scene() = default;
     virtual void setup() = 0;
-    virtual void update(float /* deltaTime */) = 0;
+    virtual void update(float /* deltaTime */, glm::mat4 /* projMat */) = 0;
     virtual void render() = 0;
 };

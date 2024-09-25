@@ -10,7 +10,7 @@ class Texture {
     GLenum m_TextureType;
 
   public:
-    Texture(const std::string &imagePath, GLenum textureType);
+    Texture(const std::string &imagePath);
     Texture(int width, int height, int depth, GLenum format, GLenum type,
             GLenum textureType);
     ~Texture();

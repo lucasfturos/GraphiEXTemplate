@@ -12,8 +12,6 @@ class Objects {
     const glm::mat4 viewMat =
         glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f));
-    const glm::mat4 projMat =
-        glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f);
 
   private:
     std::shared_ptr<Cylinder> cylinder;
@@ -23,7 +21,8 @@ class Objects {
     float t;
 
   private:
-    std::shared_ptr<Mesh<glm::vec3, glm::ivec3>> mesh;
+    glm::mat4 projMat;
+    std::shared_ptr<Mesh<>> mesh;
 
     std::vector<GLuint> indices;
     std::vector<glm::vec3> vertices;
@@ -41,6 +40,8 @@ class Objects {
     }
 
     void setTime(float time) { t = time; }
+
+    void setProjection(glm::mat4 projection) { projMat = projection; }
 
     void setup();
     void run();

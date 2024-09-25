@@ -1,17 +1,22 @@
 #pragma once
 
+#include "texture.hpp"
+
 #include <GL/glew.h>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
 class ModelLoader {
   private:
     std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> texCoords;
     std::vector<GLuint> faces;
 
     void loadModel(const std::string &filepath) {
@@ -40,13 +45,30 @@ class ModelLoader {
         }
     }
 
-    void processMesh(aiMesh *mesh, const aiScene * /*scene*/) {
+    void processMesh(aiMesh *mesh, const aiScene * /* scene */) {
         for (auto i = 0U; i < mesh->mNumVertices; ++i) {
             glm::vec3 vertex;
             vertex.x = mesh->mVertices[i].x;
             vertex.y = mesh->mVertices[i].y;
             vertex.z = mesh->mVertices[i].z;
             vertices.push_back(vertex);
+
+            if (mesh->HasNormals()) {
+                glm::vec3 normal;
+                normal.x = mesh->mNormals[i].x;
+                normal.y = mesh->mNormals[i].y;
+                normal.z = mesh->mNormals[i].z;
+                normals.push_back(normal);
+            }
+
+            if (mesh->mTextureCoords[0]) {
+                glm::vec2 texCoord;
+                texCoord.x = mesh->mTextureCoords[0][i].x;
+                texCoord.y = mesh->mTextureCoords[0][i].y;
+                texCoords.push_back(texCoord);
+            } else {
+                texCoords.push_back(glm::vec2(0.0f, 0.0f));
+            }
         }
 
         for (auto i = 0U; i < mesh->mNumFaces; ++i) {
@@ -61,7 +83,7 @@ class ModelLoader {
     ModelLoader(const std::string &filepath) { loadModel(filepath); }
 
     const std::vector<glm::vec3> &getVertices() const { return vertices; }
-
+    const std::vector<glm::vec3> &getNormals() const { return normals; }
+    const std::vector<glm::vec2> &getTexCoords() const { return texCoords; }
     const std::vector<GLuint> &getFaces() const { return faces; }
 };
-

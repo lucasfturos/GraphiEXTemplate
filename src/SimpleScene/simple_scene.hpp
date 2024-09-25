@@ -15,6 +15,6 @@ class SimpleScene : public Scene {
                 std::shared_ptr<ControlPanel>);
 
     void setup() override;
-    void update(float) override;
+    void update(float, glm::mat4) override;
     void render() override;
 };

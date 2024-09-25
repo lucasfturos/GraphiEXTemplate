@@ -36,10 +36,10 @@ Texture::Texture(int width, int height, int depth, GLenum format, GLenum type,
     unbind();
 }
 
-Texture::Texture(const std::string &imagePath, GLenum textureType)
-    : m_RendererID(0), m_TextureType(textureType) {
+Texture::Texture(const std::string &imagePath)
+    : m_RendererID(0), m_TextureType(GL_TEXTURE_2D) {
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(1);
+    stbi_set_flip_vertically_on_load(false);
     unsigned char *data =
         stbi_load(imagePath.c_str(), &width, &height, &nrChannels, 0);
 
@@ -50,15 +50,16 @@ Texture::Texture(const std::string &imagePath, GLenum textureType)
     glGenTextures(1, &m_RendererID);
     glBindTexture(m_TextureType, m_RendererID);
 
-    if (m_TextureType == GL_TEXTURE_2D) {
-        GLenum format = (nrChannels == 4) ? GL_RGBA : GL_RGB;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-                     GL_UNSIGNED_BYTE, data);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    GLenum format = (nrChannels == 4) ? GL_RGBA : GL_RGB;
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
+                 GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     unbind();
 

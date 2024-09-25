@@ -10,7 +10,10 @@ void SimpleScene::setup() {
     objects->setup();
 }
 
-void SimpleScene::update(float time) { objects->setTime(time); }
+void SimpleScene::update(float time, glm::mat4 projection) {
+    objects->setTime(time);
+    objects->setProjection(projection);
+}
 
 void SimpleScene::render() {
     modelRender->setRotation(controlPanel->getRotation());
