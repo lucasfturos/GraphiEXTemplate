@@ -75,10 +75,11 @@ void ModelRender::setUniforms() {
 
 glm::mat4 ModelRender::generateMVP() {
     glm::mat4 model = glm::mat4(1.0f);
-
-    model = glm::scale(model, scale);
-
-    model = glm::translate(model, translation);
+    model = glm::scale(model, (scale == glm::vec3(1.0)) ? glm::vec3(0.07)
+                                                        : scale); // Debug
+    model = glm::translate(model, (translation == glm::vec3(0.0f))
+                                      ? glm::vec3(0, -110.0, 0)
+                                      : translation); // Debug
 
     glm::mat4 rotationMatrixX =
         glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
