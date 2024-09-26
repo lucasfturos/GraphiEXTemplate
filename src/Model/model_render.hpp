@@ -18,7 +18,10 @@ class ModelRender {
 
     glm::mat4 modelMat;
     glm::mat4 projMat;
+    
+    glm::vec3 scale;
     glm::vec2 rotation;
+    glm::vec3 translation;
 
     std::vector<GLuint> indices;
     std::vector<glm::vec3> vertices;
@@ -33,7 +36,10 @@ class ModelRender {
   public:
     ModelRender(const std::string &filepath);
 
+    void setScale(glm::vec3 s) { scale = s; }
     void setRotation(glm::vec2 rot) { rotation = rot; }
+    void setTranslation(glm::vec3 trans) { translation = trans; }
+
     void setProjection(glm::mat4 projection) { projMat = projection; }
 
     void setup();

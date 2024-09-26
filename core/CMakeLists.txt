@@ -18,6 +18,7 @@ set(CORE_SOURCES
     # ControlPanel
     ControlPanel/control_panel.cpp
     ControlPanel/gui.cpp
+    ControlPanel/window.cpp
     # GLObjects
     GLObjects/texture.cpp
     GLObjects/vertex_buffer_layout.cpp

@@ -2,7 +2,9 @@
 #include "Common/cube.hpp"
 
 ControlPanel::ControlPanel()
-    : objectType(ObjectType::None), showGizmoWindow(true), rotation(0.0f) {}
+    : scaleFactor(1.0f), showGizmoWindow(true), objectType(ObjectType::None),
+      currentMode(TransformMode::Rotate), scale(1.0f), rotation(0.0f),
+      translation(0.0f) {}
 
 void ControlPanel::setup() {
     styleWidget();
@@ -22,7 +24,7 @@ void ControlPanel::setupGizmo() {
          }},
     };
     cubeMesh->setup(layoutMap);
-    
+
     framebuffer = std::make_shared<FrameBuffer>(gizmoWidth, gizmoHeight);
 }
 

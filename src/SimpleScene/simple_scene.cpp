@@ -11,14 +11,16 @@ void SimpleScene::setup() {
 }
 
 void SimpleScene::update(float time, glm::mat4 projection) {
+    modelRender->setScale(controlPanel->getScale());
+    modelRender->setRotation(controlPanel->getRotation());
+    modelRender->setTranslation(controlPanel->getTranslation());
+
     objects->setTime(time);
     objects->setProjection(projection);
+    objects->setObjectType(controlPanel->getObjectType());
 }
 
 void SimpleScene::render() {
-    modelRender->setRotation(controlPanel->getRotation());
     modelRender->run();
-
-    objects->setObjectType(controlPanel->getObjectType());
     objects->run();
 }

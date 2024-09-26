@@ -20,7 +20,6 @@ void ModelRender::loadModel() {
 
 void ModelRender::setupMesh() {
     auto texCoords = modelLoader->getTexCoords();
-
     mesh = std::make_shared<Mesh<>>(vertices, indices, texCoords,
                                     "assets/shader/Model/vertex.shader",
                                     "assets/shader/Model/fragment.shader");
@@ -35,6 +34,7 @@ void ModelRender::setupMesh() {
              layout->push<GLfloat>(2);
          }},
     };
+
     mesh->setup(layoutMap);
 }
 
@@ -76,10 +76,8 @@ void ModelRender::setUniforms() {
 glm::mat4 ModelRender::generateMVP() {
     glm::mat4 model = glm::mat4(1.0f);
 
-    glm::vec3 scale(0.07f);
     model = glm::scale(model, scale);
 
-    glm::vec3 translation(0.0f, -100.0f, 0.0f);
     model = glm::translate(model, translation);
 
     glm::mat4 rotationMatrixX =
