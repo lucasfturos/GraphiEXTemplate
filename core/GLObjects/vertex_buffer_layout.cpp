@@ -1,7 +1,14 @@
 #include "vertex_buffer_layout.hpp"
 
-template <typename T> void VertexBufferLayout::push(GLuint /* count */) {
-    static_assert(t_always_false<T>(), "Type error");
+template <typename T> void push(GLuint /* count */) {
+    static_assert(t_always_false<T>(),
+                  "Unsupported type for VertexBufferLayout. Supported types: "
+                  "GLfloat, GLuint, GLint, GLubyte.");
+}
+
+template <> void VertexBufferLayout::push<GLint>(GLuint count) {
+    m_elements.push_back({GL_INT, count, GL_FALSE});
+    m_stride += count * VertexBufferElement::getSizeOfType(GL_INT);
 }
 
 template <> void VertexBufferLayout::push<GLfloat>(GLuint count) {

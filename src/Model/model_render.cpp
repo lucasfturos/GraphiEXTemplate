@@ -1,10 +1,10 @@
 #include "model_render.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
-    : modelLoader(std::make_shared<ModelLoader>(filepath)),
-      modelMat(glm::mat4(1.0f)),
+    : model(std::make_shared<Model>(filepath)), modelMat(glm::mat4(1.0f)),
       projMat(
-          glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)) {}
+          glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)),
+      time(0) {}
 
 void ModelRender::setup() {
     loadModel();
@@ -14,25 +14,36 @@ void ModelRender::setup() {
 }
 
 void ModelRender::loadModel() {
-    vertices = modelLoader->getVertices();
-    indices = modelLoader->getFaces();
+    vertices = model->getVertices();
+    faces = model->getFaces();
+    normals = model->getNormals();
+    boneIds = model->getBoneIds();
+    weights = model->getWeights();
 }
 
 void ModelRender::setupMesh() {
-    auto texCoords = modelLoader->getTexCoords();
-    mesh = std::make_shared<Mesh<>>(vertices, indices, texCoords,
-                                    "assets/shader/Model/vertex.shader",
-                                    "assets/shader/Model/fragment.shader");
+    auto texCoords = model->getTexCoords();
+    mesh =
+        std::make_shared<Mesh<>>(vertices, faces, normals, texCoords, boneIds,
+                                 weights, "assets/shader/Model/vertex.shader",
+                                 "assets/shader/Model/fragment.shader");
 
-    Mesh<>::VertexBufferLayoutMap layoutMap = {
-        {"vertices",
-         [](std::shared_ptr<VertexBufferLayout> layout) {
-             layout->push<GLfloat>(3);
-         }},
-        {"texCoords",
-         [](std::shared_ptr<VertexBufferLayout> layout) {
-             layout->push<GLfloat>(2);
-         }},
+    Mesh<>::VertexBufferLayoutMap layoutMap;
+
+    layoutMap["vertices"] = [](std::shared_ptr<VertexBufferLayout> layout) {
+        layout->push<GLfloat>(3);
+    };
+    layoutMap["normals"] = [](std::shared_ptr<VertexBufferLayout> layout) {
+        layout->push<GLfloat>(3);
+    };
+    layoutMap["texCoords"] = [](std::shared_ptr<VertexBufferLayout> layout) {
+        layout->push<GLfloat>(2);
+    };
+    layoutMap["boneIDs"] = [](std::shared_ptr<VertexBufferLayout> layout) {
+        layout->push<GLuint>(4);
+    };
+    layoutMap["weights"] = [](std::shared_ptr<VertexBufferLayout> layout) {
+        layout->push<GLuint>(4);
     };
 
     mesh->setup(layoutMap);
@@ -56,47 +67,50 @@ void ModelRender::loadTextures() {
 }
 
 void ModelRender::setUniforms() {
-    Mesh<>::UniformsMap uniforms = {
-        {"texture1",
-         [](std::shared_ptr<Shader> shader) {
-             shader->setUniform1i("texture1", 0);
-         }},
-        {"texture2",
-         [](std::shared_ptr<Shader> shader) {
-             shader->setUniform1i("texture2", 1);
-         }},
-        {"texture3",
-         [](std::shared_ptr<Shader> shader) {
-             shader->setUniform1i("texture3", 2);
-         }},
+    Mesh<>::UniformsMap uniforms;
+
+    uniforms["texture1"] = [](std::shared_ptr<Shader> shader) {
+        shader->setUniform1i("texture1", 0);
     };
+    uniforms["texture2"] = [](std::shared_ptr<Shader> shader) {
+        shader->setUniform1i("texture2", 1);
+    };
+    uniforms["texture3"] = [](std::shared_ptr<Shader> shader) {
+        shader->setUniform1i("texture3", 2);
+    };
+
     mesh->setUniforms(uniforms);
 }
 
-glm::mat4 ModelRender::generateMVP() {
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, (scale == glm::vec3(1.0)) ? glm::vec3(0.07)
-                                                        : scale); // Debug
-    model = glm::translate(model, (translation == glm::vec3(0.0f))
-                                      ? glm::vec3(0, -110.0, 0)
-                                      : translation); // Debug
-
-    glm::mat4 rotationMatrixX =
-        glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 rotationMatrixY =
-        glm::rotate(glm::mat4(1.0f), -rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
-    model *= rotationMatrixX * rotationMatrixY;
-
-    return projMat * viewMat * model;
-}
-
 void ModelRender::setRunUniforms() {
-    Mesh<>::UniformsMap uniforms = {
-        {"uMVP",
-         [this](std::shared_ptr<Shader> shader) {
-             glm::mat4 mvp = generateMVP();
-             shader->setUniformMat4f("uMVP", mvp);
-         }},
+    Mesh<>::UniformsMap uniforms;
+
+    uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::scale(model, (scale == glm::vec3(1.0)) ? glm::vec3(0.07)
+                                                            : scale); // Debug
+        model = glm::translate(model, (translation == glm::vec3(0.0f))
+                                          ? glm::vec3(0, -110.0, 0)
+                                          : translation); // Debug
+
+        glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), rotation.x,
+                                                glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), -rotation.y,
+                                                glm::vec3(1.0f, 0.0f, 0.0f));
+        model *= rotationMatrixX * rotationMatrixY;
+
+        glm::mat4 mvp = projMat * viewMat * model;
+        shader->setUniformMat4f("uMVP", mvp);
+    };
+    uniforms["boneTransforms"] = [this](std::shared_ptr<Shader> shader) {
+        auto bones = model->getBoneInfo();
+        for (auto i = 0U;
+             i < std::min(bones.size(), static_cast<size_t>(MAX_BONES)); ++i) {
+            glm::mat4 animatedBone = glm::rotate(bones[i].boneOffset, 0.0f,
+                                                 glm::vec3(0.0f, 1.0f, 0.0f));
+            shader->setUniformMat4f("boneTransforms[" + std::to_string(i) + "]",
+                                    animatedBone);
+        }
     };
 
     mesh->setUniforms(uniforms);

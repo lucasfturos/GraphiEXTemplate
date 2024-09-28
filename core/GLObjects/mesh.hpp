@@ -33,15 +33,38 @@ class Mesh {
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
-        : va(std::make_shared<VertexArray>()),
-          vb(std::make_shared<VertexBuffer<VertexType>>(vertices)),
-          ib(std::make_shared<IndexBuffer>(faces)),
-          nb(normals.empty()
-                 ? nullptr
-                 : std::make_shared<VertexBuffer<NormalType>>(normals)),
-          tb(texCoords.empty()
-                 ? nullptr
-                 : std::make_shared<VertexBuffer<TexType>>(texCoords)),
+        : Mesh(vertices, faces, normals, texCoords, {}, {}, vertexShaderPath,
+               fragmentShaderPath) {}
+
+    Mesh(const std::vector<VertexType> &vertices,
+         const std::vector<GLuint> &faces,
+         const std::vector<TexType> &texCoords,
+         const std::vector<GLuint> &boneIds, const std::vector<GLuint> &weights,
+         const std::string &vertexShaderPath,
+         const std::string &fragmentShaderPath)
+        : Mesh(vertices, faces, {}, texCoords, boneIds, weights,
+               vertexShaderPath, fragmentShaderPath) {}
+
+    Mesh(const std::vector<VertexType> &vertices,
+         const std::vector<GLuint> &faces,
+         const std::vector<NormalType> &normals,
+         const std::vector<TexType> &texCoords,
+         const std::vector<GLuint> &boneIds, const std::vector<GLuint> &weights,
+         const std::string &vertexShaderPath,
+         const std::string &fragmentShaderPath)
+        : vertexArray(std::make_shared<VertexArray>()),
+          vertexBuffer(std::make_shared<VertexBuffer<VertexType>>(vertices)),
+          indexBuffer(std::make_shared<IndexBuffer>(faces)),
+          normalBuffer(
+              normals.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<NormalType>>(normals)),
+          textureBuffer(
+              texCoords.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<TexType>>(texCoords)),
+          boneIDBuffer(std::make_shared<VertexBuffer<GLuint>>(boneIds)),
+          weightBuffer(std::make_shared<VertexBuffer<GLuint>>(weights)),
           shader(
               std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
           hasTexture(false) {}
@@ -50,22 +73,39 @@ class Mesh {
         std::string, std::function<void(std::shared_ptr<VertexBufferLayout>)>>;
 
     void setup(const VertexBufferLayoutMap &layoutMap) {
-        if (vb) {
+        if (vertexBuffer) {
             auto vertexLayout = std::make_shared<VertexBufferLayout>();
-            layoutMap.at("vertices")(vertexLayout);
-            va->addBuffer(*vb, *vertexLayout);
+            if (layoutMap.find("vertices") != layoutMap.end())
+                layoutMap.at("vertices")(vertexLayout);
+            vertexArray->addBuffer(*vertexBuffer, *vertexLayout);
         }
 
-        if (nb) {
+        if (normalBuffer) {
             auto normalLayout = std::make_shared<VertexBufferLayout>();
-            layoutMap.at("normals")(normalLayout);
-            va->addBuffer(*nb, *normalLayout);
+            if (layoutMap.find("normals") != layoutMap.end())
+                layoutMap.at("normals")(normalLayout);
+            vertexArray->addBuffer(*normalBuffer, *normalLayout);
         }
 
-        if (tb) {
+        if (textureBuffer) {
             auto texCoordLayout = std::make_shared<VertexBufferLayout>();
-            layoutMap.at("texCoords")(texCoordLayout);
-            va->addBuffer(*tb, *texCoordLayout);
+            if (layoutMap.find("texCoords") != layoutMap.end())
+                layoutMap.at("texCoords")(texCoordLayout);
+            vertexArray->addBuffer(*textureBuffer, *texCoordLayout);
+        }
+
+        if (boneIDBuffer) {
+            auto boneIdLayout = std::make_shared<VertexBufferLayout>();
+            if (layoutMap.find("boneIDs") != layoutMap.end())
+                layoutMap.at("boneIDs")(boneIdLayout);
+            vertexArray->addBuffer(*boneIDBuffer, *boneIdLayout);
+        }
+
+        if (weightBuffer) {
+            auto weightLayout = std::make_shared<VertexBufferLayout>();
+            if (layoutMap.find("weights") != layoutMap.end())
+                layoutMap.at("weights")(weightLayout);
+            vertexArray->addBuffer(*weightBuffer, *weightLayout);
         }
     }
 
@@ -83,9 +123,15 @@ class Mesh {
 
     void draw() {
         shader->bind();
-        va->bind();
-        vb->bind();
-        ib->bind();
+        vertexArray->bind();
+        vertexBuffer->bind();
+        indexBuffer->bind();
+
+        if (boneIDBuffer)
+            boneIDBuffer->bind();
+
+        if (weightBuffer)
+            weightBuffer->bind();
 
         if (hasTexture) {
             for (auto i = 0U; i < textures.size(); ++i) {
@@ -95,12 +141,21 @@ class Mesh {
             }
         }
 
-        glDrawElements(GL_TRIANGLES, ib->getCount(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT,
+                       nullptr);
 
-        va->unbind();
-        vb->unbind();
-        ib->unbind();
+        vertexArray->unbind();
+        vertexBuffer->unbind();
+        indexBuffer->unbind();
+
+        if (boneIDBuffer)
+            boneIDBuffer->unbind();
+
+        if (weightBuffer)
+            weightBuffer->unbind();
+
         shader->unbind();
+
         if (hasTexture) {
             for (auto i = 0U; i < textures.size(); ++i) {
                 if (textures[i]) {
@@ -131,11 +186,15 @@ class Mesh {
     }
 
   private:
-    std::shared_ptr<VertexArray> va;
-    std::shared_ptr<VertexBuffer<VertexType>> vb;
-    std::shared_ptr<IndexBuffer> ib;
-    std::shared_ptr<VertexBuffer<NormalType>> nb;
-    std::shared_ptr<VertexBuffer<TexType>> tb;
+    std::shared_ptr<VertexArray> vertexArray;
+    std::shared_ptr<VertexBuffer<VertexType>> vertexBuffer;
+    std::shared_ptr<IndexBuffer> indexBuffer;
+    std::shared_ptr<VertexBuffer<NormalType>> normalBuffer;
+    std::shared_ptr<VertexBuffer<TexType>> textureBuffer;
+
+    std::shared_ptr<VertexBuffer<GLuint>> boneIDBuffer;
+    std::shared_ptr<VertexBuffer<GLuint>> weightBuffer;
+
     std::shared_ptr<Shader> shader;
     std::vector<std::shared_ptr<Texture>> textures;
 

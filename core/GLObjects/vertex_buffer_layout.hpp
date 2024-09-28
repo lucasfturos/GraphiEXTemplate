@@ -10,6 +10,8 @@ struct VertexBufferElement {
 
     static GLuint getSizeOfType(GLuint type) {
         switch (type) {
+        case GL_INT:
+            return 4;
         case GL_FLOAT:
             return 4;
         case GL_UNSIGNED_INT:

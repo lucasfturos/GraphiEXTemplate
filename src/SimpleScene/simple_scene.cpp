@@ -11,6 +11,7 @@ void SimpleScene::setup() {
 }
 
 void SimpleScene::update(float time, glm::mat4 projection) {
+    modelRender->setTime(time);
     modelRender->setScale(controlPanel->getScale());
     modelRender->setRotation(controlPanel->getRotation());
     modelRender->setTranslation(controlPanel->getTranslation());

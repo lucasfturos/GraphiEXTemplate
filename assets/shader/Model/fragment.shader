@@ -14,6 +14,5 @@ void main() {
     vec4 specularColor = texture(texture3, TexCoords);
 
     vec4 finalColor = diffuseColor * 0.8 + glowColor * 0.5 + specularColor * 0.2;
-
     color = finalColor;
 }
