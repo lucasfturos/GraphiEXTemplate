@@ -39,7 +39,7 @@ class Mesh {
     Mesh(const std::vector<VertexType> &vertices,
          const std::vector<GLuint> &faces,
          const std::vector<TexType> &texCoords,
-         const std::vector<GLuint> &boneIds, const std::vector<GLuint> &weights,
+         const std::vector<GLint> &boneIds, const std::vector<GLuint> &weights,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
         : Mesh(vertices, faces, {}, texCoords, boneIds, weights,
@@ -49,7 +49,7 @@ class Mesh {
          const std::vector<GLuint> &faces,
          const std::vector<NormalType> &normals,
          const std::vector<TexType> &texCoords,
-         const std::vector<GLuint> &boneIds, const std::vector<GLuint> &weights,
+         const std::vector<GLint> &boneIds, const std::vector<GLuint> &weights,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
         : vertexArray(std::make_shared<VertexArray>()),
@@ -63,7 +63,7 @@ class Mesh {
               texCoords.empty()
                   ? nullptr
                   : std::make_shared<VertexBuffer<TexType>>(texCoords)),
-          boneIDBuffer(std::make_shared<VertexBuffer<GLuint>>(boneIds)),
+          boneIDBuffer(std::make_shared<VertexBuffer<GLint>>(boneIds)),
           weightBuffer(std::make_shared<VertexBuffer<GLuint>>(weights)),
           shader(
               std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
@@ -192,7 +192,7 @@ class Mesh {
     std::shared_ptr<VertexBuffer<NormalType>> normalBuffer;
     std::shared_ptr<VertexBuffer<TexType>> textureBuffer;
 
-    std::shared_ptr<VertexBuffer<GLuint>> boneIDBuffer;
+    std::shared_ptr<VertexBuffer<GLint>> boneIDBuffer;
     std::shared_ptr<VertexBuffer<GLuint>> weightBuffer;
 
     std::shared_ptr<Shader> shader;

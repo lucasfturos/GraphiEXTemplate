@@ -1,4 +1,5 @@
 #include "model_render.hpp"
+#include "GLObjects/model.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
     : model(std::make_shared<Model>(filepath)), modelMat(glm::mat4(1.0f)),
@@ -17,14 +18,14 @@ void ModelRender::loadModel() {
     vertices = model->getVertices();
     faces = model->getFaces();
     normals = model->getNormals();
-    boneIds = model->getBoneIds();
+    boneIDs = model->getBoneIds();
     weights = model->getWeights();
 }
 
 void ModelRender::setupMesh() {
     auto texCoords = model->getTexCoords();
     mesh =
-        std::make_shared<Mesh<>>(vertices, faces, normals, texCoords, boneIds,
+        std::make_shared<Mesh<>>(vertices, faces, normals, texCoords, boneIDs,
                                  weights, "assets/shader/Model/vertex.shader",
                                  "assets/shader/Model/fragment.shader");
 
@@ -40,7 +41,7 @@ void ModelRender::setupMesh() {
         layout->push<GLfloat>(2);
     };
     layoutMap["boneIDs"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLuint>(4);
+        layout->push<GLint>(4);
     };
     layoutMap["weights"] = [](std::shared_ptr<VertexBufferLayout> layout) {
         layout->push<GLuint>(4);
@@ -102,14 +103,12 @@ void ModelRender::setRunUniforms() {
         glm::mat4 mvp = projMat * viewMat * model;
         shader->setUniformMat4f("uMVP", mvp);
     };
-    uniforms["boneTransforms"] = [this](std::shared_ptr<Shader> shader) {
-        auto bones = model->getBoneInfo();
-        for (auto i = 0U;
-             i < std::min(bones.size(), static_cast<size_t>(MAX_BONES)); ++i) {
-            glm::mat4 animatedBone = glm::rotate(bones[i].boneOffset, 0.0f,
-                                                 glm::vec3(0.0f, 1.0f, 0.0f));
-            shader->setUniformMat4f("boneTransforms[" + std::to_string(i) + "]",
-                                    animatedBone);
+    uniforms["finalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {
+        auto bones = model->getBoneInfoMap();
+        for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
+            glm::mat4 animatedBone(1.0);
+            shader->setUniformMat4f(
+                "finalBonesMatrices[" + std::to_string(i) + "]", animatedBone);
         }
     };
 

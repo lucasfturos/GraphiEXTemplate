@@ -29,7 +29,7 @@ class ModelRender {
     std::vector<GLuint> faces;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec3> vertices;
-    std::vector<GLuint> boneIds;
+    std::vector<GLint> boneIDs;
     std::vector<GLuint> weights;
 
     void loadModel();
