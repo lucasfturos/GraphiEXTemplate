@@ -2,8 +2,7 @@
 
 ModelRender::ModelRender(const std::string &filepath)
     : model(std::make_shared<Model>(filepath)),
-      animation(std::make_shared<Animation>(
-          "assets/model/Nightshade/Breakdance_1990.dae", model)),
+      animation(std::make_shared<Animation>(filepath, model)),
       animator(std::make_shared<Animator>(animation)),
       modelMat(glm::mat4(1.0f)),
       projMat(
@@ -23,6 +22,8 @@ void ModelRender::loadModel() {
     normals = model->getNormals();
     boneIDs = model->getBoneIds();
     weights = model->getWeights();
+
+    animator->playAnimation(animation);
 }
 
 void ModelRender::setupMesh() {
@@ -108,10 +109,9 @@ void ModelRender::setRunUniforms() {
     };
     uniforms["finalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {
         auto transforms = animator->getFinalBoneMatrices();
-        for (std::size_t i = 0; i < transforms.size(); ++i) {
+        for (std::size_t i = 0; i < transforms.size(); ++i)
             shader->setUniformMat4f(
                 "finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-        }
     };
 
     mesh->setUniforms(uniforms);
@@ -122,7 +122,7 @@ void ModelRender::run() {
         return;
     }
 
-    // animator->updateAnimation(time);
+    animator->updateAnimation(time);
     setRunUniforms();
 
     mesh->getTexture(0)->bind(0);

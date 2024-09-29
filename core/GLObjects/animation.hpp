@@ -36,6 +36,8 @@ class Animation {
         readMissingBones(animation, model);
     }
 
+    ~Animation() {}
+
     std::shared_ptr<Bone> findBone(const std::string &name) {
         auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
                                  [&](const std::shared_ptr<Bone> &bone) {

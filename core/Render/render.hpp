@@ -34,7 +34,9 @@ class Render {
     Uint32 frameStart;
     Uint32 frameTime;
 
+    void setup();
     void update(float);
+    void render();
 
     // Setup
     void clear();

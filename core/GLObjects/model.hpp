@@ -64,28 +64,19 @@ class Model {
 
     void processMesh(aiMesh *mesh, const aiScene * /* scene */) {
         for (std::size_t i = 0; i < mesh->mNumVertices; ++i) {
-            glm::vec3 vertex;
-            vertex.x = mesh->mVertices[i].x;
-            vertex.y = mesh->mVertices[i].y;
-            vertex.z = mesh->mVertices[i].z;
+            glm::vec3 vertex = aiVector3DToGLM(mesh->mVertices[i]);
             m_Vertices.push_back(vertex);
 
             if (mesh->HasNormals()) {
-                glm::vec3 normal;
-                normal.x = mesh->mNormals[i].x;
-                normal.y = mesh->mNormals[i].y;
-                normal.z = mesh->mNormals[i].z;
+                glm::vec3 normal = aiVector3DToGLM(mesh->mNormals[i]);
                 m_Normals.push_back(normal);
             }
 
-            if (mesh->mTextureCoords[0]) {
-                glm::vec2 texCoord;
-                texCoord.x = mesh->mTextureCoords[0][i].x;
-                texCoord.y = mesh->mTextureCoords[0][i].y;
-                m_TexCoords.push_back(texCoord);
-            } else {
-                m_TexCoords.push_back(glm::vec2(0.0f, 0.0f));
-            }
+            glm::vec2 texCoord = mesh->mTextureCoords[0]
+                                     ? glm::vec2(mesh->mTextureCoords[0][i].x,
+                                                 mesh->mTextureCoords[0][i].y)
+                                     : glm::vec2(0.0f, 0.0f);
+            m_TexCoords.push_back(texCoord);
 
             m_BoneIDs.push_back(-1);
             m_Weights.push_back(0);

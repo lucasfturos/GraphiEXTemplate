@@ -10,17 +10,19 @@
 #include <memory>
 #include <unordered_map>
 
-template <typename VertexType = glm::vec3, typename FaceType = glm::ivec3,
-          typename TexType = glm::vec2, typename NormalType = glm::vec3>
+template <typename VertexType = glm::vec3, typename FaceType = GLuint,
+          typename TexType = glm::vec2, typename NormalType = glm::vec3,
+          typename BoneIdType = GLint, typename WeightType = GLuint>
 class Mesh {
   public:
     Mesh(const std::vector<VertexType> &vertices,
-         const std::vector<GLuint> &faces, const std::string &vertexShaderPath,
+         const std::vector<FaceType> &faces,
+         const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
         : Mesh(vertices, faces, {}, {}, vertexShaderPath, fragmentShaderPath) {}
 
     Mesh(const std::vector<VertexType> &vertices,
-         const std::vector<GLuint> &faces,
+         const std::vector<FaceType> &faces,
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
@@ -28,7 +30,7 @@ class Mesh {
                fragmentShaderPath) {}
 
     Mesh(const std::vector<VertexType> &vertices,
-         const std::vector<GLuint> &faces,
+         const std::vector<FaceType> &faces,
          const std::vector<NormalType> &normals,
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
@@ -37,9 +39,10 @@ class Mesh {
                fragmentShaderPath) {}
 
     Mesh(const std::vector<VertexType> &vertices,
-         const std::vector<GLuint> &faces,
+         const std::vector<FaceType> &faces,
          const std::vector<TexType> &texCoords,
-         const std::vector<GLint> &boneIds, const std::vector<GLuint> &weights,
+         const std::vector<BoneIdType> &boneIds,
+         const std::vector<WeightType> &weights,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
         : Mesh(vertices, faces, {}, texCoords, boneIds, weights,
@@ -49,22 +52,20 @@ class Mesh {
          const std::vector<GLuint> &faces,
          const std::vector<NormalType> &normals,
          const std::vector<TexType> &texCoords,
-         const std::vector<GLint> &boneIds, const std::vector<GLuint> &weights,
+         const std::vector<BoneIdType> &boneIds,
+         const std::vector<WeightType> &weights,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath)
         : vertexArray(std::make_shared<VertexArray>()),
           vertexBuffer(std::make_shared<VertexBuffer<VertexType>>(vertices)),
           indexBuffer(std::make_shared<IndexBuffer>(faces)),
-          normalBuffer(
-              normals.empty()
-                  ? nullptr
-                  : std::make_shared<VertexBuffer<NormalType>>(normals)),
-          textureBuffer(
-              texCoords.empty()
-                  ? nullptr
-                  : std::make_shared<VertexBuffer<TexType>>(texCoords)),
-          boneIDBuffer(std::make_shared<VertexBuffer<GLint>>(boneIds)),
-          weightBuffer(std::make_shared<VertexBuffer<GLuint>>(weights)),
+
+          normalBuffer(std::make_shared<VertexBuffer<NormalType>>(normals)),
+          textureBuffer(std::make_shared<VertexBuffer<TexType>>(texCoords)),
+
+          boneIDBuffer(std::make_shared<VertexBuffer<BoneIdType>>(boneIds)),
+          weightBuffer(std::make_shared<VertexBuffer<WeightType>>(weights)),
+
           shader(
               std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
           hasTexture(false) {}
@@ -207,8 +208,8 @@ class Mesh {
     std::shared_ptr<VertexBuffer<NormalType>> normalBuffer;
     std::shared_ptr<VertexBuffer<TexType>> textureBuffer;
 
-    std::shared_ptr<VertexBuffer<GLint>> boneIDBuffer;
-    std::shared_ptr<VertexBuffer<GLuint>> weightBuffer;
+    std::shared_ptr<VertexBuffer<BoneIdType>> boneIDBuffer;
+    std::shared_ptr<VertexBuffer<WeightType>> weightBuffer;
 
     std::shared_ptr<Shader> shader;
     std::vector<std::shared_ptr<Texture>> textures;
