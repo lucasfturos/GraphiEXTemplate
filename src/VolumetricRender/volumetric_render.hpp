@@ -1,15 +1,14 @@
 #pragma once
 
-#include "GLObjects/animation.hpp"
-#include "GLObjects/animator.hpp"
 #include "GLObjects/mesh.hpp"
 #include "GLObjects/model.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
+#include <string>
 
-class ModelRender {
+class VolumetricRender {
   protected:
     const glm::mat4 viewMat =
         glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
@@ -18,34 +17,28 @@ class ModelRender {
   private:
     std::shared_ptr<Model> model;
     std::shared_ptr<Mesh<>> mesh;
-    std::shared_ptr<Animation> animation;
-    std::shared_ptr<Animator> animator;
 
     glm::mat4 modelMat;
     glm::mat4 projMat;
-
-    std::string filePath;
 
   private:
     glm::vec3 scale;
     glm::vec2 rotation;
     glm::vec3 translation;
 
-    std::vector<GLuint> faces;
-    std::vector<glm::vec3> vertices;
-    std::vector<GLint> boneIDs;
-    std::vector<GLuint> weights;
+    std::vector<GLuint> modelFaces;
+    std::vector<glm::vec3> modelVertices;
 
     void loadModel();
     void setupMesh();
     void loadTextures();
     void setUniforms();
     void setRunUniforms();
+    std::vector<GLfloat> generateDensityData(int, int, int);
 
   public:
-    ModelRender(const std::string &filepath);
+    VolumetricRender(const std::string &);
 
-    void setDeltaTime(float);
     void setScale(glm::vec3 s) { scale = s; }
     void setRotation(glm::vec2 rot) { rotation = rot; }
     void setTranslation(glm::vec3 trans) { translation = trans; }

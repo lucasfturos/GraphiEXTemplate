@@ -42,6 +42,14 @@ class Shader {
         glUniform1f(location, value);
     }
 
+    void setUniform1iv(const std::string &name,
+                       const std::vector<GLuint> &values) {
+        GLint location = getUniformLocation(name);
+        std::vector<GLint> intValues(values.begin(), values.end());
+        glUniform1iv(location, static_cast<GLsizei>(intValues.size()),
+                     intValues.data());
+    }
+
     void setUniform2f(const std::string &name, glm::vec2 value) {
         GLint location = getUniformLocation(name);
         glUniform2f(location, value.x, value.y);
