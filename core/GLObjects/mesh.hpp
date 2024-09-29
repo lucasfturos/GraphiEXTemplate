@@ -59,13 +59,22 @@ class Mesh {
         : vertexArray(std::make_shared<VertexArray>()),
           vertexBuffer(std::make_shared<VertexBuffer<VertexType>>(vertices)),
           indexBuffer(std::make_shared<IndexBuffer>(faces)),
-
-          normalBuffer(std::make_shared<VertexBuffer<NormalType>>(normals)),
-          textureBuffer(std::make_shared<VertexBuffer<TexType>>(texCoords)),
-
-          boneIDBuffer(std::make_shared<VertexBuffer<BoneIdType>>(boneIds)),
-          weightBuffer(std::make_shared<VertexBuffer<WeightType>>(weights)),
-
+          normalBuffer(
+              normals.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<NormalType>>(normals)),
+          textureBuffer(
+              texCoords.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<TexType>>(texCoords)),
+          boneIDBuffer(
+              boneIds.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<BoneIdType>>(boneIds)),
+          weightBuffer(
+              weights.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<WeightType>>(weights)),
           shader(
               std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
           hasTexture(false) {}
@@ -74,40 +83,16 @@ class Mesh {
         std::string, std::function<void(std::shared_ptr<VertexBufferLayout>)>>;
 
     void setup(const VertexBufferLayoutMap &layoutMap) {
-        if (vertexBuffer) {
-            auto vertexLayout = std::make_shared<VertexBufferLayout>();
-            if (layoutMap.find("vertices") != layoutMap.end())
-                layoutMap.at("vertices")(vertexLayout);
-            vertexArray->addBuffer(*vertexBuffer, *vertexLayout);
-        }
-
-        if (normalBuffer) {
-            auto normalLayout = std::make_shared<VertexBufferLayout>();
-            if (layoutMap.find("normals") != layoutMap.end())
-                layoutMap.at("normals")(normalLayout);
-            vertexArray->addBuffer(*normalBuffer, *normalLayout);
-        }
-
-        if (textureBuffer) {
-            auto texCoordLayout = std::make_shared<VertexBufferLayout>();
-            if (layoutMap.find("texCoords") != layoutMap.end())
-                layoutMap.at("texCoords")(texCoordLayout);
-            vertexArray->addBuffer(*textureBuffer, *texCoordLayout);
-        }
-
-        if (boneIDBuffer) {
-            auto boneIdLayout = std::make_shared<VertexBufferLayout>();
-            if (layoutMap.find("boneIDs") != layoutMap.end())
-                layoutMap.at("boneIDs")(boneIdLayout);
-            vertexArray->addBuffer(*boneIDBuffer, *boneIdLayout);
-        }
-
-        if (weightBuffer) {
-            auto weightLayout = std::make_shared<VertexBufferLayout>();
-            if (layoutMap.find("weights") != layoutMap.end())
-                layoutMap.at("weights")(weightLayout);
-            vertexArray->addBuffer(*weightBuffer, *weightLayout);
-        }
+        if (vertexBuffer)
+            setupBuffers<VertexType>(layoutMap, "vertices", vertexBuffer);
+        if (normalBuffer)
+            setupBuffers<NormalType>(layoutMap, "normals", normalBuffer);
+        if (textureBuffer)
+            setupBuffers<TexType>(layoutMap, "texCoords", textureBuffer);
+        if (boneIDBuffer)
+            setupBuffers<BoneIdType>(layoutMap, "boneIDs", boneIDBuffer);
+        if (weightBuffer)
+            setupBuffers<WeightType>(layoutMap, "weights", weightBuffer);
     }
 
     using UniformsMap =
@@ -125,60 +110,16 @@ class Mesh {
     }
 
     void draw() {
-        if (shader)
-            shader->bind();
-
-        if (vertexArray)
-            vertexArray->bind();
-
-        if (vertexBuffer)
-            vertexBuffer->bind();
-
-        if (indexBuffer)
-            indexBuffer->bind();
-
-        if (boneIDBuffer)
-            boneIDBuffer->bind();
-
-        if (weightBuffer)
-            weightBuffer->bind();
-
-        if (hasTexture) {
-            for (auto i = 0U; i < textures.size(); ++i) {
-                if (textures[i]) {
-                    textures[i]->bind(i);
-                }
-            }
-        }
+        bindShader();
+        bindBuffers();
+        bindTextures();
 
         glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT,
                        nullptr);
 
-        if (vertexArray)
-            vertexArray->unbind();
-
-        if (vertexBuffer)
-            vertexBuffer->unbind();
-
-        if (indexBuffer)
-            indexBuffer->unbind();
-
-        if (boneIDBuffer)
-            boneIDBuffer->unbind();
-
-        if (weightBuffer)
-            weightBuffer->unbind();
-
-        if (shader)
-            shader->unbind();
-
-        if (hasTexture) {
-            for (auto i = 0U; i < textures.size(); ++i) {
-                if (textures[i]) {
-                    textures[i]->unbind();
-                }
-            }
-        }
+        unbindTextures();
+        unbindBuffers();
+        unbindShader();
     }
 
     void updateTexture(const std::vector<float> &data, int width, int height,
@@ -194,14 +135,73 @@ class Mesh {
         hasTexture = true;
     }
 
-    std::shared_ptr<Texture> getTexture(std::uint32_t index) {
-        if (index < textures.size()) {
-            return textures[index];
-        }
-        return nullptr;
+  private:
+    template <typename BufferType>
+    void setupBuffers(const VertexBufferLayoutMap &layoutMap,
+                      const std::string &bufferName,
+                      const std::shared_ptr<VertexBuffer<BufferType>> &buffer) {
+        auto layout = std::make_shared<VertexBufferLayout>();
+        if (layoutMap.find(bufferName) != layoutMap.end())
+            layoutMap.at(bufferName)(layout);
+        vertexArray->addBuffer(*buffer, *layout);
     }
 
-  private:
+    void bindShader() {
+        if (shader)
+            shader->bind();
+    }
+
+    void unbindShader() {
+        if (shader)
+            shader->unbind();
+    }
+
+    void bindBuffers() {
+        if (vertexArray)
+            vertexArray->bind();
+        if (vertexBuffer)
+            vertexBuffer->bind();
+        if (indexBuffer)
+            indexBuffer->bind();
+        if (boneIDBuffer)
+            boneIDBuffer->bind();
+        if (weightBuffer)
+            weightBuffer->bind();
+    }
+
+    void unbindBuffers() {
+        if (vertexArray)
+            vertexArray->unbind();
+        if (vertexBuffer)
+            vertexBuffer->unbind();
+        if (indexBuffer)
+            indexBuffer->unbind();
+        if (boneIDBuffer)
+            boneIDBuffer->unbind();
+        if (weightBuffer)
+            weightBuffer->unbind();
+    }
+
+    void bindTextures() {
+        if (hasTexture) {
+            for (auto i = 0U; i < textures.size(); ++i) {
+                if (textures[i]) {
+                    textures[i]->bind(i);
+                }
+            }
+        }
+    }
+
+    void unbindTextures() {
+        if (hasTexture) {
+            for (auto i = 0U; i < textures.size(); ++i) {
+                if (textures[i]) {
+                    textures[i]->unbind();
+                }
+            }
+        }
+    }
+
     std::shared_ptr<VertexArray> vertexArray;
     std::shared_ptr<VertexBuffer<VertexType>> vertexBuffer;
     std::shared_ptr<IndexBuffer> indexBuffer;

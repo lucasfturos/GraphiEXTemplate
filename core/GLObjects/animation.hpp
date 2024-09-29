@@ -17,8 +17,7 @@ class Animation {
   public:
     Animation() = default;
     Animation(const std::string &animationPath, std::shared_ptr<Model> model)
-        : m_Duration(0.0f), m_TicksPerSecond(0), m_RootNode(), m_Bones(),
-          m_BoneInfoMap() {
+        : m_Duration(0.0f), m_TicksPerSecond(0) {
         Assimp::Importer importer;
 
         const aiScene *scene =
@@ -58,22 +57,20 @@ class Animation {
     void readMissingBones(const aiAnimation *animation,
                           std::shared_ptr<Model> &model) {
         int size = animation->mNumChannels;
-
         auto &boneInfoMap = model->getBoneInfoMap();
-        int boneCount = model->getBoneCount();
+        int &boneCount = model->getBoneCount();
 
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; i++) {
             auto channel = animation->mChannels[i];
             std::string boneName = channel->mNodeName.data;
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
                 boneInfoMap[boneName].id = boneCount;
                 boneCount++;
             }
-            m_Bones.emplace_back(
+            m_Bones.push_back(
                 std::make_shared<Bone>(boneInfoMap[channel->mNodeName.data].id,
                                        channel->mNodeName.data, channel));
         }
-
         m_BoneInfoMap = boneInfoMap;
     }
 
@@ -83,7 +80,6 @@ class Animation {
         dest.name = src->mName.data;
         dest.transformation = aiMatrix4x4ToGLM(src->mTransformation);
         dest.childrenCount = src->mNumChildren;
-
         for (std::size_t i = 0; i < src->mNumChildren; ++i) {
             AssimpNodeData newData;
             readHeirarchyData(newData, src->mChildren[i]);

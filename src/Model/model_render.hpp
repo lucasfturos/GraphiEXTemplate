@@ -25,7 +25,6 @@ class ModelRender {
     glm::mat4 modelMat;
     glm::mat4 projMat;
 
-    float time;
     std::string filePath;
 
   private:
@@ -34,7 +33,6 @@ class ModelRender {
     glm::vec3 translation;
 
     std::vector<GLuint> faces;
-    std::vector<glm::vec3> normals;
     std::vector<glm::vec3> vertices;
     std::vector<GLint> boneIDs;
     std::vector<GLuint> weights;
@@ -48,11 +46,10 @@ class ModelRender {
   public:
     ModelRender(const std::string &filepath);
 
-    void setTime(float t) { time = t; }
+    void setDeltaTime(float);
     void setScale(glm::vec3 s) { scale = s; }
     void setRotation(glm::vec2 rot) { rotation = rot; }
     void setTranslation(glm::vec3 trans) { translation = trans; }
-
     void setProjection(glm::mat4 projection) { projMat = projection; }
 
     void setup();

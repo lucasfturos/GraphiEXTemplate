@@ -39,7 +39,7 @@ class Objects {
         }
     }
 
-    void setTime(float time) { t = time; }
+    void setTime(float deltaTime) { t += deltaTime; }
 
     void setProjection(glm::mat4 projection) { projMat = projection; }
 

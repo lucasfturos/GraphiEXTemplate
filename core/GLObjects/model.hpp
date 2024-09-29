@@ -114,13 +114,13 @@ class Model {
                     aiMatrix4x4ToGLM(mesh->mBones[boneIndex]->mOffsetMatrix);
                 boneID = m_BoneCounter;
                 m_BoneCounter++;
+                m_BoneInfoMap[boneName] = newBoneInfo;
             } else {
                 boneID = m_BoneInfoMap[boneName].id;
             }
             assert(boneID != -1);
             auto weights = mesh->mBones[boneIndex]->mWeights;
             int numWeights = mesh->mBones[boneIndex]->mNumWeights;
-
             for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex) {
                 float weight = weights[weightIndex].mWeight;
                 setVertexBoneData(boneID, weight);

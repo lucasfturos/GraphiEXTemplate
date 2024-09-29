@@ -41,8 +41,6 @@ void Render::render() {
 }
 
 void Render::run() {
-    static float t = 0.0;
-
     setup();
 
     Uint32 lastTime = SDL_GetTicks();
@@ -50,13 +48,12 @@ void Render::run() {
         Uint32 currentTime = SDL_GetTicks();
         float deltaTime = (currentTime - lastTime) / 1000.0f;
         lastTime = currentTime;
-        t += deltaTime;
 
         frameStart = SDL_GetTicks();
         handleEvents();
 
         clear();
-        update(t);
+        update(deltaTime);
         render();
 
         SDL_GL_SwapWindow(window);

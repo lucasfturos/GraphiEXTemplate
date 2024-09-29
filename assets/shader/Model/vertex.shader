@@ -1,8 +1,7 @@
 #version 330 core
 
 layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec3 aNormal;
-layout(location = 2) in vec2 aTexCoord;
+layout(location = 1) in vec2 aTexCoord;
 layout(location = 5) in ivec4 boneIDs;
 layout(location = 6) in vec4 weights;
 
@@ -16,7 +15,7 @@ uniform mat4 finalBonesMatrices[MAX_BONES];
 
 void main() {
     vec4 totalPosition = vec4(0.0f);
-    for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
+    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
         if (boneIDs[i] == -1) continue;
 
         if (boneIDs[i] >= MAX_BONES) {
@@ -26,7 +25,6 @@ void main() {
 
         vec4 localPosition = finalBonesMatrices[boneIDs[i]] * vec4(aPos, 1.0f);
         totalPosition += localPosition * weights[i];
-        vec3 localNormal = mat3(finalBonesMatrices[boneIDs[i]]) * aNormal;
     }
 
     gl_Position = uMVP * totalPosition;

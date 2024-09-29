@@ -9,12 +9,7 @@ class Animator {
           m_FinalBoneMatrices(MAX_BONES, glm::mat4(1.0)),
           m_CurrentAnimation(animation) {}
 
-    void playAnimation(std::shared_ptr<Animation> pAnimation) {
-        m_CurrentAnimation = pAnimation;
-        m_CurrentTime = 0.0f;
-    }
-
-    void updateAnimation(float dt) {
+    void update(float dt) {
         if (!m_CurrentAnimation)
             return;
         m_DeltaTime = dt;
@@ -42,10 +37,8 @@ class Animator {
         const auto &boneInfoMap = m_CurrentAnimation->getBoneIDMap();
         if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
             std::size_t index = boneInfoMap.at(nodeName).id;
-            if (index < m_FinalBoneMatrices.size()) {
-                glm::mat4 offset = boneInfoMap.at(nodeName).offSet;
-                m_FinalBoneMatrices[index] = globalTransformation * offset;
-            }
+            glm::mat4 offset = boneInfoMap.at(nodeName).offSet;
+            m_FinalBoneMatrices[index] = globalTransformation * offset;
         }
 
         for (int i = 0; i < node->childrenCount; ++i)
