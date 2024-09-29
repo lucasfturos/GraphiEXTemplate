@@ -6,7 +6,7 @@
 int main(void) {
     try {
         auto modelRender = std::make_shared<ModelRender>(
-            "assets/model/Nightshade/Breakdance_1990.dae");
+            "assets/model/Nightshade/Nightshade.dae");
         auto objects = std::make_shared<Objects>();
 
         auto controlPanel = std::make_shared<ControlPanel>();

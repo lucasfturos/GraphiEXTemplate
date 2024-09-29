@@ -114,18 +114,27 @@ class Mesh {
                            std::function<void(std::shared_ptr<Shader>)>>;
 
     void setUniforms(const UniformsMap &uniforms) {
-        shader->bind();
-        for (const auto &[name, setUniform] : uniforms) {
-            setUniform(shader);
+        if (shader) {
+            shader->bind();
+            for (const auto &[name, setUniform] : uniforms) {
+                setUniform(shader);
+            }
+            shader->unbind();
         }
-        shader->unbind();
     }
 
     void draw() {
-        shader->bind();
-        vertexArray->bind();
-        vertexBuffer->bind();
-        indexBuffer->bind();
+        if (shader)
+            shader->bind();
+
+        if (vertexArray)
+            vertexArray->bind();
+
+        if (vertexBuffer)
+            vertexBuffer->bind();
+
+        if (indexBuffer)
+            indexBuffer->bind();
 
         if (boneIDBuffer)
             boneIDBuffer->bind();
@@ -144,9 +153,14 @@ class Mesh {
         glDrawElements(GL_TRIANGLES, indexBuffer->getCount(), GL_UNSIGNED_INT,
                        nullptr);
 
-        vertexArray->unbind();
-        vertexBuffer->unbind();
-        indexBuffer->unbind();
+        if (vertexArray)
+            vertexArray->unbind();
+
+        if (vertexBuffer)
+            vertexBuffer->unbind();
+
+        if (indexBuffer)
+            indexBuffer->unbind();
 
         if (boneIDBuffer)
             boneIDBuffer->unbind();
@@ -154,7 +168,8 @@ class Mesh {
         if (weightBuffer)
             weightBuffer->unbind();
 
-        shader->unbind();
+        if (shader)
+            shader->unbind();
 
         if (hasTexture) {
             for (auto i = 0U; i < textures.size(); ++i) {

@@ -1,8 +1,11 @@
 #include "model_render.hpp"
-#include "GLObjects/model.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
-    : model(std::make_shared<Model>(filepath)), modelMat(glm::mat4(1.0f)),
+    : model(std::make_shared<Model>(filepath)),
+      animation(std::make_shared<Animation>(
+          "assets/model/Nightshade/Breakdance_1990.dae", model)),
+      animator(std::make_shared<Animator>(animation)),
+      modelMat(glm::mat4(1.0f)),
       projMat(
           glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)),
       time(0) {}
@@ -41,7 +44,7 @@ void ModelRender::setupMesh() {
         layout->push<GLfloat>(2);
     };
     layoutMap["boneIDs"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLint>(4);
+        layout->push<GLint>(3);
     };
     layoutMap["weights"] = [](std::shared_ptr<VertexBufferLayout> layout) {
         layout->push<GLuint>(4);
@@ -104,11 +107,10 @@ void ModelRender::setRunUniforms() {
         shader->setUniformMat4f("uMVP", mvp);
     };
     uniforms["finalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {
-        auto bones = model->getBoneInfoMap();
-        for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
-            glm::mat4 animatedBone(1.0);
+        auto transforms = animator->getFinalBoneMatrices();
+        for (std::size_t i = 0; i < transforms.size(); ++i) {
             shader->setUniformMat4f(
-                "finalBonesMatrices[" + std::to_string(i) + "]", animatedBone);
+                "finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
         }
     };
 
@@ -116,10 +118,11 @@ void ModelRender::setRunUniforms() {
 }
 
 void ModelRender::run() {
-    if (!mesh) {
+    if (!mesh || !animator) {
         return;
     }
 
+    // animator->updateAnimation(time);
     setRunUniforms();
 
     mesh->getTexture(0)->bind(0);

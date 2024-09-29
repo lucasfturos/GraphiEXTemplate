@@ -77,9 +77,9 @@ class Bone {
         m_LocalTransform = translation * rotation * scale;
     }
 
-    int getBoneID() const { return m_Index; }
-    const std::string &getBoneName() const { return m_Name; }
-    glm::mat4 getLocalTransform() const { return m_LocalTransform; }
+    int getBoneID() { return m_Index; }
+    std::string getBoneName() const { return m_Name; }
+    glm::mat4 getLocalTransform() { return m_LocalTransform; }
 
   private:
     glm::mat4 interpolatePosition(float animationTime) {

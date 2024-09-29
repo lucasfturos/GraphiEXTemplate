@@ -1,11 +1,14 @@
 #pragma once
 
+#include "GLObjects/animation.hpp"
+#include "GLObjects/animator.hpp"
 #include "GLObjects/mesh.hpp"
 #include "GLObjects/model.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
+#include <string>
 
 class ModelRender {
   protected:
@@ -16,10 +19,14 @@ class ModelRender {
   private:
     std::shared_ptr<Model> model;
     std::shared_ptr<Mesh<>> mesh;
+    std::shared_ptr<Animation> animation;
+    std::shared_ptr<Animator> animator;
 
     glm::mat4 modelMat;
     glm::mat4 projMat;
+
     float time;
+    std::string filePath;
 
   private:
     glm::vec3 scale;

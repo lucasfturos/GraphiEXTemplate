@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Common/util.hpp"
 #include "texture.hpp"
 
 #include <assimp/Importer.hpp>
@@ -118,18 +119,8 @@ class Model {
             if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end()) {
                 BoneInfo newBoneInfo;
                 newBoneInfo.id = m_BoneCounter;
-
-                const aiMatrix4x4 &offsetMatrix =
-                    mesh->mBones[boneIndex]->mOffsetMatrix;
                 newBoneInfo.offSet =
-                    glm::mat4(offsetMatrix.a1, offsetMatrix.b1, offsetMatrix.c1,
-                              offsetMatrix.d1, offsetMatrix.a2, offsetMatrix.b2,
-                              offsetMatrix.c2, offsetMatrix.d2, offsetMatrix.a3,
-                              offsetMatrix.b3, offsetMatrix.c3, offsetMatrix.d3,
-                              offsetMatrix.a4, offsetMatrix.b4, offsetMatrix.c4,
-                              offsetMatrix.d4);
-
-                m_BoneInfoMap[boneName] = newBoneInfo;
+                    aiMatrix4x4ToGLM(mesh->mBones[boneIndex]->mOffsetMatrix);
                 boneID = m_BoneCounter;
                 m_BoneCounter++;
             } else {
@@ -147,7 +138,9 @@ class Model {
     }
 
   public:
-    Model(const std::string &filepath) { loadModel(filepath); }
+    Model(const std::string &filepath) : m_BoneCounter(0) {
+        loadModel(filepath);
+    }
 
     const std::vector<glm::vec3> &getVertices() const { return m_Vertices; }
     const std::vector<glm::vec3> &getNormals() const { return m_Normals; }
@@ -156,8 +149,6 @@ class Model {
     const std::vector<GLint> &getBoneIds() const { return m_BoneIDs; }
     const std::vector<GLuint> &getWeights() const { return m_Weights; }
 
-    const int &getBoneCount() const { return m_BoneCounter; }
-    const std::map<std::string, BoneInfo> getBoneInfoMap() const {
-        return m_BoneInfoMap;
-    }
+    int &getBoneCount() { return m_BoneCounter; }
+    auto &getBoneInfoMap() { return m_BoneInfoMap; }
 };
