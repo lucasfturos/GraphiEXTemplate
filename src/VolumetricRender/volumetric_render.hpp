@@ -16,7 +16,6 @@ class VolumetricRender {
 
   private:
     std::shared_ptr<Model> model;
-    std::shared_ptr<Mesh<>> mesh;
 
     glm::mat4 modelMat;
     glm::mat4 projMat;
@@ -28,6 +27,8 @@ class VolumetricRender {
 
     std::vector<GLuint> modelFaces;
     std::vector<glm::vec3> modelVertices;
+
+    std::shared_ptr<Mesh<>> mesh;
 
     void loadModel();
     void setupMesh();

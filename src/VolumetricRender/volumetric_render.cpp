@@ -49,9 +49,29 @@ VolumetricRender::generateDensityData(int width, int height, int depth) {
             int yi = static_cast<int>(y);
             int zi = static_cast<int>(z);
 
-            if (xi >= 0 && xi < width && yi >= 0 && yi < height && zi >= 0 &&
-                zi < depth) {
-                densityData[xi + width * (yi + height * zi)] += 1.0f;
+            float dx = x - xi;
+            float dy = y - yi;
+            float dz = z - zi;
+
+            if (xi >= 0 && xi < width - 1 && yi >= 0 && yi < height - 1 &&
+                zi >= 0 && zi < depth - 1) {
+                densityData[xi + width * (yi + height * zi)] +=
+                    (1 - dx) * (1 - dy) * (1 - dz);
+                densityData[(xi + 1) + width * (yi + height * zi)] +=
+                    dx * (1 - dy) * (1 - dz);
+                densityData[xi + width * ((yi + 1) + height * zi)] +=
+                    (1 - dx) * dy * (1 - dz);
+                densityData[xi + width * (yi + height * (zi + 1))] +=
+                    (1 - dx) * (1 - dy) * dz;
+                densityData[(xi + 1) + width * ((yi + 1) + height * zi)] +=
+                    dx * dy * (1 - dz);
+                densityData[xi + width * ((yi + 1) + height * (zi + 1))] +=
+                    (1 - dx) * dy * dz;
+                densityData[(xi + 1) + width * (yi + height * (zi + 1))] +=
+                    dx * (1 - dy) * dz;
+                densityData[(xi + 1) +
+                            width * ((yi + 1) + height * (zi + 1))] +=
+                    dx * dy * dz;
             }
         }
     }
@@ -59,17 +79,17 @@ VolumetricRender::generateDensityData(int width, int height, int depth) {
 }
 
 void VolumetricRender::loadTextures() {
-    int num = 16;
+    int num = 32;
     int width = num;
     int height = num;
     int depth = num;
 
     std::vector<GLfloat> densityData =
         generateDensityData(width, height, depth);
-    auto texture = std::make_shared<Texture>(width, height, depth, GL_RGBA,
+    auto texture = std::make_shared<Texture>(width, height, depth, GL_RED,
                                              GL_FLOAT, GL_TEXTURE_3D);
 
-    texture->updateData(densityData, width, height, depth, GL_RGBA, GL_FLOAT);
+    texture->updateData(densityData, width, height, depth, GL_RED, GL_FLOAT);
     mesh->setTexture(texture);
 }
 
@@ -88,7 +108,7 @@ void VolumetricRender::setRunUniforms() {
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, scale * 2.0f);
+        model = glm::scale(model, scale * 4.0f);
         model = glm::translate(model, translation);
 
         glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), rotation.x,
@@ -99,6 +119,10 @@ void VolumetricRender::setRunUniforms() {
 
         glm::mat4 mvp = projMat * viewMat * model;
         shader->setUniformMat4f("uMVP", mvp);
+    };
+    uniforms["cameraPosition"] = [this](std::shared_ptr<Shader> shader) {
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(viewMat)[3]);
+        shader->setUniform3f("cameraPosition", cameraPos);
     };
 
     mesh->setUniforms(uniforms);

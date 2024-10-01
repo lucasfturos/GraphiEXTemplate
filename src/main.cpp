@@ -1,6 +1,4 @@
-#include "Render/render.hpp"
 #include "SimpleScene/simple_scene.hpp"
-#include "VolumetricRender/volumetric_render.hpp"
 
 int main(void) {
     try {
