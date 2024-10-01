@@ -3,15 +3,19 @@
 in vec3 FragPos;
 out vec4 color;
 
-const vec3 cameraPos = vec3(0.0, 2.0, 20.0);
-const vec3 lightPos = vec3(5.0, 5.0, 1.5);
-const vec3 lightDir = normalize(lightPos - cameraPos);
-const vec3 objectColor = vec3(0.2, 0.3, 0.8);
+uniform vec3 uCameraPosition;
+uniform vec3 uObjectPosition;
 
+const vec3 lightPos = vec3(5.0, 5.0, 1.5);
+vec3 lightDir;
+
+const vec3 objectColor = vec3(0.2, 0.3, 0.8);
 const float ambientStrength = 0.2;
 const float diffuseStrength = 0.6;
 
 vec3 calculateLighting(vec3 pos) {
+    lightDir = normalize(lightPos - pos);
+    
     float diffuse = max(dot(pos, lightDir), 0.0);
     return vec3(0.7) * (ambientStrength + diffuseStrength * diffuse);
 }

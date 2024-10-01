@@ -53,25 +53,30 @@ void Objects::run() {
         return;
     }
 
-    Mesh<>::UniformsMap uniforms = {
-        {"uMVP",
-         [this](std::shared_ptr<Shader> shader) {
-             glm::mat4 model = glm::mat4(1.0f);
+    Mesh<>::UniformsMap uniforms;
+    uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
+        modelMat = glm::mat4(1.0f);
+        glm::vec3 scale(3.0f);
+        modelMat = glm::scale(modelMat, scale);
 
-             glm::vec3 scale(3.0f);
-             model = glm::scale(model, scale);
+        glm::vec3 translation(3.0f, 0.0f, 0.0f);
+        modelMat = glm::translate(modelMat, translation);
 
-             glm::vec3 translation(3.0f, 0.0f, 0.0f);
-             model = glm::translate(model, translation);
+        float angle = t * glm::radians(90.0f);
+        glm::mat4 rotationMatrix =
+            glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 1.0f, 0.0f));
+        modelMat *= rotationMatrix;
 
-             float angle = t * glm::radians(90.0f);
-             glm::mat4 rotationMatrix = glm::rotate(
-                 glm::mat4(1.0f), angle, glm::vec3(1.0f, 1.0f, 0.0f));
-             model *= rotationMatrix;
-
-             glm::mat4 mvp = projMat * viewMat * model;
-             shader->setUniformMat4f("uMVP", mvp);
-         }},
+        glm::mat4 mvp = projMat * viewMat * modelMat;
+        shader->setUniformMat4f("uMVP", mvp);
+    };
+    uniforms["uCameraPosition"] = [this](std::shared_ptr<Shader> shader) {
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(viewMat)[3]);
+        shader->setUniform3f("uCameraPosition", cameraPos);
+    };
+    uniforms["uObjectPosition"] = [this](std::shared_ptr<Shader> shader) {
+        glm::vec3 objectPosition = glm::vec3(modelMat[3]);
+        shader->setUniform3f("uObjectPosition", objectPosition);
     };
 
     mesh->setUniforms(uniforms);

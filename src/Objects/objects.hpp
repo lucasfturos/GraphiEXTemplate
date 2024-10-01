@@ -22,6 +22,7 @@ class Objects {
 
   private:
     glm::mat4 projMat;
+    glm::mat4 modelMat;
     std::shared_ptr<Mesh<>> mesh;
 
     std::vector<GLuint> indices;

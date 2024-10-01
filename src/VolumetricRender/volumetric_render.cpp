@@ -99,6 +99,10 @@ void VolumetricRender::setUniforms() {
     uniforms["uModel"] = [](std::shared_ptr<Shader> shader) {
         shader->setUniform1i("uModel", 0);
     };
+    uniforms["cameraPosition"] = [this](std::shared_ptr<Shader> shader) {
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(viewMat)[3]);
+        shader->setUniform3f("cameraPosition", cameraPos);
+    };
 
     mesh->setUniforms(uniforms);
 }
@@ -119,10 +123,6 @@ void VolumetricRender::setRunUniforms() {
 
         glm::mat4 mvp = projMat * viewMat * model;
         shader->setUniformMat4f("uMVP", mvp);
-    };
-    uniforms["cameraPosition"] = [this](std::shared_ptr<Shader> shader) {
-        glm::vec3 cameraPos = glm::vec3(glm::inverse(viewMat)[3]);
-        shader->setUniform3f("cameraPosition", cameraPos);
     };
 
     mesh->setUniforms(uniforms);
