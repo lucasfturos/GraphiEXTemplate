@@ -24,8 +24,7 @@ class Animation {
             importer.ReadFile(animationPath, aiProcess_Triangulate);
         assert(scene && scene->mRootNode);
         if (scene->mNumAnimations == 0)
-            throw std::runtime_error(
-                "Erro: Nenhuma animação encontrada no arquivo.");
+            throw std::runtime_error("Error: No animation found in file.");
 
         auto animation = scene->mAnimations[0];
         m_Duration = animation->mDuration;
@@ -46,12 +45,11 @@ class Animation {
         return (iter != m_Bones.end()) ? *iter : nullptr;
     }
 
-    inline float getDuration() { return m_Duration; }
-    inline float getTicksPerSecond() { return m_TicksPerSecond; }
-    inline const AssimpNodeData &getRootNode() { return m_RootNode; }
-    inline const std::map<std::string, BoneInfo> &getBoneIDMap() {
-        return m_BoneInfoMap;
-    }
+    float getDuration() { return m_Duration; }
+    float getTicksPerSecond() { return m_TicksPerSecond; }
+
+    const auto &getRootNode() { return m_RootNode; }
+    const auto &getBoneIDMap() { return m_BoneInfoMap; }
 
   private:
     void readMissingBones(const aiAnimation *animation,

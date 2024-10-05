@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Common/util.hpp"
-#include <assimp/anim.h>
 
+#include <assimp/anim.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>

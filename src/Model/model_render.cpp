@@ -81,8 +81,6 @@ void ModelRender::setUniforms() {
     mesh->setUniforms(uniforms);
 }
 
-void ModelRender::setDeltaTime(float dt) { animator->update(dt); }
-
 void ModelRender::setRunUniforms() {
     Mesh<>::UniformsMap uniforms;
 
@@ -104,10 +102,9 @@ void ModelRender::setRunUniforms() {
         shader->setUniformMat4f("uMVP", mvp);
     };
     uniforms["finalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {
-        auto transforms = animator->getFinalBoneMatrices();
-        for (std::size_t i = 0; i < transforms.size(); ++i)
-            shader->setUniformMat4f(
-                "finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+        std::vector<glm::mat4> finalBoneMatrices =
+            animator->getFinalBoneMatrices();
+        shader->setUniformMat4Array("finalBonesMatrices", finalBoneMatrices);
     };
 
     mesh->setUniforms(uniforms);

@@ -3,7 +3,7 @@
 int main(void) {
     try {
         auto modelRender = std::make_shared<ModelRender>(
-            "assets/model/Nightshade/Breakdance_1990.dae");
+            "assets/model/Nightshade/Breakdance Freeze Var 2.dae");
         auto volumetricRender =
             std::make_shared<VolumetricRender>("assets/model/spot.obj");
         auto objects = std::make_shared<Objects>();

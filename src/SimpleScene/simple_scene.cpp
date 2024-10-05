@@ -8,22 +8,22 @@ SimpleScene::SimpleScene(std::shared_ptr<ModelRender> modelRender,
       volumetricRender(volumetricRender), objects(objects) {}
 
 void SimpleScene::setup() {
-    // modelRender->setup();
-    volumetricRender->setup();
+    modelRender->setup();
+    // volumetricRender->setup();
     objects->setup();
 }
 
 void SimpleScene::update(float dt, glm::mat4 projection) {
-    // modelRender->setDeltaTime(dt);
-    // modelRender->setProjection(projection);
-    // modelRender->setScale(controlPanel->getScale());
-    // modelRender->setRotation(controlPanel->getRotation());
-    // modelRender->setTranslation(controlPanel->getTranslation());
+    modelRender->setDeltaTime(dt);
+    modelRender->setProjection(projection);
+    modelRender->setScale(controlPanel->getScale());
+    modelRender->setRotation(controlPanel->getRotation());
+    modelRender->setTranslation(controlPanel->getTranslation());
 
-    volumetricRender->setProjection(projection);
-    volumetricRender->setScale(controlPanel->getScale());
-    volumetricRender->setRotation(controlPanel->getRotation());
-    volumetricRender->setTranslation(controlPanel->getTranslation());
+    // volumetricRender->setProjection(projection);
+    // volumetricRender->setScale(controlPanel->getScale());
+    // volumetricRender->setRotation(controlPanel->getRotation());
+    // volumetricRender->setTranslation(controlPanel->getTranslation());
 
     objects->setTime(dt);
     objects->setProjection(projection);
@@ -31,7 +31,7 @@ void SimpleScene::update(float dt, glm::mat4 projection) {
 }
 
 void SimpleScene::render() {
-    // modelRender->run();
-    volumetricRender->run();
+    modelRender->run();
+    // volumetricRender->run();
     objects->run();
 }

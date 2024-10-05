@@ -82,6 +82,13 @@ class Shader {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
+    void setUniformMat4Array(const std::string &name,
+                             const std::vector<glm::mat4> &matrices) {
+        GLint location = getUniformLocation(name);
+        glUniformMatrix4fv(location, static_cast<GLsizei>(matrices.size()),
+                           GL_FALSE, glm::value_ptr(matrices[0]));
+    }
+
   private:
     std::string loadShader(const std::string &filepath) {
         std::ifstream file(filepath);

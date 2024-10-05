@@ -24,8 +24,6 @@ class ModelRender {
     glm::mat4 modelMat;
     glm::mat4 projMat;
 
-    std::string filePath;
-
   private:
     glm::vec3 scale;
     glm::vec2 rotation;
@@ -45,7 +43,8 @@ class ModelRender {
   public:
     ModelRender(const std::string &filepath);
 
-    void setDeltaTime(float);
+    void setDeltaTime(float dt) { animator->update(dt); }
+
     void setScale(glm::vec3 s) { scale = s; }
     void setRotation(glm::vec2 rot) { rotation = rot; }
     void setTranslation(glm::vec3 trans) { translation = trans; }

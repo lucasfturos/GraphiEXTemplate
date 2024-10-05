@@ -1,10 +1,10 @@
 #pragma once
 
-#include "GLObjects/vertex_buffer_layout.hpp"
 #include "index_buffer.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
 #include "vertex_array.hpp"
+#include "vertex_buffer_layout.hpp"
 
 #include <functional>
 #include <memory>

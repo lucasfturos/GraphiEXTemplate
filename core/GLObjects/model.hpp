@@ -133,13 +133,14 @@ class Model {
         loadModel(filepath);
     }
 
-    const std::vector<glm::vec3> &getVertices() const { return m_Vertices; }
-    const std::vector<glm::vec3> &getNormals() const { return m_Normals; }
-    const std::vector<glm::vec2> &getTexCoords() const { return m_TexCoords; }
-    const std::vector<GLuint> &getFaces() const { return m_Faces; }
-    const std::vector<GLint> &getBoneIds() const { return m_BoneIDs; }
-    const std::vector<GLuint> &getWeights() const { return m_Weights; }
+    const auto &getFaces() const { return m_Faces; }
+    const auto &getNormals() const { return m_Normals; }
+    const auto &getVertices() const { return m_Vertices; }
+    const auto &getTexCoords() const { return m_TexCoords; }
 
-    int &getBoneCount() { return m_BoneCounter; }
+    const auto &getBoneIds() const { return m_BoneIDs; }
+    const auto &getWeights() const { return m_Weights; }
+
+    auto &getBoneCount() { return m_BoneCounter; }
     auto &getBoneInfoMap() { return m_BoneInfoMap; }
 };
