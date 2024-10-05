@@ -124,7 +124,9 @@ class Model {
             } else {
                 boneID = m_BoneInfoMap[boneName].id;
             }
+
             assert(boneID != -1);
+
             auto weights = mesh->mBones[boneIndex]->mWeights;
             int numWeights = mesh->mBones[boneIndex]->mNumWeights;
             for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex) {
@@ -139,7 +141,7 @@ class Model {
     std::vector<glm::vec2> m_TexCoords;
     std::vector<GLuint> m_Faces;
     std::vector<GLint> m_BoneIDs;
-    std::vector<GLuint> m_Weights;
+    std::vector<GLfloat> m_Weights;
 
     int m_BoneCounter;
     std::map<std::string, BoneInfo> m_BoneInfoMap;

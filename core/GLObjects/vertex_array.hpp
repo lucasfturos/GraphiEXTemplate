@@ -42,9 +42,9 @@ class VertexArray {
         bind();
         vb.bind();
 
-        const auto &elements = layout.getElements();
         GLuint offset = 0;
 
+        const auto &elements = layout.getElements();
         for (const auto &element : elements) {
             glEnableVertexAttribArray(m_AttributeIndex);
             glVertexAttribPointer(m_AttributeIndex, element.count, element.type,

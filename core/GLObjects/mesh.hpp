@@ -12,7 +12,7 @@
 
 template <typename VertexType = glm::vec3, typename FaceType = GLuint,
           typename TexType = glm::vec2, typename NormalType = glm::vec3,
-          typename BoneIdType = GLint, typename WeightType = GLuint>
+          typename BoneIdType = GLint, typename WeightType = GLfloat>
 class Mesh {
   public:
     Mesh(const std::vector<VertexType> &vertices,

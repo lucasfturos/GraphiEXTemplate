@@ -18,6 +18,9 @@ class Animator {
                                glm::mat4(1.0f));
     }
 
+    auto getFinalBoneMatrices() { return m_FinalBoneMatrices; }
+
+  private:
     void calculateBoneTransform(const AssimpNodeData *node,
                                 glm::mat4 parentTransform) {
         std::string nodeName = node->name;
@@ -40,12 +43,9 @@ class Animator {
         }
 
         for (int i = 0; i < node->childrenCount; ++i)
-            calculateBoneTransform(&node->children[i], globalTransformation);
+            calculateBoneTransform(node->children.data(), globalTransformation);
     }
 
-    auto getFinalBoneMatrices() { return m_FinalBoneMatrices; }
-
-  private:
     float m_CurrentTime;
     std::vector<glm::mat4> m_FinalBoneMatrices;
     std::shared_ptr<Animation> m_CurrentAnimation;
