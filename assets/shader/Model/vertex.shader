@@ -2,8 +2,8 @@
 
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec2 aTexCoord;
-layout(location = 5) in ivec4 boneIDs;
-layout(location = 6) in vec4 weights;
+layout(location = 3) in ivec4 boneIDs;
+layout(location = 4) in ivec4 weights;
 
 out vec2 TexCoords;
 

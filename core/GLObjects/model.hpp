@@ -25,17 +25,23 @@ struct BoneInfo {
 };
 
 class Model {
+  public:
+    Model(const std::string &filepath) : m_BoneCounter(0) {
+        loadModel(filepath);
+    }
+
+    const auto &getFaces() const { return m_Faces; }
+    const auto &getNormals() const { return m_Normals; }
+    const auto &getVertices() const { return m_Vertices; }
+    const auto &getTexCoords() const { return m_TexCoords; }
+
+    const auto &getBoneIds() const { return m_BoneIDs; }
+    const auto &getWeights() const { return m_Weights; }
+
+    auto &getBoneCount() { return m_BoneCounter; }
+    auto &getBoneInfoMap() { return m_BoneInfoMap; }
+
   private:
-    std::vector<glm::vec3> m_Vertices;
-    std::vector<glm::vec3> m_Normals;
-    std::vector<glm::vec2> m_TexCoords;
-    std::vector<GLuint> m_Faces;
-    std::vector<GLint> m_BoneIDs;
-    std::vector<GLuint> m_Weights;
-
-    int m_BoneCounter;
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
-
     void loadModel(const std::string &filepath) {
         Assimp::Importer importer;
         const aiScene *scene = importer.ReadFile(
@@ -128,19 +134,13 @@ class Model {
         }
     }
 
-  public:
-    Model(const std::string &filepath) : m_BoneCounter(0) {
-        loadModel(filepath);
-    }
+    std::vector<glm::vec3> m_Vertices;
+    std::vector<glm::vec3> m_Normals;
+    std::vector<glm::vec2> m_TexCoords;
+    std::vector<GLuint> m_Faces;
+    std::vector<GLint> m_BoneIDs;
+    std::vector<GLuint> m_Weights;
 
-    const auto &getFaces() const { return m_Faces; }
-    const auto &getNormals() const { return m_Normals; }
-    const auto &getVertices() const { return m_Vertices; }
-    const auto &getTexCoords() const { return m_TexCoords; }
-
-    const auto &getBoneIds() const { return m_BoneIDs; }
-    const auto &getWeights() const { return m_Weights; }
-
-    auto &getBoneCount() { return m_BoneCounter; }
-    auto &getBoneInfoMap() { return m_BoneInfoMap; }
+    int m_BoneCounter;
+    std::map<std::string, BoneInfo> m_BoneInfoMap;
 };

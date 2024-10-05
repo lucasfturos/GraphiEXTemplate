@@ -1,5 +1,4 @@
 #include "model_render.hpp"
-#include "GLObjects/model.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
     : model(std::make_shared<Model>(filepath)),
@@ -86,11 +85,8 @@ void ModelRender::setRunUniforms() {
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, (scale == glm::vec3(1.0)) ? glm::vec3(0.07)
-                                                            : scale); // Debug
-        model = glm::translate(model, (translation == glm::vec3(0.0f))
-                                          ? glm::vec3(0, -110.0, 0)
-                                          : translation); // Debug
+        model = glm::scale(model, scale);
+        model = glm::translate(model, translation);
 
         glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), rotation.x,
                                                 glm::vec3(0.0f, 1.0f, 0.0f));
@@ -104,7 +100,7 @@ void ModelRender::setRunUniforms() {
     uniforms["finalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {
         std::vector<glm::mat4> finalBoneMatrices =
             animator->getFinalBoneMatrices();
-        shader->setUniformMat4Array("finalBonesMatrices", finalBoneMatrices);
+        shader->setUniformMat4f("finalBonesMatrices", finalBoneMatrices);
     };
 
     mesh->setUniforms(uniforms);
