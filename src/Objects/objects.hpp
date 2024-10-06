@@ -3,7 +3,7 @@
 #include "Common/cylinder.hpp"
 #include "Common/sphere.hpp"
 #include "Common/util.hpp"
-#include "GLObjects/mesh.hpp"
+#include "GLObjects/Mesh/mesh.hpp"
 
 #include <memory>
 
@@ -23,7 +23,7 @@ class Objects {
   private:
     glm::mat4 projMat;
     glm::mat4 modelMat;
-    std::shared_ptr<Mesh<>> mesh;
+    std::shared_ptr<Mesh<Types>> mesh;
 
     std::vector<GLuint> indices;
     std::vector<glm::vec3> vertices;

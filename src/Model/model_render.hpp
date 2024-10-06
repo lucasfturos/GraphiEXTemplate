@@ -1,8 +1,8 @@
 #pragma once
 
+#include "GLObjects/Mesh/mesh.hpp"
 #include "GLObjects/animation.hpp"
 #include "GLObjects/animator.hpp"
-#include "GLObjects/mesh.hpp"
 #include "GLObjects/model.hpp"
 
 #include <glm/glm.hpp>
@@ -17,7 +17,7 @@ class ModelRender {
 
   private:
     std::shared_ptr<Model> model;
-    std::shared_ptr<Mesh<>> mesh;
+    std::shared_ptr<Mesh<Types>> mesh;
     std::shared_ptr<Animation> animation;
     std::shared_ptr<Animator> animator;
 

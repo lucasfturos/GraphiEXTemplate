@@ -19,11 +19,11 @@ void VolumetricRender::loadModel() {
 }
 
 void VolumetricRender::setupMesh() {
-    mesh = std::make_shared<Mesh<>>(
+    mesh = std::make_shared<Mesh<Types>>(
         cubeVertices, cubeIndices, "assets/shader/VolumeRender/vertex.shader",
         "assets/shader/VolumeRender/fragment.shader");
 
-    Mesh<>::VertexBufferLayoutMap layoutMap;
+    Mesh<Types>::VertexBufferLayoutMap layoutMap;
 
     layoutMap["vertices"] = [](std::shared_ptr<VertexBufferLayout> layout) {
         layout->push<GLfloat>(3);
@@ -94,7 +94,7 @@ void VolumetricRender::loadTextures() {
 }
 
 void VolumetricRender::setUniforms() {
-    Mesh<>::UniformsMap uniforms;
+    Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uModel"] = [](std::shared_ptr<Shader> shader) {
         shader->setUniform1i("uModel", 0);
@@ -108,7 +108,7 @@ void VolumetricRender::setUniforms() {
 }
 
 void VolumetricRender::setRunUniforms() {
-    Mesh<>::UniformsMap uniforms;
+    Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);

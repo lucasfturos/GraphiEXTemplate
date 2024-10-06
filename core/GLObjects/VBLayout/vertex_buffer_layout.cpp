@@ -6,14 +6,14 @@ template <typename T> void push(GLuint /* count */) {
                   "GLfloat, GLuint, GLint, GLubyte.");
 }
 
-template <> void VertexBufferLayout::push<GLint>(GLuint count) {
-    m_elements.push_back({GL_INT, count, GL_FALSE});
-    m_stride += count * VertexBufferElement::getSizeOfType(GL_INT);
-}
-
 template <> void VertexBufferLayout::push<GLfloat>(GLuint count) {
     m_elements.push_back({GL_FLOAT, count, GL_FALSE});
     m_stride += count * VertexBufferElement::getSizeOfType(GL_FLOAT);
+}
+
+template <> void VertexBufferLayout::push<GLint>(GLuint count) {
+    m_elements.push_back({GL_INT, count, GL_FALSE});
+    m_stride += count * VertexBufferElement::getSizeOfType(GL_INT);
 }
 
 template <> void VertexBufferLayout::push<GLuint>(GLuint count) {

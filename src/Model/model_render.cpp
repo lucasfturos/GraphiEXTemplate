@@ -26,11 +26,11 @@ void ModelRender::loadModel() {
 void ModelRender::setupMesh() {
     auto texCoords = model->getTexCoords();
     mesh =
-        std::make_shared<Mesh<>>(vertices, faces, normals, texCoords, boneIDs,
+        std::make_shared<Mesh<Types>>(vertices, faces, normals, texCoords, boneIDs,
                                  weights, "assets/shader/Model/vertex.shader",
                                  "assets/shader/Model/fragment.shader");
 
-    Mesh<>::VertexBufferLayoutMap layoutMap;
+    Mesh<Types>::VertexBufferLayoutMap layoutMap;
 
     layoutMap["vertices"] = [](std::shared_ptr<VertexBufferLayout> layout) {
         layout->push<GLfloat>(3);
@@ -73,7 +73,7 @@ void ModelRender::loadTextures() {
 }
 
 void ModelRender::setUniforms() {
-    Mesh<>::UniformsMap uniforms;
+    Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uTexture1"] = [](std::shared_ptr<Shader> shader) {
         shader->setUniform1i("uTexture1", 0);
@@ -102,7 +102,7 @@ void ModelRender::setUniforms() {
 }
 
 void ModelRender::setRunUniforms() {
-    Mesh<>::UniformsMap uniforms;
+    Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);

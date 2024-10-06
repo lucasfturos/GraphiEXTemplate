@@ -10,14 +10,14 @@ struct VertexBufferElement {
 
     static GLuint getSizeOfType(GLuint type) {
         switch (type) {
-        case GL_INT:
-            return 4;
         case GL_FLOAT:
-            return 4;
+            return sizeof(GLfloat);
         case GL_UNSIGNED_INT:
-            return 4;
+            return sizeof(GLuint);
+        case GL_INT:
+            return sizeof(GLint);
         case GL_UNSIGNED_BYTE:
-            return 1;
+            return sizeof(GLubyte);
         }
         return 0;
     }
@@ -27,17 +27,14 @@ template <typename T> constexpr bool t_always_false() { return false; }
 
 class VertexBufferLayout {
   private:
-    std::vector<VertexBufferElement> m_elements;
     GLuint m_stride;
+    std::vector<VertexBufferElement> m_elements;
 
   public:
     VertexBufferLayout() : m_stride(0) {}
 
     template <typename T> void push(GLuint count);
 
-    inline const std::vector<VertexBufferElement> getElements() const {
-        return m_elements;
-    }
-
     inline GLuint getStride() const { return m_stride; }
+    inline const auto &getElements() const { return m_elements; }
 };

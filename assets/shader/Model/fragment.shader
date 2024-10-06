@@ -2,9 +2,9 @@
 
 out vec4 color;
 
-in vec2 TexCoords;
-in vec3 FragPos;
 in vec3 Normal;
+in vec3 FragPos;
+in vec2 TexCoords;
 
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;

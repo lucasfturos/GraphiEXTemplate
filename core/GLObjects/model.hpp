@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common/util.hpp"
-#include "texture.hpp"
+#include "Texture/texture.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>

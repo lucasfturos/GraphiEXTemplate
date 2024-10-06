@@ -33,11 +33,11 @@ void Objects::update() {
         break;
     }
 
-    mesh = std::make_shared<Mesh<>>(vertices, indices,
-                                    "assets/shader/Objects/vertex.shader",
-                                    "assets/shader/Objects/fragment.shader");
+    mesh = std::make_shared<Mesh<Types>>(
+        vertices, indices, "assets/shader/Objects/vertex.shader",
+        "assets/shader/Objects/fragment.shader");
 
-    Mesh<>::VertexBufferLayoutMap layoutMap = {
+    Mesh<Types>::VertexBufferLayoutMap layoutMap = {
         {"vertices",
          [](std::shared_ptr<VertexBufferLayout> layout) {
              layout->push<GLfloat>(3);
@@ -53,7 +53,7 @@ void Objects::run() {
         return;
     }
 
-    Mesh<>::UniformsMap uniforms;
+    Mesh<Types>::UniformsMap uniforms;
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         modelMat = glm::mat4(1.0f);
         glm::vec3 scale(3.0f);

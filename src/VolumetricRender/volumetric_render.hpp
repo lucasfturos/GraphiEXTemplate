@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLObjects/mesh.hpp"
+#include "GLObjects/Mesh/mesh.hpp"
 #include "GLObjects/model.hpp"
 
 #include <glm/glm.hpp>
@@ -28,7 +28,7 @@ class VolumetricRender {
     std::vector<GLuint> modelFaces;
     std::vector<glm::vec3> modelVertices;
 
-    std::shared_ptr<Mesh<>> mesh;
+    std::shared_ptr<Mesh<Types>> mesh;
 
     void loadModel();
     void setupMesh();

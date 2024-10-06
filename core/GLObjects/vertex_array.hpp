@@ -1,17 +1,18 @@
 #pragma once
 
+#include "VBLayout/vertex_buffer_layout.hpp"
 #include "vertex_buffer.hpp"
-#include "vertex_buffer_layout.hpp"
+
+#include <set>
+#include <stdexcept>
 
 class VertexArray {
   private:
     GLuint m_RendererID;
-    GLuint m_AttributeIndex;
+    std::set<GLuint> m_UsedAttributeIndices;
 
   public:
-    VertexArray() : m_RendererID(0), m_AttributeIndex(0) {
-        glGenVertexArrays(1, &m_RendererID);
-    }
+    VertexArray() : m_RendererID(0) { glGenVertexArrays(1, &m_RendererID); }
 
     ~VertexArray() { glDeleteVertexArrays(1, &m_RendererID); }
 
@@ -20,25 +21,30 @@ class VertexArray {
 
     VertexArray(VertexArray &&other) noexcept
         : m_RendererID(other.m_RendererID),
-          m_AttributeIndex(other.m_AttributeIndex) {
+          m_UsedAttributeIndices(std::move(other.m_UsedAttributeIndices)) {
         other.m_RendererID = 0;
-        other.m_AttributeIndex = 0;
     }
 
     VertexArray &operator=(VertexArray &&other) noexcept {
         if (this != &other) {
             glDeleteVertexArrays(1, &m_RendererID);
             m_RendererID = other.m_RendererID;
-            m_AttributeIndex = other.m_AttributeIndex;
+            m_UsedAttributeIndices = std::move(other.m_UsedAttributeIndices);
             other.m_RendererID = 0;
-            other.m_AttributeIndex = 0;
         }
         return *this;
     }
 
     template <typename T>
-    void addBuffer(const VertexBuffer<T> &vb,
-                   const VertexBufferLayout &layout) {
+    void addBuffer(const VertexBuffer<T> &vb, const VertexBufferLayout &layout,
+                   GLuint attributeIndex) {
+        if (m_UsedAttributeIndices.find(attributeIndex) !=
+            m_UsedAttributeIndices.end()) {
+            throw std::invalid_argument("Error: Attribute index " +
+                                        std::to_string(attributeIndex) +
+                                        " is already in use.");
+        }
+
         bind();
         vb.bind();
 
@@ -46,17 +52,18 @@ class VertexArray {
 
         const auto &elements = layout.getElements();
         for (const auto &element : elements) {
-            glEnableVertexAttribArray(m_AttributeIndex);
-            glVertexAttribPointer(m_AttributeIndex, element.count, element.type,
+            glEnableVertexAttribArray(attributeIndex);
+            glVertexAttribPointer(attributeIndex, element.count, element.type,
                                   element.normalized, layout.getStride(),
                                   reinterpret_cast<const void *>(offset));
             offset += element.count *
                       VertexBufferElement::getSizeOfType(element.type);
-            ++m_AttributeIndex;
         }
 
         vb.unbind();
         unbind();
+
+        m_UsedAttributeIndices.insert(attributeIndex);
     }
 
     void bind() const { glBindVertexArray(m_RendererID); }

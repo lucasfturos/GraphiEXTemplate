@@ -1,10 +1,10 @@
 #pragma once
 
-#include "GLObjects/framebuffer.hpp"
 #include "imgui.h"
 
 #include "Common/util.hpp"
-#include "GLObjects/mesh.hpp"
+#include "GLObjects/Mesh/mesh.hpp"
+#include "GLObjects/framebuffer.hpp"
 
 #include <memory>
 
@@ -34,7 +34,7 @@ class ControlPanel {
   private:
     float bottomControlPanelHeight;
     std::shared_ptr<FrameBuffer> framebuffer;
-    std::shared_ptr<Mesh<glm::vec3, GLuint>> cubeMesh;
+    std::shared_ptr<Mesh<MeshTypes<glm::vec3, GLuint>>> cubeMesh;
 
     void setupGizmo();
 
@@ -51,7 +51,8 @@ class ControlPanel {
     void resetTransformations();
     void renderObjectTypeSelector();
     void handleMouseInteraction(const ImVec2 &, const ImVec2 &);
-    Mesh<glm::vec3, GLuint>::UniformsMap createUniforms(const ImVec2 &);
+    Mesh<MeshTypes<glm::vec3, GLuint>>::UniformsMap
+    createUniforms(const ImVec2 &);
 
   public:
     ControlPanel();

@@ -30,7 +30,8 @@ void ControlPanel::renderGizmoWindow() {
 
     handleMouseInteraction(windowPos, windowMax);
 
-    Mesh<glm::vec3, GLuint>::UniformsMap uniforms = createUniforms(windowSize);
+    Mesh<MeshTypes<glm::vec3, GLuint>>::UniformsMap uniforms =
+        createUniforms(windowSize);
     cubeMesh->setUniforms(uniforms);
     cubeMesh->draw();
 
@@ -65,7 +66,7 @@ void ControlPanel::handleMouseInteraction(const ImVec2 &windowPos,
     }
 }
 
-Mesh<glm::vec3, GLuint>::UniformsMap
+Mesh<MeshTypes<glm::vec3, GLuint>>::UniformsMap
 ControlPanel::createUniforms(const ImVec2 &windowSize) {
     return {
         {"uMVP", [this, windowSize](std::shared_ptr<Shader> shader) {
