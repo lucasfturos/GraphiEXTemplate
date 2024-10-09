@@ -11,29 +11,29 @@
 
 class ModelRender {
   protected:
-    const glm::mat4 viewMat =
+    const glm::mat4 VIEW_MATRIX =
         glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f));
 
   private:
-    std::shared_ptr<Model> model;
-    std::shared_ptr<Mesh<Types>> mesh;
-    std::shared_ptr<Animation> animation;
-    std::shared_ptr<Animator> animator;
+    std::shared_ptr<Model> m_Model;
+    std::shared_ptr<Mesh<Types>> m_Mesh;
+    std::shared_ptr<Animation> m_Animation;
+    std::shared_ptr<Animator> m_Animator;
 
-    glm::mat4 modelMat;
-    glm::mat4 projMat;
+    glm::mat4 m_ModelMatrix;
+    glm::mat4 m_ProjMatrix;
 
   private:
-    glm::vec3 scale;
-    glm::vec2 rotation;
-    glm::vec3 translation;
+    glm::vec3 m_Scale;
+    glm::vec2 m_Rotation;
+    glm::vec3 m_Translation;
 
-    std::vector<GLuint> faces;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-    std::vector<GLint> boneIDs;
-    std::vector<GLfloat> weights;
+    std::vector<GLuint> m_Faces;
+    std::vector<glm::vec3> m_Vertices;
+    std::vector<glm::vec3> m_Normals;
+    std::vector<glm::ivec4> m_BoneIDs;
+    std::vector<glm::vec4> m_Weights;
 
     void loadModel();
     void setupMesh();
@@ -44,12 +44,12 @@ class ModelRender {
   public:
     ModelRender(const std::string &filepath);
 
-    void setDeltaTime(float dt) { animator->update(dt); }
+    void setDeltaTime(float dt) { m_Animator->update(dt); }
 
-    void setScale(glm::vec3 s) { scale = s; }
-    void setRotation(glm::vec2 rot) { rotation = rot; }
-    void setTranslation(glm::vec3 trans) { translation = trans; }
-    void setProjection(glm::mat4 projection) { projMat = projection; }
+    void setScale(glm::vec3 scale) { m_Scale = scale; }
+    void setRotation(glm::vec2 rotation) { m_Rotation = rotation; }
+    void setProjection(glm::mat4 projection) { m_ProjMatrix = projection; }
+    void setTranslation(glm::vec3 translation) { m_Translation = translation; }
 
     void setup();
     void run();

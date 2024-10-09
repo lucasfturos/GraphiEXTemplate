@@ -11,7 +11,7 @@
 
 template <typename VertexType = glm::vec3, typename FaceType = GLuint,
           typename TexType = glm::vec2, typename NormalType = glm::vec3,
-          typename BoneIdType = GLint, typename WeightType = GLfloat>
+          typename BoneIdType = glm::ivec4, typename WeightType = glm::vec4>
 struct MeshTypes {
     using Vertex = VertexType;
     using Face = FaceType;

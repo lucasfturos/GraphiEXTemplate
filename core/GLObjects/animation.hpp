@@ -41,15 +41,14 @@ class Animation {
                                  [&](const std::shared_ptr<Bone> &bone) {
                                      return bone->getBoneName() == name;
                                  });
-
-        return (iter != m_Bones.end()) ? *iter : nullptr;
+        return (iter == m_Bones.end()) ? nullptr : *iter;
     }
 
     float getDuration() { return m_Duration; }
     float getTicksPerSecond() { return m_TicksPerSecond; }
 
     const auto &getRootNode() { return m_RootNode; }
-    const auto &getBoneIDMap() { return m_BoneInfoMap; }
+    const auto &getBoneInfoMap() { return m_BoneInfoMap; }
 
   private:
     void readMissingBones(const aiAnimation *animation,
@@ -63,7 +62,7 @@ class Animation {
             std::string boneName = channel->mNodeName.data;
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
                 boneInfoMap[boneName].id = boneCount;
-                boneCount++;
+                ++boneCount;
             }
             m_Bones.push_back(
                 std::make_shared<Bone>(boneInfoMap[channel->mNodeName.data].id,

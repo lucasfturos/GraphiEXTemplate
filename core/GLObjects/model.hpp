@@ -84,8 +84,8 @@ class Model {
                                      : glm::vec2(0.0f, 0.0f);
             m_TexCoords.push_back(texCoord);
 
-            m_BoneIDs.push_back(-1);
-            m_Weights.push_back(0);
+            m_BoneIDs.push_back(glm::ivec4(-1));
+            m_Weights.push_back(glm::vec4(0));
         }
 
         for (std::size_t i = 0; i < mesh->mNumFaces; ++i) {
@@ -98,11 +98,11 @@ class Model {
         processBones(mesh);
     }
 
-    void setVertexBoneData(int boneID, float weight) {
+    void setVertexBoneData(int vertexIndex, int boneID, float weight) {
         for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
-            if (m_BoneIDs[i] < 0) {
-                m_Weights[i] = weight;
-                m_BoneIDs[i] = boneID;
+            if (m_BoneIDs[vertexIndex][i] < 0) {
+                m_BoneIDs[vertexIndex][i] = boneID;
+                m_Weights[vertexIndex][i] = weight;
                 break;
             }
         }
@@ -130,8 +130,9 @@ class Model {
             auto weights = mesh->mBones[boneIndex]->mWeights;
             int numWeights = mesh->mBones[boneIndex]->mNumWeights;
             for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex) {
+                int vertexIndex = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
-                setVertexBoneData(boneID, weight);
+                setVertexBoneData(vertexIndex, boneID, weight);
             }
         }
     }
@@ -140,8 +141,8 @@ class Model {
     std::vector<glm::vec3> m_Normals;
     std::vector<glm::vec2> m_TexCoords;
     std::vector<GLuint> m_Faces;
-    std::vector<GLint> m_BoneIDs;
-    std::vector<GLfloat> m_Weights;
+    std::vector<glm::ivec4> m_BoneIDs;
+    std::vector<glm::vec4> m_Weights;
 
     int m_BoneCounter;
     std::map<std::string, BoneInfo> m_BoneInfoMap;

@@ -82,7 +82,7 @@ class Shader {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
-    void setUniformMat4f(const std::string &name,
+    void setUniformMat4fv(const std::string &name,
                          const std::vector<glm::mat4> &matrices) {
         GLint location = getUniformLocation(name);
         glUniformMatrix4fv(location, static_cast<GLsizei>(matrices.size()),

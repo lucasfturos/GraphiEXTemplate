@@ -26,7 +26,7 @@ class Animator {
         std::string nodeName = node->name;
         glm::mat4 nodeTransform = node->transformation;
 
-        std::shared_ptr<Bone> bone = m_CurrentAnimation->findBone(nodeName);
+        auto bone = m_CurrentAnimation->findBone(nodeName);
 
         if (bone) {
             bone->update(m_CurrentTime);
@@ -35,7 +35,7 @@ class Animator {
 
         glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-        const auto &boneInfoMap = m_CurrentAnimation->getBoneIDMap();
+        const auto &boneInfoMap = m_CurrentAnimation->getBoneInfoMap();
         if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
             std::size_t index = boneInfoMap.at(nodeName).id;
             glm::mat4 offset = boneInfoMap.at(nodeName).offSet;

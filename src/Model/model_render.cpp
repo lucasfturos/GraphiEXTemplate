@@ -1,11 +1,11 @@
 #include "model_render.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
-    : model(std::make_shared<Model>(filepath)),
-      animation(std::make_shared<Animation>(filepath, model)),
-      animator(std::make_shared<Animator>(animation)),
-      modelMat(glm::mat4(1.0f)),
-      projMat(
+    : m_Model(std::make_shared<Model>(filepath)),
+      m_Animation(std::make_shared<Animation>(filepath, m_Model)),
+      m_Animator(std::make_shared<Animator>(m_Animation)),
+      m_ModelMatrix(glm::mat4(1.0f)),
+      m_ProjMatrix(
           glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)) {}
 
 void ModelRender::setup() {
@@ -16,19 +16,19 @@ void ModelRender::setup() {
 }
 
 void ModelRender::loadModel() {
-    vertices = model->getVertices();
-    faces = model->getFaces();
-    normals = model->getNormals();
-    boneIDs = model->getBoneIds();
-    weights = model->getWeights();
+    m_Vertices = m_Model->getVertices();
+    m_Faces = m_Model->getFaces();
+    m_Normals = m_Model->getNormals();
+    m_BoneIDs = m_Model->getBoneIds();
+    m_Weights = m_Model->getWeights();
 }
 
 void ModelRender::setupMesh() {
-    auto texCoords = model->getTexCoords();
-    mesh =
-        std::make_shared<Mesh<Types>>(vertices, faces, normals, texCoords, boneIDs,
-                                 weights, "assets/shader/Model/vertex.shader",
-                                 "assets/shader/Model/fragment.shader");
+    auto texCoords = m_Model->getTexCoords();
+    m_Mesh = std::make_shared<Mesh<Types>>(
+        m_Vertices, m_Faces, m_Normals, texCoords, m_BoneIDs, m_Weights,
+        "assets/shader/Model/vertex.shader",
+        "assets/shader/Model/fragment.shader");
 
     Mesh<Types>::VertexBufferLayoutMap layoutMap;
 
@@ -48,7 +48,7 @@ void ModelRender::setupMesh() {
         layout->push<GLfloat>(MAX_BONE_INFLUENCE);
     };
 
-    mesh->setup(layoutMap);
+    m_Mesh->setup(layoutMap);
 }
 
 void ModelRender::loadTextures() {
@@ -66,10 +66,10 @@ void ModelRender::loadTextures() {
     auto specularTexture = std::make_shared<Texture>(specularPath);
     auto normalTexture = std::make_shared<Texture>(normalPath);
 
-    mesh->setTexture(diffuseTexture);
-    mesh->setTexture(glowTexture);
-    mesh->setTexture(specularTexture);
-    mesh->setTexture(normalTexture);
+    m_Mesh->setTexture(diffuseTexture);
+    m_Mesh->setTexture(glowTexture);
+    m_Mesh->setTexture(specularTexture);
+    m_Mesh->setTexture(normalTexture);
 }
 
 void ModelRender::setUniforms() {
@@ -94,11 +94,11 @@ void ModelRender::setUniforms() {
         shader->setUniform3f("uLightColor", glm::vec3(1.0f));
     };
     uniforms["uCameraPosition"] = [this](std::shared_ptr<Shader> shader) {
-        glm::vec3 cameraPos = glm::vec3(glm::inverse(viewMat)[3]);
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(VIEW_MATRIX)[3]);
         shader->setUniform3f("uCameraPosition", cameraPos);
     };
 
-    mesh->setUniforms(uniforms);
+    m_Mesh->setUniforms(uniforms);
 }
 
 void ModelRender::setRunUniforms() {
@@ -106,36 +106,35 @@ void ModelRender::setRunUniforms() {
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, scale * 3.0f);
-        model = glm::translate(model, translation);
+        model = glm::scale(model, m_Scale * 4.0f);
+        model = glm::translate(model, m_Translation);
 
-        glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), rotation.x,
+        glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
                                                 glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), -rotation.y,
+        glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), -m_Rotation.y,
                                                 glm::vec3(1.0f, 0.0f, 0.0f));
         model *= rotationMatrixX * rotationMatrixY;
-        modelMat = model;
+        m_ModelMatrix = model;
 
-        glm::mat4 mvp = projMat * viewMat * model;
+        glm::mat4 mvp = m_ProjMatrix * VIEW_MATRIX * model;
         shader->setUniformMat4f("uMVP", mvp);
     };
     uniforms["uFinalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {
-        std::vector<glm::mat4> finalBoneMatrices =
-            animator->getFinalBoneMatrices();
-        shader->setUniformMat4f("uFinalBonesMatrices", finalBoneMatrices);
+        auto finalBoneMatrices = m_Animator->getFinalBoneMatrices();
+        shader->setUniformMat4fv("uFinalBonesMatrices", finalBoneMatrices);
     };
     uniforms["uModel"] = [this](std::shared_ptr<Shader> shader) {
-        shader->setUniformMat4f("uModel", modelMat);
+        shader->setUniformMat4f("uModel", m_ModelMatrix);
     };
 
-    mesh->setUniforms(uniforms);
+    m_Mesh->setUniforms(uniforms);
 }
 
 void ModelRender::run() {
-    if (!mesh || !animator)
+    if (!m_Mesh || !m_Animator)
         return;
 
     setRunUniforms();
 
-    mesh->draw();
+    m_Mesh->draw();
 }
