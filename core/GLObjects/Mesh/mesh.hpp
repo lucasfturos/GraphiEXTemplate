@@ -9,11 +9,11 @@
 #include <memory>
 #include <unordered_map>
 
-template <typename VertexType = glm::vec3, typename FaceType = GLuint,
+template <typename VerticesType = glm::vec3, typename FaceType = GLuint,
           typename TexType = glm::vec2, typename NormalType = glm::vec3,
           typename BoneIdType = glm::ivec4, typename WeightType = glm::vec4>
 struct MeshTypes {
-    using Vertex = VertexType;
+    using Vertices = VerticesType;
     using Face = FaceType;
     using Tex = TexType;
     using Normal = NormalType;
@@ -25,32 +25,32 @@ using Types = MeshTypes<>;
 
 template <typename Types> class Mesh {
   public:
-    using VertexType = typename Types::Vertex;
+    using VerticesType = typename Types::Vertices;
     using FaceType = typename Types::Face;
     using TexType = typename Types::Tex;
     using NormalType = typename Types::Normal;
     using BoneIdType = typename Types::BoneId;
     using WeightType = typename Types::Weight;
 
-    Mesh(const std::vector<VertexType> &vertices,
+    Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath);
 
-    Mesh(const std::vector<VertexType> &vertices,
+    Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath);
 
-    Mesh(const std::vector<VertexType> &vertices,
+    Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::vector<NormalType> &normals,
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath);
 
-    Mesh(const std::vector<VertexType> &vertices,
+    Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::vector<TexType> &texCoords,
          const std::vector<BoneIdType> &boneIds,
@@ -58,7 +58,7 @@ template <typename Types> class Mesh {
          const std::string &vertexShaderPath,
          const std::string &fragmentShaderPath);
 
-    Mesh(const std::vector<VertexType> &vertices,
+    Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<GLuint> &faces,
          const std::vector<NormalType> &normals,
          const std::vector<TexType> &texCoords,
@@ -96,19 +96,19 @@ template <typename Types> class Mesh {
     void bindTextures();
     void unbindTextures();
 
-    std::shared_ptr<VertexArray> vertexArray;
-    std::shared_ptr<VertexBuffer<VertexType>> vertexBuffer;
-    std::shared_ptr<IndexBuffer> indexBuffer;
-    std::shared_ptr<VertexBuffer<NormalType>> normalBuffer;
-    std::shared_ptr<VertexBuffer<TexType>> textureBuffer;
+    std::shared_ptr<VertexArray> m_VertexArray;
+    std::shared_ptr<VertexBuffer<VerticesType>> m_VerticesBuffer;
+    std::shared_ptr<IndexBuffer> m_FacesBuffer;
+    std::shared_ptr<VertexBuffer<NormalType>> m_NormalBuffer;
+    std::shared_ptr<VertexBuffer<TexType>> m_TextureBuffer;
 
-    std::shared_ptr<VertexBuffer<BoneIdType>> boneIDBuffer;
-    std::shared_ptr<VertexBuffer<WeightType>> weightBuffer;
+    std::shared_ptr<VertexBuffer<BoneIdType>> m_BoneIDBuffer;
+    std::shared_ptr<VertexBuffer<WeightType>> m_WeightBuffer;
 
-    std::shared_ptr<Shader> shader;
-    std::vector<std::shared_ptr<Texture>> textures;
+    std::shared_ptr<Shader> m_Shader;
+    std::vector<std::shared_ptr<Texture>> m_Textures;
 
-    bool hasTexture;
+    bool m_HasTexture;
 };
 
 template class Mesh<Types>;

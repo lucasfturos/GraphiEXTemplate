@@ -27,14 +27,14 @@ template <typename T> constexpr bool t_always_false() { return false; }
 
 class VertexBufferLayout {
   private:
-    GLuint m_stride;
-    std::vector<VertexBufferElement> m_elements;
+    GLuint m_Stride;
+    std::vector<VertexBufferElement> m_Elements;
 
   public:
-    VertexBufferLayout() : m_stride(0) {}
+    VertexBufferLayout() : m_Stride(0) {}
 
     template <typename T> void push(GLuint count);
 
-    inline GLuint getStride() const { return m_stride; }
-    inline const auto &getElements() const { return m_elements; }
+    inline GLuint getStride() const { return m_Stride; }
+    inline const auto &getElements() const { return m_Elements; }
 };
