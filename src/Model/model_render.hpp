@@ -11,9 +11,8 @@
 
 class ModelRender {
   protected:
-    const glm::mat4 VIEW_MATRIX =
-        glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-                    glm::vec3(0.0f, 1.0f, 0.0f));
+    const glm::mat4 m_ViewMatrix =
+        glm::lookAt({0.0f, 2.0f, 20.0f}, glm::vec3(0.0f), {0.0f, 1.0f, 0.0f});
 
   private:
     std::shared_ptr<Model> m_Model;
@@ -42,7 +41,7 @@ class ModelRender {
     void setRunUniforms();
 
   public:
-    ModelRender(const std::string &filepath);
+    ModelRender(const std::string &);
 
     void setDeltaTime(float dt) { m_Animator->update(dt); }
 

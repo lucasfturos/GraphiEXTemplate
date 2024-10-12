@@ -1,4 +1,5 @@
 #include "model_render.hpp"
+#include "GLObjects/VBLayout/vertex_buffer_layout.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
     : m_Model(std::make_shared<Model>(filepath)),
@@ -32,21 +33,11 @@ void ModelRender::setupMesh() {
 
     Mesh<Types>::VertexBufferLayoutMap layoutMap;
 
-    layoutMap["vertices"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLfloat>(3);
-    };
-    layoutMap["normals"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLfloat>(3);
-    };
-    layoutMap["texCoords"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLfloat>(2);
-    };
-    layoutMap["boneIDs"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLint>(MAX_BONE_INFLUENCE);
-    };
-    layoutMap["weights"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLfloat>(MAX_BONE_INFLUENCE);
-    };
+    layoutMap["vertices"] = &LayoutAttribute<GLfloat, 3>::setup;
+    layoutMap["normals"] = &LayoutAttribute<GLfloat, 3>::setup;
+    layoutMap["texCoords"] = &LayoutAttribute<GLfloat, 2>::setup;
+    layoutMap["boneIDs"] = &LayoutAttribute<GLint, MAX_BONE_INFLUENCE>::setup;
+    layoutMap["weights"] = &LayoutAttribute<GLfloat, MAX_BONE_INFLUENCE>::setup;
 
     m_Mesh->setup(layoutMap);
 }
@@ -94,7 +85,7 @@ void ModelRender::setUniforms() {
         shader->setUniform3f("uLightColor", glm::vec3(1.0f));
     };
     uniforms["uCameraPosition"] = [this](std::shared_ptr<Shader> shader) {
-        glm::vec3 cameraPos = glm::vec3(glm::inverse(VIEW_MATRIX)[3]);
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(m_ViewMatrix)[3]);
         shader->setUniform3f("uCameraPosition", cameraPos);
     };
 
@@ -109,14 +100,14 @@ void ModelRender::setRunUniforms() {
         model = glm::scale(model, m_Scale * 4.0f);
         model = glm::translate(model, m_Translation);
 
-        glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
-                                                glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), -m_Rotation.y,
-                                                glm::vec3(1.0f, 0.0f, 0.0f));
-        model *= rotationMatrixX * rotationMatrixY;
+        glm::mat4 rotMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
+                                           glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 rotMatrixY = glm::rotate(glm::mat4(1.0f), -m_Rotation.y,
+                                           glm::vec3(1.0f, 0.0f, 0.0f));
+        model *= rotMatrixX * rotMatrixY;
         m_ModelMatrix = model;
 
-        glm::mat4 mvp = m_ProjMatrix * VIEW_MATRIX * model;
+        glm::mat4 mvp = m_ProjMatrix * m_ViewMatrix * model;
         shader->setUniformMat4f("uMVP", mvp);
     };
     uniforms["uFinalBonesMatrices"] = [this](std::shared_ptr<Shader> shader) {

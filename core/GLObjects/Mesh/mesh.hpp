@@ -9,6 +9,12 @@
 #include <memory>
 #include <unordered_map>
 
+template <typename T, int Size> struct LayoutAttribute {
+    static void setup(std::shared_ptr<VertexBufferLayout> layout) {
+        layout->push<T>(Size);
+    }
+};
+
 template <typename VerticesType = glm::vec3, typename FaceType = GLuint,
           typename TexType = glm::vec2, typename NormalType = glm::vec3,
           typename BoneIdType = glm::ivec4, typename WeightType = glm::vec4>
