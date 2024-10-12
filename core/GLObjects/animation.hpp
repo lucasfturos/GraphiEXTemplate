@@ -60,7 +60,7 @@ class Animation {
 
         for (auto i = 0U; i < animation->mNumChannels; ++i) {
             auto channel = animation->mChannels[i];
-            std::string boneName = channel->mNodeName.data;
+            auto boneName = channel->mNodeName.data;
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
                 boneInfoMap[boneName].id = boneCount;
                 ++boneCount;
