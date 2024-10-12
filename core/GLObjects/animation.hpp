@@ -4,8 +4,6 @@
 #include "bone.hpp"
 #include "model.hpp"
 
-#include <algorithm>
-
 struct AssimpNodeData {
     glm::mat4 transformation;
     std::string name;
@@ -32,7 +30,7 @@ class Animation {
 
         readHeirarchyData(m_RootNode, scene->mRootNode);
         m_RootNode.transformation = glm::mat4(1.0f);
-        
+
         readMissingBones(animation, model);
     }
 
