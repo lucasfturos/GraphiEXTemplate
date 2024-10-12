@@ -20,18 +20,6 @@ enum class ObjectType {
     Cube,
 };
 
-template <typename Vec3Type, typename FaceType, typename NormalType,
-          typename TexCoordType>
-struct MeshData {
-    std::vector<Vec3Type> vertices;
-    std::vector<FaceType> faces;
-    std::vector<NormalType> normals;
-    std::vector<TexCoordType> textures;
-};
-
-using MeshDataModel = MeshData<glm::vec3, unsigned int, glm::vec3, glm::vec2>;
-using MeshDataObj = MeshData<glm::vec3, glm::ivec3, glm::vec3, glm::vec2>;
-
 inline std::string vec3ToString(const glm::vec3 &vec) {
     std::stringstream ss;
     ss << "vec3(" << vec.x << ", " << vec.y << ", " << vec.z << ")";

@@ -113,9 +113,9 @@ class Bone {
 
         int p0Index = getPositionIndex(animationTime);
         int p1Index = p0Index + 1;
-        float scaleFactor =
-            getScaleFactor(m_Positions[p0Index].timeStamp,
-                           m_Positions[p1Index].timeStamp, animationTime);
+            float scaleFactor =
+                getScaleFactor(m_Positions[p0Index].timeStamp,
+                            m_Positions[p1Index].timeStamp, animationTime);
         glm::vec3 finalPosition =
             glm::mix(m_Positions[p0Index].position,
                      m_Positions[p1Index].position, scaleFactor);

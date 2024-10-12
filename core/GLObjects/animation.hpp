@@ -31,6 +31,8 @@ class Animation {
         m_TicksPerSecond = animation->mTicksPerSecond;
 
         readHeirarchyData(m_RootNode, scene->mRootNode);
+        m_RootNode.transformation = glm::mat4(1.0f);
+        
         readMissingBones(animation, model);
     }
 
@@ -53,11 +55,10 @@ class Animation {
   private:
     void readMissingBones(const aiAnimation *animation,
                           std::shared_ptr<Model> &model) {
-        int size = animation->mNumChannels;
         auto &boneInfoMap = model->getBoneInfoMap();
         int &boneCount = model->getBoneCount();
 
-        for (int i = 0; i < size; i++) {
+        for (auto i = 0U; i < animation->mNumChannels; ++i) {
             auto channel = animation->mChannels[i];
             std::string boneName = channel->mNodeName.data;
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
@@ -77,7 +78,7 @@ class Animation {
         dest.name = src->mName.data;
         dest.transformation = aiMatrix4x4ToGLM(src->mTransformation);
         dest.childrenCount = src->mNumChildren;
-        for (std::size_t i = 0; i < src->mNumChildren; ++i) {
+        for (auto i = 0U; i < src->mNumChildren; ++i) {
             AssimpNodeData newData;
             readHeirarchyData(newData, src->mChildren[i]);
             dest.children.push_back(newData);

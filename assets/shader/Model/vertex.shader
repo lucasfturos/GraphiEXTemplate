@@ -17,17 +17,29 @@ uniform mat4 uMVP;
 uniform mat4 uModel;
 uniform mat4 uFinalBonesMatrices[MAX_BONES];
 
+vec4 Pos = vec4(aPos, 1.0);
+
 void main() {
-    mat4 boneTransform = mat4(0.0);
+    vec4 newPos = vec4(0.0f);
+    vec3 newNorm = vec3(0.0f);
+
     for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
-        if (aBoneIDs[i] >= 0) {
-            boneTransform += uFinalBonesMatrices[aBoneIDs[i]] * aWeights[i];
+        if (aBoneIDs[i] == -1) continue;
+        if (aBoneIDs[i] >= MAX_BONES) {
+            newPos = Pos;
+            newNorm = aNormal;
+            break;
         }
+        
+        vec4 localPos = uFinalBonesMatrices[aBoneIDs[i]] * Pos;
+        newPos += localPos * aWeights[i];
+
+        vec3 localNorm = mat3(uFinalBonesMatrices[aBoneIDs[i]]) * aNormal;
+        newNorm += localNorm * aWeights[i];
     }
 
-    vec4 totalPos = boneTransform * vec4(aPos, 1.0);
-    gl_Position = uMVP * totalPos;
-    FragPos = vec3(uModel * totalPos);
-    Normal = mat3(transpose(inverse(uModel))) * aNormal;
+    gl_Position = uMVP * newPos;
+    FragPos = vec3(uModel * newPos);
+    Normal = mat3(transpose(inverse(uModel))) * newNorm;
     TexCoords = aTexCoord;
 }

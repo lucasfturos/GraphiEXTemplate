@@ -97,8 +97,11 @@ void ModelRender::setRunUniforms() {
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, m_Scale * 4.0f);
-        model = glm::translate(model, m_Translation);
+        model = glm::scale(model, (m_Scale == glm::vec3(1.0)) ? glm::vec3(0.07)
+                                                              : m_Scale);
+        model = glm::translate(model, (m_Translation == glm::vec3(0.0f))
+                                          ? glm::vec3(0, -110.0, 0)
+                                          : m_Translation);
 
         glm::mat4 rotMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
                                            glm::vec3(0.0f, 1.0f, 0.0f));

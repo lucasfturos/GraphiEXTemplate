@@ -23,22 +23,21 @@ class Animator {
   private:
     void calculateBoneTransform(const AssimpNodeData *node,
                                 glm::mat4 parentTransform) {
-        std::string nodeName = node->name;
-        glm::mat4 nodeTransform = node->transformation;
+        auto nodeName = node->name;
+        auto nodeTransform = node->transformation;
 
         auto bone = m_CurrentAnimation->findBone(nodeName);
-
         if (bone) {
             bone->update(m_CurrentTime);
             nodeTransform = bone->getLocalTransform();
         }
 
-        glm::mat4 globalTransformation = parentTransform * nodeTransform;
+        auto globalTransformation = parentTransform * nodeTransform;
 
         const auto &boneInfoMap = m_CurrentAnimation->getBoneInfoMap();
         if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
-            std::size_t index = boneInfoMap.at(nodeName).id;
-            glm::mat4 offset = boneInfoMap.at(nodeName).offSet;
+            auto index = boneInfoMap.at(nodeName).id;
+            auto offset = boneInfoMap.at(nodeName).offSet;
             m_FinalBoneMatrices[index] = globalTransformation * offset;
         }
 
