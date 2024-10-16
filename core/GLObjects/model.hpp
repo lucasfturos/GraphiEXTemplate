@@ -13,6 +13,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -48,28 +49,26 @@ class Model {
             filepath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
-            !scene->mRootNode) {
-            std::cerr << "Error loading model: " << importer.GetErrorString()
-                      << '\n';
-            return;
-        }
+            !scene->mRootNode)
+            throw std::runtime_error("Error loading model: " +
+                                     std::string(importer.GetErrorString()));
 
         processNode(scene->mRootNode, scene);
     }
 
     void processNode(aiNode *node, const aiScene *scene) {
-        for (std::size_t i = 0; i < node->mNumMeshes; ++i) {
+        for (auto i = 0U; i < node->mNumMeshes; ++i) {
             aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
             processMesh(mesh, scene);
         }
 
-        for (std::size_t i = 0; i < node->mNumChildren; ++i) {
+        for (auto i = 0U; i < node->mNumChildren; ++i) {
             processNode(node->mChildren[i], scene);
         }
     }
 
     void processMesh(aiMesh *mesh, const aiScene * /* scene */) {
-        for (std::size_t i = 0; i < mesh->mNumVertices; ++i) {
+        for (auto i = 0U; i < mesh->mNumVertices; ++i) {
             glm::vec3 vertex = aiVector3DToGLM(mesh->mVertices[i]);
             m_Vertices.push_back(vertex);
 
@@ -88,11 +87,11 @@ class Model {
             m_Weights.push_back(glm::vec4(0));
         }
 
-        for (std::size_t i = 0; i < mesh->mNumFaces; ++i) {
+        for (auto i = 0U; i < mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
-            for (std::size_t j = 0; j < face.mNumIndices; ++j) {
-                m_Faces.push_back(face.mIndices[j]);
-            }
+            m_Faces.push_back(face.mIndices[0]);
+            m_Faces.push_back(face.mIndices[1]);
+            m_Faces.push_back(face.mIndices[2]);
         }
 
         processBones(mesh);
@@ -109,8 +108,7 @@ class Model {
     }
 
     void processBones(aiMesh *mesh) {
-        for (std::size_t boneIndex = 0; boneIndex < mesh->mNumBones;
-             ++boneIndex) {
+        for (auto boneIndex = 0U; boneIndex < mesh->mNumBones; ++boneIndex) {
             int boneID = -1;
             std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
             if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end()) {
@@ -118,9 +116,9 @@ class Model {
                 newBoneInfo.id = m_BoneCounter;
                 newBoneInfo.offSet =
                     aiMatrix4x4ToGLM(mesh->mBones[boneIndex]->mOffsetMatrix);
-                boneID = m_BoneCounter;
-                m_BoneCounter++;
                 m_BoneInfoMap[boneName] = newBoneInfo;
+                boneID = m_BoneCounter;
+                ++m_BoneCounter;
             } else {
                 boneID = m_BoneInfoMap[boneName].id;
             }

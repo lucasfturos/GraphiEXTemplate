@@ -1,5 +1,4 @@
 #include "model_render.hpp"
-#include "GLObjects/VBLayout/vertex_buffer_layout.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
     : m_Model(std::make_shared<Model>(filepath)),
@@ -49,18 +48,14 @@ void ModelRender::loadTextures() {
         "assets/model/Nightshade/textures/Nightshade_glow.png";
     std::string specularPath =
         "assets/model/Nightshade/textures/Nightshade_specular.png";
-    std::string normalPath =
-        "assets/model/Nightshade/textures/Nightshade_normal.png";
 
     auto diffuseTexture = std::make_shared<Texture>(diffusePath);
     auto glowTexture = std::make_shared<Texture>(glowPath);
     auto specularTexture = std::make_shared<Texture>(specularPath);
-    auto normalTexture = std::make_shared<Texture>(normalPath);
 
     m_Mesh->setTexture(diffuseTexture);
     m_Mesh->setTexture(glowTexture);
     m_Mesh->setTexture(specularTexture);
-    m_Mesh->setTexture(normalTexture);
 }
 
 void ModelRender::setUniforms() {
@@ -74,9 +69,6 @@ void ModelRender::setUniforms() {
     };
     uniforms["uTexture3"] = [](std::shared_ptr<Shader> shader) {
         shader->setUniform1i("uTexture3", 2);
-    };
-    uniforms["uTexture4"] = [](std::shared_ptr<Shader> shader) {
-        shader->setUniform1i("uTexture4", 3);
     };
     uniforms["uLightPos"] = [](std::shared_ptr<Shader> shader) {
         shader->setUniform3f("uLightPos", glm::vec3(10.0f, 1.0f, 10.0f));
@@ -97,7 +89,7 @@ void ModelRender::setRunUniforms() {
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, (m_Scale == glm::vec3(1.0)) ? glm::vec3(0.07)
+        model = glm::scale(model, (m_Scale == glm::vec3(1.0)) ? glm::vec3(0.05)
                                                               : m_Scale);
         model = glm::translate(model, (m_Translation == glm::vec3(0.0f))
                                           ? glm::vec3(0, -110.0, 0)

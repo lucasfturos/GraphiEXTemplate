@@ -2,8 +2,8 @@
 #include "Common/cube.hpp"
 
 VolumetricRender::VolumetricRender(const std::string &filePath)
-    : model(std::make_shared<Model>(filePath)),
-      projMat(
+    : m_Model(std::make_shared<Model>(filePath)),
+      m_ProjMatrix(
           glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)) {}
 
 void VolumetricRender::setup() {
@@ -14,31 +14,27 @@ void VolumetricRender::setup() {
 }
 
 void VolumetricRender::loadModel() {
-    modelVertices = model->getVertices();
-    modelFaces = model->getFaces();
+    m_ModelVertices = m_Model->getVertices();
+    m_ModelFaces = m_Model->getFaces();
 }
 
 void VolumetricRender::setupMesh() {
-    mesh = std::make_shared<Mesh<Types>>(
+    m_Mesh = std::make_shared<Mesh<Types>>(
         cubeVertices, cubeIndices, "assets/shader/VolumeRender/vertex.shader",
         "assets/shader/VolumeRender/fragment.shader");
 
     Mesh<Types>::VertexBufferLayoutMap layoutMap;
-
-    layoutMap["vertices"] = [](std::shared_ptr<VertexBufferLayout> layout) {
-        layout->push<GLfloat>(3);
-    };
-
-    mesh->setup(layoutMap);
+    layoutMap["vertices"] = &LayoutAttribute<GLfloat, 3>::setup;
+    m_Mesh->setup(layoutMap);
 }
 
 std::vector<GLfloat>
 VolumetricRender::generateDensityData(int width, int height, int depth) {
     std::vector<GLfloat> densityData(width * height * depth, 0.0f);
-    for (size_t i = 0; i < modelFaces.size(); i += 3) {
-        glm::vec3 v0 = modelVertices[modelFaces[i + 0]];
-        glm::vec3 v1 = modelVertices[modelFaces[i + 1]];
-        glm::vec3 v2 = modelVertices[modelFaces[i + 2]];
+    for (size_t i = 0; i < m_ModelFaces.size(); i += 3) {
+        glm::vec3 v0 = m_ModelVertices[m_ModelFaces[i + 0]];
+        glm::vec3 v1 = m_ModelVertices[m_ModelFaces[i + 1]];
+        glm::vec3 v2 = m_ModelVertices[m_ModelFaces[i + 2]];
 
         for (const auto &vertex : {v0, v1, v2}) {
             float x = (vertex.x + 1.0f) / 2.0f * (width - 1);
@@ -90,7 +86,7 @@ void VolumetricRender::loadTextures() {
                                              GL_FLOAT, GL_TEXTURE_3D);
 
     texture->updateData(densityData, width, height, depth, GL_RED, GL_FLOAT);
-    mesh->setTexture(texture);
+    m_Mesh->setTexture(texture);
 }
 
 void VolumetricRender::setUniforms() {
@@ -100,11 +96,11 @@ void VolumetricRender::setUniforms() {
         shader->setUniform1i("uModel", 0);
     };
     uniforms["cameraPosition"] = [this](std::shared_ptr<Shader> shader) {
-        glm::vec3 cameraPos = glm::vec3(glm::inverse(viewMat)[3]);
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(m_ViewMatrix)[3]);
         shader->setUniform3f("cameraPosition", cameraPos);
     };
 
-    mesh->setUniforms(uniforms);
+    m_Mesh->setUniforms(uniforms);
 }
 
 void VolumetricRender::setRunUniforms() {
@@ -112,27 +108,27 @@ void VolumetricRender::setRunUniforms() {
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, scale * 4.0f);
-        model = glm::translate(model, translation);
+        model = glm::scale(model, m_Scale * 4.0f);
+        model = glm::translate(model, m_Translation);
 
-        glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), rotation.x,
+        glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
                                                 glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), -rotation.y,
+        glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), -m_Rotation.y,
                                                 glm::vec3(1.0f, 0.0f, 0.0f));
         model *= rotationMatrixX * rotationMatrixY;
 
-        glm::mat4 mvp = projMat * viewMat * model;
+        glm::mat4 mvp = m_ProjMatrix * m_ViewMatrix * model;
         shader->setUniformMat4f("uMVP", mvp);
     };
 
-    mesh->setUniforms(uniforms);
+    m_Mesh->setUniforms(uniforms);
 }
 
 void VolumetricRender::run() {
-    if (!mesh)
+    if (!m_Mesh)
         return;
 
     setRunUniforms();
 
-    mesh->draw();
+    m_Mesh->draw();
 }

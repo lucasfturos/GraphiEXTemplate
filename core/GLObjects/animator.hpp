@@ -32,17 +32,17 @@ class Animator {
             nodeTransform = bone->getLocalTransform();
         }
 
-        auto globalTransformation = parentTransform * nodeTransform;
+        auto finalTransform = parentTransform * nodeTransform;
 
         const auto &boneInfoMap = m_CurrentAnimation->getBoneInfoMap();
         if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
             auto index = boneInfoMap.at(nodeName).id;
             auto offset = boneInfoMap.at(nodeName).offSet;
-            m_FinalBoneMatrices[index] = globalTransformation * offset;
+            m_FinalBoneMatrices[index] = finalTransform * offset;
         }
 
         for (int i = 0; i < node->childrenCount; ++i)
-            calculateBoneTransform(node->children.data(), globalTransformation);
+            calculateBoneTransform(&node->children[i], finalTransform);
     }
 
     float m_CurrentTime;

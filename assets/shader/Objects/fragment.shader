@@ -3,9 +3,6 @@
 in vec3 FragPos;
 out vec4 color;
 
-uniform vec3 uCameraPosition;
-uniform vec3 uObjectPosition;
-
 const vec3 lightPos = vec3(5.0, 5.0, 1.5);
 vec3 lightDir;
 

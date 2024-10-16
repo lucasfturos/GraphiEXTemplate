@@ -10,25 +10,25 @@
 
 class VolumetricRender {
   protected:
-    const glm::mat4 viewMat =
+    const glm::mat4 m_ViewMatrix =
         glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f));
 
   private:
-    std::shared_ptr<Model> model;
+    std::shared_ptr<Model> m_Model;
 
-    glm::mat4 modelMat;
-    glm::mat4 projMat;
+    glm::mat4 m_ModelMatrix;
+    glm::mat4 m_ProjMatrix;
 
   private:
-    glm::vec3 scale;
-    glm::vec2 rotation;
-    glm::vec3 translation;
+    glm::vec3 m_Scale;
+    glm::vec2 m_Rotation;
+    glm::vec3 m_Translation;
 
-    std::vector<GLuint> modelFaces;
-    std::vector<glm::vec3> modelVertices;
+    std::vector<GLuint> m_ModelFaces;
+    std::vector<glm::vec3> m_ModelVertices;
 
-    std::shared_ptr<Mesh<Types>> mesh;
+    std::shared_ptr<Mesh<Types>> m_Mesh;
 
     void loadModel();
     void setupMesh();
@@ -40,10 +40,10 @@ class VolumetricRender {
   public:
     VolumetricRender(const std::string &);
 
-    void setScale(glm::vec3 s) { scale = s; }
-    void setRotation(glm::vec2 rot) { rotation = rot; }
-    void setTranslation(glm::vec3 trans) { translation = trans; }
-    void setProjection(glm::mat4 projection) { projMat = projection; }
+    void setScale(glm::vec3 scale) { m_Scale = scale; }
+    void setRotation(glm::vec2 rotation) { m_Rotation = rotation; }
+    void setProjection(glm::mat4 projection) { m_ProjMatrix = projection; }
+    void setTranslation(glm::vec3 translation) { m_Translation = translation; }
 
     void setup();
     void run();

@@ -11,35 +11,25 @@ out vec3 FragPos;
 out vec2 TexCoords;
 
 #define MAX_BONES 100
-#define MAX_BONE_INFLUENCE 4
 
 uniform mat4 uMVP;
 uniform mat4 uModel;
 uniform mat4 uFinalBonesMatrices[MAX_BONES];
 
-vec4 Pos = vec4(aPos, 1.0);
-
 void main() {
-    vec4 newPos = vec4(0.0f);
-    vec3 newNorm = vec3(0.0f);
+    mat4 boneTransform = mat4(0.0);
+    boneTransform += uFinalBonesMatrices[int(aBoneIDs.x)] * aWeights.x;
+    boneTransform += uFinalBonesMatrices[int(aBoneIDs.y)] * aWeights.y;
+    boneTransform += uFinalBonesMatrices[int(aBoneIDs.z)] * aWeights.z;
+    boneTransform += uFinalBonesMatrices[int(aBoneIDs.w)] * aWeights.w;
 
-    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
-        if (aBoneIDs[i] == -1) continue;
-        if (aBoneIDs[i] >= MAX_BONES) {
-            newPos = Pos;
-            newNorm = aNormal;
-            break;
-        }
-        
-        vec4 localPos = uFinalBonesMatrices[aBoneIDs[i]] * Pos;
-        newPos += localPos * aWeights[i];
+    vec4 pos = boneTransform * vec4(aPos, 1.0);
+    gl_Position = uMVP * pos;
+    FragPos = vec3(uModel * pos);
 
-        vec3 localNorm = mat3(uFinalBonesMatrices[aBoneIDs[i]]) * aNormal;
-        newNorm += localNorm * aWeights[i];
-    }
+    mat3 normalMatrix = mat3(transpose(inverse(uModel)));
+    vec3 norm = mat3(boneTransform) * aNormal;
+    Normal = normalMatrix * norm;
 
-    gl_Position = uMVP * newPos;
-    FragPos = vec3(uModel * newPos);
-    Normal = mat3(transpose(inverse(uModel))) * newNorm;
     TexCoords = aTexCoord;
 }

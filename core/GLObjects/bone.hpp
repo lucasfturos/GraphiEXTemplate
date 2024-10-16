@@ -80,7 +80,7 @@ class Bone {
             if (animationTime < m_Positions[i + 1].timeStamp)
                 return i;
         }
-        return 0;
+        assert(0);
     }
 
     int getRotationIndex(float animationTime) const {
@@ -88,7 +88,7 @@ class Bone {
             if (animationTime < m_Rotations[i + 1].timeStamp)
                 return i;
         }
-        return 0;
+        assert(0);
     }
 
     int getScaleIndex(float animationTime) const {
@@ -96,15 +96,14 @@ class Bone {
             if (animationTime < m_Scales[i + 1].timeStamp)
                 return i;
         }
-        return 0;
+        assert(0);
     }
 
   private:
     float getScaleFactor(float lastTimeStamp, float nextTimeStamp,
                          float animationTime) const {
-        float scaleFactor =
-            (animationTime - lastTimeStamp) / (nextTimeStamp - lastTimeStamp);
-        return scaleFactor;
+        return (animationTime - lastTimeStamp) /
+               (nextTimeStamp - lastTimeStamp);
     }
 
     glm::mat4 interpolatePosition(float animationTime) {
@@ -113,9 +112,9 @@ class Bone {
 
         int p0Index = getPositionIndex(animationTime);
         int p1Index = p0Index + 1;
-            float scaleFactor =
-                getScaleFactor(m_Positions[p0Index].timeStamp,
-                            m_Positions[p1Index].timeStamp, animationTime);
+        float scaleFactor =
+            getScaleFactor(m_Positions[p0Index].timeStamp,
+                           m_Positions[p1Index].timeStamp, animationTime);
         glm::vec3 finalPosition =
             glm::mix(m_Positions[p0Index].position,
                      m_Positions[p1Index].position, scaleFactor);

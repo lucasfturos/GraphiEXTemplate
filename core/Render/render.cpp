@@ -3,15 +3,15 @@
 Render::Render(std::shared_ptr<Scene> scene,
                std::shared_ptr<ControlPanel> controlPanel)
     : window(nullptr), context(nullptr), quit(false), currentScene(scene),
-      controlPanel(controlPanel) {
-    setupWindow();
-    initOpenGL();
-    setupImGui();
-}
+      controlPanel(controlPanel) {}
 
 Render::~Render() { destroyWindow(); }
 
 void Render::setup() {
+    setupWindow();
+    initOpenGL();
+    setupImGui();
+
     controlPanel->setup();
     currentScene->setup();
 }

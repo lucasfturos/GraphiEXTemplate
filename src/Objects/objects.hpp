@@ -9,41 +9,43 @@
 
 class Objects {
   protected:
-    const glm::mat4 viewMat =
+    const glm::mat4 m_ViewMatrix =
         glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f));
 
   private:
-    std::shared_ptr<Cylinder> cylinder;
-    std::shared_ptr<Sphere> sphere;
-    ObjectType objectType;
+    std::shared_ptr<Cylinder> m_Cylinder;
+    std::shared_ptr<Sphere> m_Sphere;
+    ObjectType m_ObjectType;
 
-    float t;
+    float m_Time;
 
   private:
-    glm::mat4 projMat;
-    glm::mat4 modelMat;
-    std::shared_ptr<Mesh<Types>> mesh;
+    glm::mat4 m_ProjMatrix;
+    glm::mat4 m_ModelMatrix;
+    std::shared_ptr<Mesh<Types>> m_Mesh;
 
-    std::vector<GLuint> indices;
-    std::vector<glm::vec3> vertices;
+    std::vector<GLuint> m_Indices;
+    std::vector<glm::vec3> m_Vertices;
 
     void update();
+    void updateVerticesAndIndices();
+    void createMesh();
+    void setupModelMatrix();
 
   public:
     Objects();
 
     void setObjectType(ObjectType type) {
-        if (objectType != type) {
-            objectType = type;
+        if (m_ObjectType != type) {
+            m_ObjectType = type;
             update();
         }
     }
 
-    void setTime(float deltaTime) { t += deltaTime; }
+    void setTime(float dt) { m_Time += dt; }
+    void setProjection(glm::mat4 projection) { m_ProjMatrix = projection; }
 
-    void setProjection(glm::mat4 projection) { projMat = projection; }
-
-    void setup();
+    void setup() { update(); }
     void run();
 };

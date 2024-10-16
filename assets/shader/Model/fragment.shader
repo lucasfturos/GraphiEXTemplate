@@ -9,7 +9,6 @@ in vec2 TexCoords;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
 uniform sampler2D uTexture3;
-uniform sampler2D uTexture4;
 
 uniform vec3 uLightPos;
 uniform vec3 uCameraPosition;
@@ -19,9 +18,8 @@ void main() {
     vec4 diffuseColor = texture(uTexture1, TexCoords);
     vec4 glowColor = texture(uTexture2, TexCoords);
     vec4 specularColor = texture(uTexture3, TexCoords);
-    vec3 normalMap = texture(uTexture4, TexCoords).rgb * 2.0 - 1.0;
 
-    vec3 norm = normalize(Normal + normalMap);
+    vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(uLightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
 
