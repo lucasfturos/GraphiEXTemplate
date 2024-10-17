@@ -8,11 +8,11 @@ Objects::Objects()
       m_ObjectType(ObjectType::None), m_Time(0.0f) {}
 
 void Objects::update() {
-    updateVerticesAndIndices();
+    updateObject();
     createMesh();
 }
 
-void Objects::updateVerticesAndIndices() {
+void Objects::updateObject() {
     m_Vertices.clear();
     m_Indices.clear();
 

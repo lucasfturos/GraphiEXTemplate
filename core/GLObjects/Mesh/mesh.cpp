@@ -167,21 +167,15 @@ template <typename Types> void Mesh<Types>::unbindBuffers() {
 }
 
 template <typename Types> void Mesh<Types>::bindTextures() {
-    if (m_HasTexture) {
-        for (auto i = 0U; i < m_Textures.size(); ++i) {
-            if (m_Textures[i]) {
+    if (m_HasTexture)
+        for (auto i = 0U; i < m_Textures.size(); ++i)
+            if (m_Textures[i])
                 m_Textures[i]->bind(i);
-            }
-        }
-    }
 }
 
 template <typename Types> void Mesh<Types>::unbindTextures() {
-    if (m_HasTexture) {
-        for (auto i = 0U; i < m_Textures.size(); ++i) {
-            if (m_Textures[i]) {
+    if (m_HasTexture)
+        for (auto i = 0U; i < m_Textures.size(); ++i)
+            if (m_Textures[i])
                 m_Textures[i]->unbind();
-            }
-        }
-    }
 }

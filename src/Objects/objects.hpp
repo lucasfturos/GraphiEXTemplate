@@ -29,7 +29,7 @@ class Objects {
     std::vector<glm::vec3> m_Vertices;
 
     void update();
-    void updateVerticesAndIndices();
+    void updateObject();
     void createMesh();
     void setupModelMatrix();
 

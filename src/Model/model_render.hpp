@@ -43,7 +43,7 @@ class ModelRender {
   public:
     ModelRender(const std::string &);
 
-    void setDeltaTime(float dt) { m_Animator->update(dt); }
+    void setDeltaTime(float /* dt */) { m_Animator->update(0); }
 
     void setScale(glm::vec3 scale) { m_Scale = scale; }
     void setRotation(glm::vec2 rotation) { m_Rotation = rotation; }

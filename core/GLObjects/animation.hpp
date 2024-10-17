@@ -29,8 +29,6 @@ class Animation {
         m_TicksPerSecond = animation->mTicksPerSecond;
 
         readHeirarchyData(m_RootNode, scene->mRootNode);
-        m_RootNode.transformation = glm::mat4(1.0f);
-
         readMissingBones(animation, model);
     }
 
