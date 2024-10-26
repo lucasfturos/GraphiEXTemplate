@@ -4,34 +4,34 @@ SimpleScene::SimpleScene(std::shared_ptr<ModelRender> modelRender,
                          std::shared_ptr<VolumetricRender> volumetricRender,
                          std::shared_ptr<Objects> objects,
                          std::shared_ptr<ControlPanel> controlPanel)
-    : Scene(controlPanel), modelRender(modelRender),
-      volumetricRender(volumetricRender), objects(objects) {}
+    : Scene(controlPanel), m_ModelRender(modelRender),
+      m_VolumetricRender(volumetricRender), m_Objects(objects) {}
 
 void SimpleScene::setup() {
-    modelRender->setup();
-    // volumetricRender->setup();
-    objects->setup();
+    m_ModelRender->setup();
+    // m_VolumetricRender->setup();
+    m_Objects->setup();
 }
 
 void SimpleScene::update(float dt, glm::mat4 projection) {
-    modelRender->setDeltaTime(dt);
-    modelRender->setProjection(projection);
-    modelRender->setScale(controlPanel->getScale());
-    modelRender->setRotation(controlPanel->getRotation());
-    modelRender->setTranslation(controlPanel->getTranslation());
+    m_ModelRender->setDeltaTime(dt);
+    m_ModelRender->setProjection(projection);
+    m_ModelRender->setScale(m_ControlPanel->getScale());
+    m_ModelRender->setRotation(m_ControlPanel->getRotation());
+    m_ModelRender->setTranslation(m_ControlPanel->getTranslation());
 
-    // volumetricRender->setProjection(projection);
-    // volumetricRender->setScale(controlPanel->getScale());
-    // volumetricRender->setRotation(controlPanel->getRotation());
-    // volumetricRender->setTranslation(controlPanel->getTranslation());
+    // m_VolumetricRender->setProjection(projection);
+    // m_VolumetricRender->setScale(controlPanel->getScale());
+    // m_VolumetricRender->setRotation(controlPanel->getRotation());
+    // m_VolumetricRender->setTranslation(controlPanel->getTranslation());
 
-    objects->setTime(dt);
-    objects->setProjection(projection);
-    objects->setObjectType(controlPanel->getObjectType());
+    m_Objects->setTime(dt);
+    m_Objects->setProjection(projection);
+    m_Objects->setObjectType(m_ControlPanel->getObjectType());
 }
 
 void SimpleScene::render() {
-    modelRender->run();
-    // volumetricRender->run();
-    objects->run();
+    m_ModelRender->run();
+    // m_VolumetricRender->run();
+    m_Objects->run();
 }

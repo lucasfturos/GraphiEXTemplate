@@ -1,6 +1,6 @@
 #include "render.hpp"
 
-void checkOpenGLErrors() {
+void Render::checkOpenGLErrors() {
     GLenum err;
     while ((err = glGetError()) != GL_NO_ERROR) {
         std::cerr << "OpenGL Error: " << std::hex << err << '\n';
@@ -9,9 +9,9 @@ void checkOpenGLErrors() {
 
 void Render::clear() {
     int windowWidth, windowHeight;
-    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    SDL_GetWindowSize(m_Window, &windowWidth, &windowHeight);
     glViewport(0, 0, windowWidth, windowHeight);
-    
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     checkOpenGLErrors();
 }
@@ -31,8 +31,8 @@ void Render::setupImGui() {
     (void)io;
     ImGui::StyleColorsDark();
 
-    ImGui_ImplSDL2_InitForOpenGL(window, context);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGui_ImplSDL2_InitForOpenGL(m_Window, m_Context);
+    ImGui_ImplOpenGL3_Init("#version 440");
     checkOpenGLErrors();
 }
 
@@ -47,20 +47,20 @@ void Render::setupWindow() {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                             SDL_GL_CONTEXT_PROFILE_CORE);
 
-        window =
-            SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight,
-                             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-        if (!window)
+        m_Window = SDL_CreateWindow(m_Title.c_str(), SDL_WINDOWPOS_UNDEFINED,
+                                    SDL_WINDOWPOS_UNDEFINED, m_ScreenWidth,
+                                    m_ScreenHeight,
+                                    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+        if (!m_Window)
             throw std::runtime_error("Error creating window: " +
                                      std::string(SDL_GetError()));
 
-        context = SDL_GL_CreateContext(window);
-        if (!context)
+        m_Context = SDL_GL_CreateContext(m_Window);
+        if (!m_Context)
             throw std::runtime_error("Error creating context: " +
                                      std::string(SDL_GetError()));
 
-        SDL_GL_MakeCurrent(window, context);
+        SDL_GL_MakeCurrent(m_Window, m_Context);
 
         if (SDL_GL_SetSwapInterval(1) < 0)
             throw std::runtime_error("Error setting VSync: " +
@@ -79,13 +79,13 @@ void Render::setupWindow() {
 }
 
 void Render::destroyWindow() {
-    if (window) {
-        SDL_DestroyWindow(window);
-        window = nullptr;
+    if (m_Window) {
+        SDL_DestroyWindow(m_Window);
+        m_Window = nullptr;
     }
-    if (context) {
-        SDL_GL_DeleteContext(context);
-        context = nullptr;
+    if (m_Context) {
+        SDL_GL_DeleteContext(m_Context);
+        m_Context = nullptr;
     }
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();

@@ -8,9 +8,9 @@
 
 class SimpleScene : public Scene {
   private:
-    std::shared_ptr<ModelRender> modelRender;
-    std::shared_ptr<VolumetricRender> volumetricRender;
-    std::shared_ptr<Objects> objects;
+    std::shared_ptr<ModelRender> m_ModelRender;
+    std::shared_ptr<VolumetricRender> m_VolumetricRender;
+    std::shared_ptr<Objects> m_Objects;
 
   public:
     SimpleScene(std::shared_ptr<ModelRender>, std::shared_ptr<VolumetricRender>,

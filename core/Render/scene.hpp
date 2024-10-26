@@ -6,11 +6,11 @@
 
 class Scene {
   protected:
-    std::shared_ptr<ControlPanel> controlPanel;
+    std::shared_ptr<ControlPanel> m_ControlPanel;
 
   public:
     Scene(std::shared_ptr<ControlPanel> controlPanel)
-        : controlPanel(controlPanel) {}
+        : m_ControlPanel(controlPanel) {}
     virtual ~Scene() = default;
     virtual void setup() = 0;
     virtual void update(float /* deltaTime */, glm::mat4 /* projMat */) = 0;
