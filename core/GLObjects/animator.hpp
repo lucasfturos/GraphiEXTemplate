@@ -5,8 +5,9 @@
 class Animator {
   public:
     Animator()
-        : m_CurrentTime(0.0f), m_Interpolating(false), m_HaltTime(0.0f),
-          m_InterTime(0.0f), m_FinalBoneMatrices(MAX_BONES, glm::mat4(1.0)),
+        : m_CurrentTime(0.0f), m_HaltTime(0.0f), m_InterTime(0.0f),
+          m_Interpolating(false),
+          m_FinalBoneMatrices(MAX_BONES, glm::mat4(1.0)),
           m_CurrentAnimation(nullptr), m_NextAnimation(nullptr),
           m_QueueAnimation(nullptr) {}
 
@@ -41,7 +42,7 @@ class Animator {
                 m_CurrentAnimation->getTicksPerSecond() * 0.2f;
             if (m_Interpolating && m_InterTime <= transitionTime) {
                 m_InterTime += m_CurrentAnimation->getTicksPerSecond() * dt;
-                calculateBoneTransition(&m_CurrentAnimation->getRootNode(),
+                calculateBoneTransition(m_CurrentAnimation->getRootNode(),
                                         glm::mat4(1.0f), m_CurrentAnimation,
                                         m_NextAnimation, m_HaltTime,
                                         m_InterTime, transitionTime);
@@ -62,7 +63,7 @@ class Animator {
                 m_InterTime = 0.0f;
             }
 
-            calculateBoneTransform(&m_CurrentAnimation->getRootNode(),
+            calculateBoneTransform(m_CurrentAnimation->getRootNode(),
                                    glm::mat4(1.0f));
         }
     }
@@ -138,9 +139,9 @@ class Animator {
     }
 
     float m_CurrentTime;
-    bool m_Interpolating;
     float m_HaltTime;
     float m_InterTime;
+    bool m_Interpolating;
     std::vector<glm::mat4> m_FinalBoneMatrices;
     std::shared_ptr<Animation> m_CurrentAnimation;
     std::shared_ptr<Animation> m_NextAnimation;

@@ -26,6 +26,13 @@ inline std::string vec3ToString(const glm::vec3 &vec) {
     return ss.str();
 }
 
+inline std::string vec4ToString(const glm::vec4 &vec) {
+    std::stringstream ss;
+    ss << "vec4(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w
+       << ")";
+    return ss.str();
+}
+
 inline std::string mat4ToString(const glm::mat4 &mat) {
     std::stringstream ss;
     ss << "mat4(";

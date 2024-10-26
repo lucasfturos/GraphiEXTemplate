@@ -53,9 +53,16 @@ class VertexArray {
         const auto &elements = layout.getElements();
         for (const auto &element : elements) {
             glEnableVertexAttribArray(attributeIndex);
-            glVertexAttribPointer(attributeIndex, element.count, element.type,
-                                  element.normalized, layout.getStride(),
-                                  reinterpret_cast<const void *>(offset));
+            if constexpr (std::is_integral<T>::value) {
+                glVertexAttribIPointer(attributeIndex, element.count,
+                                       element.type, layout.getStride(),
+                                       reinterpret_cast<const void *>(offset));
+            } else {
+                glVertexAttribPointer(attributeIndex, element.count,
+                                      element.type, element.normalized,
+                                      layout.getStride(),
+                                      reinterpret_cast<const void *>(offset));
+            }
             offset += element.count *
                       VertexBufferElement::getSizeOfType(element.type);
         }

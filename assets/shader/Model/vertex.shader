@@ -18,10 +18,10 @@ uniform mat4 uFinalBonesMatrices[MAX_BONES];
 
 void main() {
     mat4 boneTransform = mat4(0.0);
-    boneTransform += uFinalBonesMatrices[int(aBoneIDs.x)] * aWeights.x;
-    boneTransform += uFinalBonesMatrices[int(aBoneIDs.y)] * aWeights.y;
-    boneTransform += uFinalBonesMatrices[int(aBoneIDs.z)] * aWeights.z;
-    boneTransform += uFinalBonesMatrices[int(aBoneIDs.w)] * aWeights.w;
+    boneTransform += uFinalBonesMatrices[aBoneIDs.x] * aWeights.x;
+    boneTransform += uFinalBonesMatrices[aBoneIDs.y] * aWeights.y;
+    boneTransform += uFinalBonesMatrices[aBoneIDs.z] * aWeights.z;
+    boneTransform += uFinalBonesMatrices[aBoneIDs.w] * aWeights.w;
 
     vec4 pos = boneTransform * vec4(aPos, 1.0);
     gl_Position = uMVP * pos;

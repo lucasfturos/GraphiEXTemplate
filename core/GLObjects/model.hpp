@@ -108,19 +108,22 @@ class Model {
     }
 
     void processBones(aiMesh *mesh) {
+        int &boneCount = m_BoneCounter;
+        auto &boneInfoMap = m_BoneInfoMap;
+
         for (auto boneIndex = 0U; boneIndex < mesh->mNumBones; ++boneIndex) {
             int boneID = -1;
             std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
-            if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end()) {
+            if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
                 BoneInfo newBoneInfo;
-                newBoneInfo.id = m_BoneCounter;
+                newBoneInfo.id = boneCount;
                 newBoneInfo.offSet =
                     aiMatrix4x4ToGLM(mesh->mBones[boneIndex]->mOffsetMatrix);
-                m_BoneInfoMap[boneName] = newBoneInfo;
-                boneID = m_BoneCounter;
-                ++m_BoneCounter;
+                boneInfoMap[boneName] = newBoneInfo;
+                boneID = boneCount;
+                ++boneCount;
             } else {
-                boneID = m_BoneInfoMap[boneName].id;
+                boneID = boneInfoMap[boneName].id;
             }
 
             assert(boneID != -1);
@@ -130,6 +133,8 @@ class Model {
             for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex) {
                 int vertexIndex = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
+                assert(static_cast<std::size_t>(vertexIndex) <=
+                       m_Vertices.size());
                 setVertexBoneData(vertexIndex, boneID, weight);
             }
         }

@@ -1,70 +1,6 @@
 #include "mesh.hpp"
 
 template <typename Types>
-Mesh<Types>::Mesh(const std::vector<VerticesType> &vertices,
-                  const std::vector<FaceType> &faces,
-                  const std::string &vertexShaderPath,
-                  const std::string &fragmentShaderPath)
-    : Mesh(vertices, faces, {}, {}, vertexShaderPath, fragmentShaderPath) {}
-
-template <typename Types>
-Mesh<Types>::Mesh(const std::vector<VerticesType> &vertices,
-                  const std::vector<FaceType> &faces,
-                  const std::vector<TexType> &texCoords,
-                  const std::string &vertexShaderPath,
-                  const std::string &fragmentShaderPath)
-    : Mesh(vertices, faces, {}, texCoords, vertexShaderPath,
-           fragmentShaderPath) {}
-
-template <typename Types>
-Mesh<Types>::Mesh(const std::vector<VerticesType> &vertices,
-                  const std::vector<FaceType> &faces,
-                  const std::vector<NormalType> &normals,
-                  const std::vector<TexType> &texCoords,
-                  const std::string &vertexShaderPath,
-                  const std::string &fragmentShaderPath)
-    : Mesh(vertices, faces, normals, texCoords, {}, {}, vertexShaderPath,
-           fragmentShaderPath) {}
-
-template <typename Types>
-Mesh<Types>::Mesh(const std::vector<VerticesType> &vertices,
-                  const std::vector<FaceType> &faces,
-                  const std::vector<TexType> &texCoords,
-                  const std::vector<BoneIdType> &boneIds,
-                  const std::vector<WeightType> &weights,
-                  const std::string &vertexShaderPath,
-                  const std::string &fragmentShaderPath)
-    : Mesh(vertices, faces, {}, texCoords, boneIds, weights, vertexShaderPath,
-           fragmentShaderPath) {}
-
-template <typename Types>
-Mesh<Types>::Mesh(const std::vector<VerticesType> &vertices,
-                  const std::vector<GLuint> &faces,
-                  const std::vector<NormalType> &normals,
-                  const std::vector<TexType> &texCoords,
-                  const std::vector<BoneIdType> &boneIds,
-                  const std::vector<WeightType> &weights,
-                  const std::string &vertexShaderPath,
-                  const std::string &fragmentShaderPath)
-    : m_VertexArray(std::make_shared<VertexArray>()),
-      m_VerticesBuffer(std::make_shared<VertexBuffer<VerticesType>>(vertices)),
-      m_FacesBuffer(std::make_shared<IndexBuffer>(faces)),
-      m_NormalBuffer(normals.empty()
-                         ? nullptr
-                         : std::make_shared<VertexBuffer<NormalType>>(normals)),
-      m_TextureBuffer(texCoords.empty()
-                          ? nullptr
-                          : std::make_shared<VertexBuffer<TexType>>(texCoords)),
-      m_BoneIDBuffer(boneIds.empty()
-                         ? nullptr
-                         : std::make_shared<VertexBuffer<BoneIdType>>(boneIds)),
-      m_WeightBuffer(weights.empty()
-                         ? nullptr
-                         : std::make_shared<VertexBuffer<WeightType>>(weights)),
-      m_Shader(std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
-      m_HasTexture(false) {}
-
-template <typename Types>
 void Mesh<Types>::setup(const VertexBufferLayoutMap &layoutMap) {
     if (m_VerticesBuffer)
         setupBuffers<VerticesType>(layoutMap, "vertices", m_VerticesBuffer, 0);
@@ -106,10 +42,9 @@ template <typename Types>
 void Mesh<Types>::updateTexture(const std::vector<float> &data, int width,
                                 int height, int depth,
                                 std::uint32_t textureIndex) {
-    if (textureIndex < m_Textures.size() && m_Textures[textureIndex]) {
-        m_Textures[textureIndex]->updateData(data, width, height, depth, GL_RGB,
+    if (textureIndex < m_Textures.size() && m_Textures[textureIndex])
+        m_Textures[textureIndex]->updateData(data, width, height, depth, GL_RGBA,
                                              GL_FLOAT);
-    }
 }
 
 template <typename Types>

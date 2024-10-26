@@ -52,7 +52,7 @@ class Bone {
 
     void update(float animationTime) {
         glm::mat4 translation;
-        size_t positionIndex = getPositionIndex(animationTime);
+        auto positionIndex = getPositionIndex(animationTime);
         if (m_NumPositions == 1) {
             translation =
                 glm::translate(glm::mat4(1.0f), m_Positions[0].position);
@@ -63,7 +63,7 @@ class Bone {
         }
 
         glm::mat4 rotation;
-        size_t rotationIndex = getRotationIndex(animationTime);
+        auto rotationIndex = getRotationIndex(animationTime);
         if (m_NumRotations == 1) {
             rotation = glm::toMat4(glm::normalize(m_Rotations[0].orientation));
         } else {
@@ -73,7 +73,7 @@ class Bone {
         }
 
         glm::mat4 scale;
-        size_t scaleIndex = getScaleIndex(animationTime);
+        auto scaleIndex = getScaleIndex(animationTime);
         if (m_NumScalings == 1) {
             scale = glm::scale(glm::mat4(1.0f), m_Scales[0].scale);
         } else {
@@ -92,7 +92,7 @@ class Bone {
             if (animationTime < m_Positions[i + 1].timeStamp)
                 return i;
         }
-        assert(0);
+        return m_NumPositions - 2;
     }
 
     int getRotationIndex(float animationTime) const {
@@ -100,7 +100,7 @@ class Bone {
             if (animationTime < m_Rotations[i + 1].timeStamp)
                 return i;
         }
-        assert(0);
+        return m_NumRotations - 2;
     }
 
     int getScaleIndex(float animationTime) const {
@@ -108,23 +108,23 @@ class Bone {
             if (animationTime < m_Scales[i + 1].timeStamp)
                 return i;
         }
-        assert(0);
+        return m_NumScalings - 2;
     }
 
     KeyPosition getPositions(float animationTime) {
-        std::size_t positionIndex =
+        auto positionIndex =
             (animationTime == 0.0f) ? 0 : getPositionIndex(animationTime) + 1;
         return m_Positions[positionIndex];
     }
 
     KeyRotation getRotations(float animationTime) {
-        std::size_t rotationIndex =
+        auto rotationIndex =
             (animationTime == 0.0f) ? 0 : getRotationIndex(animationTime) + 1;
         return m_Rotations[rotationIndex];
     }
 
     KeyScale getScalings(float animationTime) {
-        std::size_t scaleIndex =
+        auto scaleIndex =
             (animationTime == 0.0f) ? 0 : getScaleIndex(animationTime) + 1;
         return m_Scales[scaleIndex];
     }

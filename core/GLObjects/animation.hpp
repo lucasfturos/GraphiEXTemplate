@@ -22,17 +22,17 @@ class Animation {
             importer.ReadFile(animationPath, aiProcess_Triangulate);
         assert(scene && scene->mRootNode);
         if (scene->mNumAnimations == 0)
-            throw std::runtime_error("Error: No animation found in file.");
+            std::cerr << "Error: No animation found in file.\n";
 
         auto animation = scene->mAnimations[0];
         m_Duration = animation->mDuration;
         m_TicksPerSecond = animation->mTicksPerSecond;
 
         readHeirarchyData(m_RootNode, scene->mRootNode);
+        m_RootNode.transformation = glm::mat4(1.0f);
+
         readMissingBones(animation, model);
     }
-
-    ~Animation() {}
 
     std::shared_ptr<Bone> findBone(const std::string &name) {
         auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
@@ -42,11 +42,11 @@ class Animation {
         return (iter == m_Bones.end()) ? nullptr : *iter;
     }
 
-    float getDuration() { return m_Duration; }
-    float getTicksPerSecond() { return m_TicksPerSecond; }
+    inline float getDuration() { return m_Duration; }
+    inline float getTicksPerSecond() { return m_TicksPerSecond; }
 
-    const auto &getRootNode() { return m_RootNode; }
-    const auto &getBoneInfoMap() { return m_BoneInfoMap; }
+    inline const auto *getRootNode() { return &m_RootNode; }
+    inline const auto &getBoneInfoMap() { return m_BoneInfoMap; }
 
   private:
     void readMissingBones(const aiAnimation *animation,
@@ -74,6 +74,7 @@ class Animation {
         dest.name = src->mName.data;
         dest.transformation = aiMatrix4x4ToGLM(src->mTransformation);
         dest.childrenCount = src->mNumChildren;
+
         for (auto i = 0U; i < src->mNumChildren; ++i) {
             AssimpNodeData newData;
             readHeirarchyData(newData, src->mChildren[i]);

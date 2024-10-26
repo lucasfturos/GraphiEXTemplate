@@ -41,20 +41,25 @@ template <typename Types> class Mesh {
     Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::string &vertexShaderPath,
-         const std::string &fragmentShaderPath);
+         const std::string &fragmentShaderPath)
+        : Mesh(vertices, faces, {}, {}, vertexShaderPath, fragmentShaderPath) {}
 
     Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
-         const std::string &fragmentShaderPath);
+         const std::string &fragmentShaderPath)
+        : Mesh(vertices, faces, {}, texCoords, vertexShaderPath,
+               fragmentShaderPath) {}
 
     Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
          const std::vector<NormalType> &normals,
          const std::vector<TexType> &texCoords,
          const std::string &vertexShaderPath,
-         const std::string &fragmentShaderPath);
+         const std::string &fragmentShaderPath)
+        : Mesh(vertices, faces, normals, texCoords, {}, {}, vertexShaderPath,
+               fragmentShaderPath) {}
 
     Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<FaceType> &faces,
@@ -62,7 +67,9 @@ template <typename Types> class Mesh {
          const std::vector<BoneIdType> &boneIds,
          const std::vector<WeightType> &weights,
          const std::string &vertexShaderPath,
-         const std::string &fragmentShaderPath);
+         const std::string &fragmentShaderPath)
+        : Mesh(vertices, faces, {}, texCoords, boneIds, weights,
+               vertexShaderPath, fragmentShaderPath) {}
 
     Mesh(const std::vector<VerticesType> &vertices,
          const std::vector<GLuint> &faces,
@@ -71,7 +78,30 @@ template <typename Types> class Mesh {
          const std::vector<BoneIdType> &boneIds,
          const std::vector<WeightType> &weights,
          const std::string &vertexShaderPath,
-         const std::string &fragmentShaderPath);
+         const std::string &fragmentShaderPath)
+        : m_VertexArray(std::make_shared<VertexArray>()),
+          m_VerticesBuffer(
+              std::make_shared<VertexBuffer<VerticesType>>(vertices)),
+          m_FacesBuffer(std::make_shared<IndexBuffer>(faces)),
+          m_NormalBuffer(
+              normals.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<NormalType>>(normals)),
+          m_TextureBuffer(
+              texCoords.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<TexType>>(texCoords)),
+          m_BoneIDBuffer(
+              boneIds.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<BoneIdType>>(boneIds)),
+          m_WeightBuffer(
+              weights.empty()
+                  ? nullptr
+                  : std::make_shared<VertexBuffer<WeightType>>(weights)),
+          m_Shader(
+              std::make_shared<Shader>(vertexShaderPath, fragmentShaderPath)),
+          m_HasTexture(false) {}
 
     using VertexBufferLayoutMap = std::unordered_map<
         std::string, std::function<void(std::shared_ptr<VertexBufferLayout>)>>;
