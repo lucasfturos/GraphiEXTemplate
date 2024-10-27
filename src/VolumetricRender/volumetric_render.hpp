@@ -25,6 +25,9 @@ class VolumetricRender {
     glm::vec2 m_Rotation;
     glm::vec3 m_Translation;
 
+    glm::vec3 m_VolumeScale;
+    glm::ivec3 m_VolumeDimension;
+
     std::vector<GLuint> m_ModelFaces;
     std::vector<glm::vec3> m_ModelVertices;
 
@@ -35,7 +38,9 @@ class VolumetricRender {
     void loadTextures();
     void setUniforms();
     void setRunUniforms();
+
     std::vector<GLfloat> generateDensityData(int, int, int);
+    std::vector<GLfloat> generateTransferFunction(int width);
 
   public:
     VolumetricRender(const std::string &);
