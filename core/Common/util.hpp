@@ -77,17 +77,17 @@ inline std::vector<GLfloat> generateTransferFunction(int width) {
     for (int i = 0; i < width; ++i) {
         float density = static_cast<float>(i) / static_cast<float>(width - 1);
         transferFunction[i * 4 + 0] = density;
-        transferFunction[i * 4 + 1] = 0.0f;
-        transferFunction[i * 4 + 2] = 1.0f - density;
+        transferFunction[i * 4 + 1] = density;
+        transferFunction[i * 4 + 2] = density;
         transferFunction[i * 4 + 3] = density;
     }
     return transferFunction;
 }
 
-inline std::vector<GLfloat> generateDensityData(std::vector<glm::vec3> vertices,
-                                                std::vector<GLuint> faces,
-                                                int width, int height,
-                                                int depth) {
+inline std::vector<GLfloat>
+generateDensityData(const std::vector<glm::vec3> &vertices,
+                    const std::vector<GLuint> &faces, int width, int height,
+                    int depth) {
     std::vector<GLfloat> densityData(width * height * depth, 0.0f);
     for (size_t i = 0; i < faces.size(); i += 3) {
         glm::vec3 v0 = vertices[faces[i + 0]];

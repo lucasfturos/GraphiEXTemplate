@@ -29,16 +29,10 @@ void VolumetricRender::setupMesh() {
 }
 
 void VolumetricRender::loadTextures() {
-    int num = 2;
+    int num = 69;
     int width = num;
     int height = num;
     int depth = num;
-
-    m_VolumeDimension = glm::ivec3(width, height, depth);
-    int longestAxis = std::max(width, std::max(height, depth));
-    m_VolumeScale = glm::vec3(static_cast<float>(width) / longestAxis,
-                              static_cast<float>(height) / longestAxis,
-                              static_cast<float>(depth) / longestAxis);
 
     std::vector<GLfloat> densityData = VolumeGeneration::generateDensityData(
         m_ModelVertices, m_ModelFaces, width, height, depth);
@@ -55,7 +49,6 @@ void VolumetricRender::loadTextures() {
         tfWidth, 1, 1, GL_RGBA, GL_FLOAT, GL_TEXTURE_2D);
     transferFunctionTexture->updateData(transferFunctionData, tfWidth, 1, 1,
                                         GL_RGBA, GL_FLOAT);
-
     m_Mesh->setTexture(modelTexture);
     m_Mesh->setTexture(transferFunctionTexture);
 }
@@ -63,24 +56,15 @@ void VolumetricRender::loadTextures() {
 void VolumetricRender::setUniforms() {
     Mesh<Types>::UniformsMap uniforms;
 
-    uniforms["uModel"] = [](std::shared_ptr<Shader> shader) {
-        shader->setUniform1i("uModel", 0);
-    };
-    uniforms["uCameraPosition"] = [this](std::shared_ptr<Shader> shader) {
-        glm::vec3 cameraPos = glm::vec3(glm::inverse(m_ViewMatrix)[3]);
-        shader->setUniform3f("uCameraPosition", cameraPos);
+    uniforms["uVolume"] = [](std::shared_ptr<Shader> shader) {
+        shader->setUniform1i("uVolume", 0);
     };
     uniforms["uTransferFunction"] = [](std::shared_ptr<Shader> shader) {
         shader->setUniform1i("uTransferFunction", 1);
     };
-    uniforms["uVolumeScale"] = [this](std::shared_ptr<Shader> shader) {
-        shader->setUniform3f("uVolumeScale", m_VolumeScale);
-    };
-    uniforms["uVolumeDimension"] = [this](std::shared_ptr<Shader> shader) {
-        shader->setUniform3f("uVolumeDimension", m_VolumeDimension);
-    };
-    uniforms["uDtScale"] = [](std::shared_ptr<Shader> shader) {
-        shader->setUniform1f("uDtScale", 0.1f);
+    uniforms["uCameraPosition"] = [this](std::shared_ptr<Shader> shader) {
+        glm::vec3 cameraPos = glm::vec3(glm::inverse(m_ViewMatrix)[3]);
+        shader->setUniform3f("uCameraPosition", cameraPos);
     };
 
     m_Mesh->setUniforms(uniforms);
