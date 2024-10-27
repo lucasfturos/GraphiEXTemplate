@@ -72,7 +72,8 @@ class Animation {
         assert(src);
 
         dest.name = src->mName.data;
-        dest.transformation = aiMatrix4x4ToGLM(src->mTransformation);
+        dest.transformation =
+            AssimpGLMConversion::aiMatrix4x4ToGLM(src->mTransformation);
         dest.childrenCount = src->mNumChildren;
 
         for (auto i = 0U; i < src->mNumChildren; ++i) {

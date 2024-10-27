@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
-#include <string>
 
 class VolumetricRender {
   protected:
@@ -38,9 +37,6 @@ class VolumetricRender {
     void loadTextures();
     void setUniforms();
     void setRunUniforms();
-
-    std::vector<GLfloat> generateDensityData(int, int, int);
-    std::vector<GLfloat> generateTransferFunction(int width);
 
   public:
     VolumetricRender(const std::string &);

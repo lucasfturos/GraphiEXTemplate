@@ -19,7 +19,7 @@ class Bone {
                 channel->mPositionKeys[positionIndex].mValue;
             float timeStamp = channel->mPositionKeys[positionIndex].mTime;
             KeyPosition data = {
-                .position = aiVector3DToGLM(aiPosition),
+                .position = AssimpGLMConversion::aiVector3DToGLM(aiPosition),
                 .timeStamp = timeStamp,
             };
             m_Positions.push_back(data);
@@ -32,7 +32,8 @@ class Bone {
                 channel->mRotationKeys[rotationIndex].mValue;
             float timeStamp = channel->mRotationKeys[rotationIndex].mTime;
             KeyRotation data = {
-                .orientation = aiQuaternionToGLM(aiOrientation),
+                .orientation =
+                    AssimpGLMConversion::aiQuaternionToGLM(aiOrientation),
                 .timeStamp = timeStamp,
             };
             m_Rotations.push_back(data);
@@ -43,7 +44,7 @@ class Bone {
             aiVector3D scale = channel->mScalingKeys[keyIndex].mValue;
             float timeStamp = channel->mScalingKeys[keyIndex].mTime;
             KeyScale data = {
-                .scale = aiVector3DToGLM(scale),
+                .scale = AssimpGLMConversion::aiVector3DToGLM(scale),
                 .timeStamp = timeStamp,
             };
             m_Scales.push_back(data);

@@ -11,14 +11,9 @@ set(SRC_HEADER
 )
 
 set(SRC_SOURCE
-    # Model
     Model/model_render.cpp
-    # Objects
     Objects/objects.cpp
-    # VolumetricRender
-    VolumetricRender/density.cpp
     VolumetricRender/volumetric_render.cpp
-    # Main
     main.cpp
 )
 

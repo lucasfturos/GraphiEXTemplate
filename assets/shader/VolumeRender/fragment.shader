@@ -6,7 +6,6 @@ flat in vec3 TransformedEye;
 
 out vec4 color;
 
-
 uniform float uDtScale;
 uniform sampler3D uModel;
 uniform ivec3 uVolumeDimension;

@@ -67,11 +67,13 @@ class Model {
 
     void processMesh(aiMesh *mesh, const aiScene * /* scene */) {
         for (auto i = 0U; i < mesh->mNumVertices; ++i) {
-            glm::vec3 vertex = aiVector3DToGLM(mesh->mVertices[i]);
+            glm::vec3 vertex =
+                AssimpGLMConversion::aiVector3DToGLM(mesh->mVertices[i]);
             m_Vertices.push_back(vertex);
 
             if (mesh->HasNormals()) {
-                glm::vec3 normal = aiVector3DToGLM(mesh->mNormals[i]);
+                glm::vec3 normal =
+                    AssimpGLMConversion::aiVector3DToGLM(mesh->mNormals[i]);
                 m_Normals.push_back(normal);
             }
 
@@ -117,8 +119,8 @@ class Model {
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
                 BoneInfo newBoneInfo;
                 newBoneInfo.id = boneCount;
-                newBoneInfo.offSet =
-                    aiMatrix4x4ToGLM(mesh->mBones[boneIndex]->mOffsetMatrix);
+                newBoneInfo.offSet = AssimpGLMConversion::aiMatrix4x4ToGLM(
+                    mesh->mBones[boneIndex]->mOffsetMatrix);
                 boneInfoMap[boneName] = newBoneInfo;
                 boneID = boneCount;
                 ++boneCount;

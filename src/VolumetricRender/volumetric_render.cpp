@@ -40,8 +40,8 @@ void VolumetricRender::loadTextures() {
                               static_cast<float>(height) / longestAxis,
                               static_cast<float>(depth) / longestAxis);
 
-    std::vector<GLfloat> densityData =
-        generateDensityData(width, height, depth);
+    std::vector<GLfloat> densityData = VolumeGeneration::generateDensityData(
+        m_ModelVertices, m_ModelFaces, width, height, depth);
     auto modelTexture = std::make_shared<Texture>(width, height, depth, GL_RED,
                                                   GL_FLOAT, GL_TEXTURE_3D);
 
@@ -50,7 +50,7 @@ void VolumetricRender::loadTextures() {
 
     int tfWidth = 256;
     std::vector<GLfloat> transferFunctionData =
-        generateTransferFunction(tfWidth);
+        VolumeGeneration::generateTransferFunction(tfWidth);
     auto transferFunctionTexture = std::make_shared<Texture>(
         tfWidth, 1, 1, GL_RGBA, GL_FLOAT, GL_TEXTURE_2D);
     transferFunctionTexture->updateData(transferFunctionData, tfWidth, 1, 1,
