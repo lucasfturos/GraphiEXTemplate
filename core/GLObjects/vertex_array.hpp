@@ -38,22 +38,16 @@ class VertexArray {
     template <typename T>
     void addBuffer(const VertexBuffer<T> &vb, const VertexBufferLayout &layout,
                    GLuint attributeIndex) {
-        if (m_UsedAttributeIndices.find(attributeIndex) !=
-            m_UsedAttributeIndices.end()) {
-            throw std::invalid_argument("Error: Attribute index " +
-                                        std::to_string(attributeIndex) +
-                                        " is already in use.");
-        }
-
         bind();
         vb.bind();
 
         GLuint offset = 0;
-
         const auto &elements = layout.getElements();
+
         for (const auto &element : elements) {
             glEnableVertexAttribArray(attributeIndex);
-            if constexpr (std::is_integral<T>::value) {
+
+            if (element.type == GL_INT || element.type == GL_UNSIGNED_INT) {
                 glVertexAttribIPointer(attributeIndex, element.count,
                                        element.type, layout.getStride(),
                                        reinterpret_cast<const void *>(offset));
@@ -63,14 +57,13 @@ class VertexArray {
                                       layout.getStride(),
                                       reinterpret_cast<const void *>(offset));
             }
+
             offset += element.count *
                       VertexBufferElement::getSizeOfType(element.type);
         }
 
         vb.unbind();
         unbind();
-
-        m_UsedAttributeIndices.insert(attributeIndex);
     }
 
     void bind() const { glBindVertexArray(m_RendererID); }

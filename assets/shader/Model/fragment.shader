@@ -19,7 +19,7 @@ void main() {
     vec4 glowColor = texture(uTexture2, TexCoords);
     vec4 specularColor = texture(uTexture3, TexCoords);
 
-    vec3 norm = normalize(Normal);
+    vec3 norm = Normal;
     vec3 lightDir = normalize(uLightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
 

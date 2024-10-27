@@ -13,8 +13,6 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <stdexcept>
-#include <string>
 #include <vector>
 
 #define MAX_BONES 100
@@ -100,8 +98,8 @@ class Model {
     void setVertexBoneData(int vertexIndex, int boneID, float weight) {
         for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
             if (m_BoneIDs[vertexIndex][i] < 0) {
-                m_BoneIDs[vertexIndex][i] = boneID;
                 m_Weights[vertexIndex][i] = weight;
+                m_BoneIDs[vertexIndex][i] = boneID;
                 break;
             }
         }
@@ -110,8 +108,10 @@ class Model {
     void processBones(aiMesh *mesh) {
         int &boneCount = m_BoneCounter;
         auto &boneInfoMap = m_BoneInfoMap;
+        std::size_t numBones =
+            mesh->mNumBones > MAX_BONES ? MAX_BONES : mesh->mNumBones;
 
-        for (auto boneIndex = 0U; boneIndex < mesh->mNumBones; ++boneIndex) {
+        for (auto boneIndex = 0U; boneIndex < numBones; ++boneIndex) {
             int boneID = -1;
             std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
             if (boneInfoMap.find(boneName) == boneInfoMap.end()) {
@@ -134,7 +134,7 @@ class Model {
                 int vertexIndex = weights[weightIndex].mVertexId;
                 float weight = weights[weightIndex].mWeight;
                 assert(static_cast<std::size_t>(vertexIndex) <=
-                       m_Vertices.size());
+                       m_BoneIDs.size());
                 setVertexBoneData(vertexIndex, boneID, weight);
             }
         }
