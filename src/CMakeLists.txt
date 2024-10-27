@@ -7,14 +7,12 @@ cmake_minimum_required(VERSION 3.4...3.25 FATAL_ERROR)
 set(SRC_HEADER
     Model/model_render.hpp
     Objects/objects.hpp
-    SimpleScene/simple_scene.hpp
     VolumetricRender/volumetric_render.hpp
 )
 
 set(SRC_SOURCE
     Model/model_render.cpp
     Objects/objects.cpp
-    SimpleScene/simple_scene.cpp
     VolumetricRender/volumetric_render.cpp
     main.cpp
 )
