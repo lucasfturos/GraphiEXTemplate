@@ -6,11 +6,12 @@ out vec4 color;
 uniform sampler3D uVolume;
 uniform sampler2D uTransferFunction;
 uniform vec3 uCameraPosition;
+uniform mat4 uModel;
 
 const float stepSize = 0.01;
-const int MAX_STEPS = 128;
+const int MAX_STEPS = 256;
 const float EPSILON = 1.0e-5;
-const float opacityFactor = 0.7;
+const float opacityFactor = 0.3;
 
 float sdBox(vec3 p, vec3 b) {
     vec3 q = abs(p) - b;
@@ -26,7 +27,8 @@ vec3 sampleTransferFunction(float density) {
     return texture(uTransferFunction, vec2(mappedDensity, 0.0)).rgb; 
 }
 
-void accumulateColorAndAlpha(inout vec4 accumulatedColor, inout float accumulatedAlpha, float density) {
+void accumulateColorAndAlpha(inout vec4 accumulatedColor,
+                             inout float accumulatedAlpha, float density) {
     if (density > EPSILON) {
         vec3 colorSample = sampleTransferFunction(density);
         float alpha = density * opacityFactor;
@@ -35,21 +37,19 @@ void accumulateColorAndAlpha(inout vec4 accumulatedColor, inout float accumulate
     }
 }
 
-// Função de ray marching
 vec4 rayMarching(vec3 rayOrigin, vec3 rayDirection) {
     vec4 accumulatedColor = vec4(0.0);
     float accumulatedAlpha = 0.0;
     float t = 0.0;
-
     for (int i = 0; i < MAX_STEPS; ++i) {
         vec3 pos = rayOrigin + t * rayDirection;
-        float d = sdBox(pos, vec3(1.0));
+        float d = sdBox(pos, vec3(4.0));
         if (d > 0.0) {
             break;
         }
         float density = sampleDensity(pos);
         accumulateColorAndAlpha(accumulatedColor, accumulatedAlpha, density);
-        if (accumulatedAlpha >= 0.5) {
+        if (accumulatedAlpha >= 1.0) {
             break;
         }
         t += stepSize;
@@ -59,8 +59,9 @@ vec4 rayMarching(vec3 rayOrigin, vec3 rayDirection) {
 }
 
 void main() {
-    vec3 rayOrigin = FragPos; 
-    vec3 rayDirection = normalize(FragPos - uCameraPosition);
-    rayDirection = normalize(rayDirection);
+    vec3 rayOrigin = FragPos;
+    vec3 cameraPosModelSpace = vec3(inverse(uModel) * vec4(uCameraPosition, 1.0));
+    vec3 rayDirection = normalize(rayOrigin - cameraPosModelSpace);
+
     color = rayMarching(rayOrigin, rayDirection);
 }
