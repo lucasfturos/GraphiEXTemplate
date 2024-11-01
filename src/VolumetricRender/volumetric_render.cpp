@@ -49,7 +49,7 @@ void VolumetricRender::loadTextures() {
         tfWidth, 1, 1, GL_RGBA, GL_FLOAT, GL_TEXTURE_2D);
     transferFunctionTexture->updateData(transferFunctionData, tfWidth, 1, 1,
                                         GL_RGBA, GL_FLOAT);
-                                        
+
     m_Mesh->setTexture(modelTexture);
     m_Mesh->setTexture(transferFunctionTexture);
 }
@@ -77,7 +77,6 @@ void VolumetricRender::setRunUniforms() {
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::scale(model, m_Scale * 5.0f);
-        model = glm::translate(model, m_Translation);
 
         glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
                                                 glm::vec3(0.0f, 1.0f, 0.0f));
@@ -91,6 +90,9 @@ void VolumetricRender::setRunUniforms() {
     };
     uniforms["uModel"] = [this](std::shared_ptr<Shader> shader) {
         shader->setUniformMat4f("uModel", m_ModelMatrix);
+    };
+    uniforms["uTranslation"] = [this](std::shared_ptr<Shader> shader) {
+        shader->setUniform3f("uTranslation", m_Translation);
     };
 
     m_Mesh->setUniforms(uniforms);
