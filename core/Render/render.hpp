@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ControlPanel/control_panel.hpp"
+#include "multi_scenes_option.hpp"
 #include "scene.hpp"
 
 #include "imgui_impl_opengl3.h"
@@ -28,9 +29,12 @@ class Render {
   private:
     SDL_Window *m_Window;
     SDL_GLContext m_Context;
+
     bool m_Quit;
-    std::shared_ptr<Scene> m_CurrentScene;
+    std::size_t m_PreviousSceneIndex;
+
     std::shared_ptr<ControlPanel> m_ControlPanel;
+    std::shared_ptr<MultiScenesOption> m_MultiScenesOption;
 
   private:
     Uint32 m_FrameStart;
@@ -52,10 +56,8 @@ class Render {
     void handleEvents();
 
   public:
-    Render(std::shared_ptr<Scene>, std::shared_ptr<ControlPanel>);
+    Render(std::shared_ptr<ControlPanel>, std::shared_ptr<MultiScenesOption>);
     ~Render();
-
-    void setScene(std::shared_ptr<Scene> scene) { m_CurrentScene = scene; }
 
     void run();
 };

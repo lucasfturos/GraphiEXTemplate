@@ -1,10 +1,10 @@
 #include "control_panel.hpp"
 #include "Common/cube.hpp"
 
-ControlPanel::ControlPanel()
+ControlPanel::ControlPanel(std::shared_ptr<MultiScenesOption> multiScenesOption)
     : scaleFactor(1.0f), showGizmoWindow(true), objectType(ObjectType::None),
       currentMode(TransformMode::Rotate), scale(1.0f), rotation(0.0f),
-      translation(0.0f) {}
+      translation(0.0f), m_MultiScenesOption(multiScenesOption) {}
 
 void ControlPanel::setup() {
     styleWidget();
@@ -17,12 +17,9 @@ void ControlPanel::setupGizmo() {
         cubeVertices, cubeIndices, "assets/shader/Gizmo/vertex.shader",
         "assets/shader/Gizmo/fragment.shader");
 
-    Mesh<MeshTypes<glm::vec3, glm::ivec3>>::VertexBufferLayoutMap layoutMap = {
-        {"vertices",
-         [](std::shared_ptr<VertexBufferLayout> layout) {
-             layout->push<GLfloat>(3);
-         }},
-    };
+    Mesh<MeshTypes<glm::vec3, glm::ivec3>>::VertexBufferLayoutMap layoutMap;
+    layoutMap["vertices"] = &LayoutAttribute<GLfloat, 3>::setup;
+
     cubeMesh->setup(layoutMap);
 
     framebuffer = std::make_shared<FrameBuffer>(gizmoWidth, gizmoHeight);

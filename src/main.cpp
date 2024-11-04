@@ -16,7 +16,8 @@ int main(void) {
         }
 
         // Scenes render
-        auto controlPanel = std::make_shared<ControlPanel>();
+        auto multiScenesOption = std::make_shared<MultiScenesOption>();
+        auto controlPanel = std::make_shared<ControlPanel>(multiScenesOption);
         auto simpleScene =
             std::make_shared<SimpleScene>(controlPanel, modelRender, objects);
         auto volumetricScene =
@@ -26,10 +27,13 @@ int main(void) {
             throw std::runtime_error("Failed to initialize scenes objects.");
             return -1;
         }
+        
+        // Add Scenes
+        multiScenesOption->addScene(simpleScene);
+        multiScenesOption->addScene(volumetricScene);
 
         // Render
-        // auto render = std::make_shared<Render>(simpleScene, controlPanel);
-        auto render = std::make_shared<Render>(volumetricScene, controlPanel);
+        auto render = std::make_shared<Render>(controlPanel, multiScenesOption);
         render->run();
     } catch (const std::exception &e) {
         std::cerr << e.what() << '\n';

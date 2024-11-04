@@ -1,9 +1,10 @@
 #include "render.hpp"
 
-Render::Render(std::shared_ptr<Scene> scene,
-               std::shared_ptr<ControlPanel> controlPanel)
+Render::Render(std::shared_ptr<ControlPanel> controlPanel,
+               std::shared_ptr<MultiScenesOption> multiScenesOption)
     : m_Window(nullptr), m_Context(nullptr), m_Quit(false),
-      m_CurrentScene(scene), m_ControlPanel(controlPanel) {}
+      m_PreviousSceneIndex(-1), m_ControlPanel(controlPanel),
+      m_MultiScenesOption(multiScenesOption) {}
 
 Render::~Render() { destroyWindow(); }
 
@@ -13,7 +14,10 @@ void Render::setup() {
     setupImGui();
 
     m_ControlPanel->setup();
-    m_CurrentScene->setup();
+
+    auto currentScene = m_MultiScenesOption->getCurrentScene();
+    if (currentScene)
+        currentScene->setup();
 }
 
 void Render::update(float time) {
@@ -24,11 +28,27 @@ void Render::update(float time) {
 
     glm::mat4 projMat =
         glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-    m_CurrentScene->update(time, projMat);
+
+    auto currentScene = m_MultiScenesOption->getCurrentScene();
+    std::size_t currentSceneIndex = m_MultiScenesOption->getCurrentSceneIndex();
+
+    if (currentSceneIndex != m_PreviousSceneIndex) {
+        if (currentScene) {
+            currentScene->resetMatrix();
+            currentScene->setup();
+        }
+
+        m_PreviousSceneIndex = currentSceneIndex;
+    }
+
+    if (currentScene)
+        currentScene->update(time, projMat);
 }
 
 void Render::render() {
-    m_CurrentScene->render();
+    auto currentScene = m_MultiScenesOption->getCurrentScene();
+    if (currentScene)
+        currentScene->render();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();

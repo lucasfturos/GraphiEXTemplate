@@ -18,6 +18,7 @@ set(CORE_HEADERS
 set(CORE_SOURCES
     # ControlPanel
     ControlPanel/control_panel.cpp
+    ControlPanel/event.cpp
     ControlPanel/gui.cpp
     ControlPanel/window.cpp
     # GLObjects

@@ -23,6 +23,8 @@ O projeto inclui exemplos e funções que permitem a implementação de diversos
 
 ## Referência
 
-1. [Learn OpenGL](https://learnopengl.com/)
-2. [Mixamo](https://www.mixamo.com/)
-3. [Volume Rendering with WebGL](https://www.willusher.io/webgl/2019/01/13/volume-rendering-with-webgl/)
+1. [Learn OpenGL - Skeletal Animation](https://learnopengl.com/Guest-Articles/2020/Skeletal-Animation)
+2. [@MathNuts on Github - Skeletal animation using C++ and OpenGL.](https://github.com/MathNuts/SkeletalAnimation)
+3. [Mixamo - Source of the Animated Model](https://www.mixamo.com/)
+4. [Volume Rendering with WebGL](https://www.willusher.io/webgl/2019/01/13/volume-rendering-with-webgl/)
+5. [Divin Ookken Athappan - Getting Started with Volume Rendering using OpenGL](https://www.codeproject.com/Articles/352270/Getting-Started-with-Volume-Rendering-using-OpenGL)

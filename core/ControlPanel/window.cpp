@@ -22,50 +22,6 @@ void ControlPanel::setupGizmoWindow() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void ControlPanel::renderGizmoWindow() {
-    ImVec2 windowSize = ImGui::GetContentRegionAvail();
-    ImVec2 windowPos = ImGui::GetWindowPos();
-    ImVec2 windowMax =
-        ImVec2(windowPos.x + windowSize.x, windowPos.y + windowSize.y);
-
-    handleMouseInteraction(windowPos, windowMax);
-
-    Mesh<MeshTypes<glm::vec3, GLuint>>::UniformsMap uniforms =
-        createUniforms(windowSize);
-    cubeMesh->setUniforms(uniforms);
-    cubeMesh->draw();
-
-    framebuffer->unbind();
-    ImGui::Image(reinterpret_cast<void *>(framebuffer->getTexture()),
-                 windowSize);
-    ImGui::End();
-}
-
-void ControlPanel::handleMouseInteraction(const ImVec2 &windowPos,
-                                          const ImVec2 &windowMax) {
-    if (ImGui::IsMouseHoveringRect(windowPos, windowMax) &&
-        ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
-        ImVec2 mouseDelta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Left);
-
-        switch (currentMode) {
-        case TransformMode::Rotate:
-            rotation.x += mouseDelta.x * 0.03f;
-            rotation.y += mouseDelta.y * 0.03f;
-            break;
-        case TransformMode::Translate:
-            translation.x += mouseDelta.x * 0.01f * scaleFactor;
-            translation.y += mouseDelta.y * 0.01f * scaleFactor;
-            break;
-        case TransformMode::Scale:
-            scale += glm::vec3(mouseDelta.y * 0.01f * scaleFactor);
-            scale = glm::max(scale, glm::vec3(0.05f));
-            break;
-        }
-
-        ImGui::ResetMouseDragDelta();
-    }
-}
-
 Mesh<MeshTypes<glm::vec3, GLuint>>::UniformsMap
 ControlPanel::createUniforms(const ImVec2 &windowSize) {
     return {
@@ -91,6 +47,25 @@ ControlPanel::createUniforms(const ImVec2 &windowSize) {
              glm::mat4 mvp = projection * view * model;
              shader->setUniformMat4f("uMVP", mvp);
          }}};
+}
+
+void ControlPanel::renderGizmoWindow() {
+    ImVec2 windowSize = ImGui::GetContentRegionAvail();
+    ImVec2 windowPos = ImGui::GetWindowPos();
+    ImVec2 windowMax =
+        ImVec2(windowPos.x + windowSize.x, windowPos.y + windowSize.y);
+
+    handleMouseInteraction(windowPos, windowMax);
+
+    Mesh<MeshTypes<glm::vec3, GLuint>>::UniformsMap uniforms =
+        createUniforms(windowSize);
+    cubeMesh->setUniforms(uniforms);
+    cubeMesh->draw();
+
+    framebuffer->unbind();
+    ImGui::Image(reinterpret_cast<void *>(framebuffer->getTexture()),
+                 windowSize);
+    ImGui::End();
 }
 
 void ControlPanel::renderGizmoControls() {
@@ -136,12 +111,6 @@ void ControlPanel::renderGizmoControls() {
     ImGui::End();
 }
 
-void ControlPanel::resetTransformations() {
-    translation = glm::vec3(0.0f);
-    rotation = glm::vec3(0.0f);
-    scale = glm::vec3(1.0f);
-}
-
 void ControlPanel::mainWindow() {
     ImGui::Begin("Control Panel", nullptr,
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
@@ -153,17 +122,16 @@ void ControlPanel::mainWindow() {
     bottomControlPanelHeight = controlPanelPos.y + controlPanelSize.y;
 
     ImGui::PushItemWidth(200);
-    renderObjectTypeSelector();
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
 
-    if (ImGui::Button("Default")) {
-        objectType = ObjectType::None;
-    }
+    renderSceneSelector();
+
+    renderObjectTypeSelector();
 
     if (ImGui::Button("Gizmo Window")) {
         showGizmoWindow = !showGizmoWindow;
     }
+
+    ImGui::PopItemWidth();
 
     ImGui::End();
 }
@@ -172,8 +140,27 @@ void ControlPanel::renderObjectTypeSelector() {
     std::vector<const char *> objectTypeNames = {"None", "Sphere", "Cylinder",
                                                  "Plane", "Cube"};
     int currentType = static_cast<int>(objectType);
-    if (ImGui::Combo(" ", &currentType, objectTypeNames.data(),
+    if (ImGui::Combo("##comboobject", &currentType, objectTypeNames.data(),
                      objectTypeNames.size())) {
         objectType = static_cast<ObjectType>(currentType);
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Default")) {
+        objectType = ObjectType::None;
+    }
+}
+
+void ControlPanel::renderSceneSelector() {
+    std::vector<std::string> sceneNames = m_MultiScenesOption->getSceneNames();
+    std::vector<const char *> sceneNamesCStr;
+    for (const auto &name : sceneNames) {
+        sceneNamesCStr.push_back(name.c_str());
+    }
+
+    int selectedScene = m_MultiScenesOption->getCurrentSceneIndex();
+    if (ImGui::Combo("  Scenes", &selectedScene, sceneNamesCStr.data(),
+                     sceneNamesCStr.size())) {
+        m_MultiScenesOption->setCurrentSceneIndex(selectedScene);
     }
 }
