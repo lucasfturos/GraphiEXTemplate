@@ -1,7 +1,6 @@
 #pragma once
 
 #include "GLObjects/Mesh/mesh.hpp"
-#include "GLObjects/animation.hpp"
 #include "GLObjects/animator.hpp"
 #include "GLObjects/model.hpp"
 

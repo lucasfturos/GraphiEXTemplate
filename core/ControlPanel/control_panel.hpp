@@ -5,7 +5,7 @@
 #include "Common/util.hpp"
 #include "GLObjects/Mesh/mesh.hpp"
 #include "GLObjects/framebuffer.hpp"
-#include "Render/multi_scenes_option.hpp"
+#include "Scenes/multi_scenes_option.hpp"
 
 #include <memory>
 

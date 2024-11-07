@@ -1,6 +1,6 @@
 #include "objects.hpp"
-#include "Common/cube.hpp"
-#include "Common/plane.hpp"
+#include "Objects3D/cube.hpp"
+#include "Objects3D/plane.hpp"
 
 Objects::Objects()
     : m_Cylinder(std::make_shared<Cylinder>(2.0, 0.5, 0.5, 20)),

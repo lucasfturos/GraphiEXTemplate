@@ -1,5 +1,5 @@
 #include "control_panel.hpp"
-#include "Common/cube.hpp"
+#include "Objects3D/cube.hpp"
 
 ControlPanel::ControlPanel(std::shared_ptr<MultiScenesOption> multiScenesOption)
     : scaleFactor(1.0f), showGizmoWindow(true), objectType(ObjectType::None),

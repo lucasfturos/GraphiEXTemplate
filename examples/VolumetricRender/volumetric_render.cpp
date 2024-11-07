@@ -1,5 +1,5 @@
 #include "volumetric_render.hpp"
-#include "Common/cube.hpp"
+#include "Objects3D/cube.hpp"
 
 VolumetricRender::VolumetricRender(const std::string &filePath)
     : m_Model(std::make_shared<Model>(filePath)),

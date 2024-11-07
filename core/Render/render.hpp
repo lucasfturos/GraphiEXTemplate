@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ControlPanel/control_panel.hpp"
-#include "multi_scenes_option.hpp"
-#include "scene.hpp"
+#include "Scenes/multi_scenes_option.hpp"
+#include "Scenes/scene.hpp"
 
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl2.h"

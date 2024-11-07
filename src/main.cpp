@@ -1,5 +1,5 @@
-#include "Scenes/simple_scene.hpp"
-#include "Scenes/volumetric_scene.hpp"
+#include "ScenesRender/simple_scene.hpp"
+#include "ScenesRender/volumetric_scene.hpp"
 
 int main(void) {
     try {
