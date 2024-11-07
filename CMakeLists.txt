@@ -28,6 +28,7 @@ add_compile_options(
 )
 
 add_subdirectory(core)
+add_subdirectory(examples)
 add_subdirectory(external)
 add_subdirectory(src)
 

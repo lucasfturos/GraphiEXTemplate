@@ -27,10 +27,11 @@ int main(void) {
             throw std::runtime_error("Failed to initialize scenes objects.");
             return -1;
         }
-        
+
         // Add Scenes
         multiScenesOption->addScene(simpleScene);
         multiScenesOption->addScene(volumetricScene);
+        multiScenesOption->setCurrentSceneIndex(0);
 
         // Render
         auto render = std::make_shared<Render>(controlPanel, multiScenesOption);

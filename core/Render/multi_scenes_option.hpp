@@ -20,9 +20,8 @@ class MultiScenesOption {
     }
 
     void setCurrentSceneIndex(std::size_t index) {
-        if (index < m_Scenes.size()) {
+        if (index < m_Scenes.size())
             m_CurrentSceneIndex = index;
-        }
     }
 
     std::size_t getCurrentSceneIndex() const { return m_CurrentSceneIndex; }

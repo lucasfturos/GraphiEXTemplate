@@ -8,6 +8,7 @@ class Scene {
   protected:
     glm::mat4 m_ViewMatrix;
     glm::mat4 m_ModelMatrix;
+    glm::mat4 m_ProjMatrix;
 
     std::shared_ptr<ControlPanel> m_ControlPanel;
 

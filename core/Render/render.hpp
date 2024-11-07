@@ -7,15 +7,12 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl2.h"
 
-#include <GL/glew.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
-#include <glm/glm.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include <iostream>
 #include <memory>
 
 class Render {
