@@ -20,6 +20,8 @@ O projeto inclui exemplos e funções que permitem a implementação de diversos
 -   OpenGL
 -   Assimp
 -   STB
+-   Doxygen
+-   CTest
 
 ## Licença
 
