@@ -27,10 +27,14 @@ add_compile_options(
     -Wall -Wextra -Wpedantic -Werror -pedantic -g -Ofast 
 )
 
+include(CTest)
+enable_testing()
+
 add_subdirectory(core)
 add_subdirectory(docs)
 add_subdirectory(examples)
 add_subdirectory(external)
 add_subdirectory(src)
+add_subdirectory(tests)
 
 # -------------------------------------------------------------------
