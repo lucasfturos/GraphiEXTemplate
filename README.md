@@ -20,6 +20,7 @@ The project includes examples and functions that enable the implementation of va
 -   OpenGL
 -   Assimp
 -   STB
+-   Doxygen
 
 ## License
 

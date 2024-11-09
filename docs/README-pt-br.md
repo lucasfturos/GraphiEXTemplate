@@ -1,4 +1,4 @@
-# GraphiEXTemplate
+# GraphiEXTemplate PT-BR
 
 Este repositório oferece um template para configuração rápida e eficiente de um ambiente de desenvolvimento e teste para modelos 2D e 3D, utilizando OpenGL, SDL2 e ImGui.
 
