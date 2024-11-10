@@ -5,9 +5,11 @@ int runAllTestsColor();
 int runAllTestsPerlin();
 int runAllTestsUtil();
 
+// GLObjects
+int runAllTestsInterpolation();
+
 // Objects3D
 int runAllTestsCylinder();
-int runAllTestsPlane();
 int runAllTestsSphere();
 
 int main(void) {
@@ -20,11 +22,11 @@ int main(void) {
     std::cout << "Running Util Functions Tests...\n";
     runAllTestsUtil();
 
+    std::cout << "Running Interpolation Tests...\n";
+    runAllTestsInterpolation();
+
     std::cout << "Running Cylinder tests...\n";
     runAllTestsCylinder();
-
-    std::cout << "Running Plane tests...\n";
-    runAllTestsPlane();
 
     std::cout << "Running Sphere tests...\n";
     runAllTestsSphere();

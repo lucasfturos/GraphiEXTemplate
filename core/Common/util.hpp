@@ -49,6 +49,7 @@ inline std::string mat4ToString(const glm::mat4 &mat) {
     ss << ")";
     return ss.str();
 }
+
 } // namespace DebugGLM
 
 namespace AssimpGLMConversion {
