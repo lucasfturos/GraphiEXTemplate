@@ -1,24 +1,24 @@
-#include "volumetric_render.hpp"
+#include "volume_obj.hpp"
 #include "Objects3D/cube.hpp"
 
-VolumetricRender::VolumetricRender(const std::string &filePath)
+VolumeObject::VolumeObject(const std::string &filePath)
     : m_Model(std::make_shared<Model>(filePath)),
       m_ProjMatrix(
           glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)) {}
 
-void VolumetricRender::setup() {
+void VolumeObject::setup() {
     loadModel();
     setupMesh();
     loadTextures();
     setUniforms();
 }
 
-void VolumetricRender::loadModel() {
+void VolumeObject::loadModel() {
     m_ModelVertices = m_Model->getVertices();
     m_ModelFaces = m_Model->getFaces();
 }
 
-void VolumetricRender::setupMesh() {
+void VolumeObject::setupMesh() {
     m_Mesh = std::make_shared<Mesh<Types>>(
         cubeVertices, cubeIndices, "assets/shader/VolumeRender/vertex.shader",
         "assets/shader/VolumeRender/fragment.shader");
@@ -28,7 +28,7 @@ void VolumetricRender::setupMesh() {
     m_Mesh->setup(layoutMap);
 }
 
-void VolumetricRender::loadTextures() {
+void VolumeObject::loadTextures() {
     int num = 69;
     int width = num;
     int height = num;
@@ -54,7 +54,7 @@ void VolumetricRender::loadTextures() {
     m_Mesh->setTexture(transferFunctionTexture);
 }
 
-void VolumetricRender::setUniforms() {
+void VolumeObject::setUniforms() {
     Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uVolume"] = [](std::shared_ptr<Shader> shader) {
@@ -71,7 +71,7 @@ void VolumetricRender::setUniforms() {
     m_Mesh->setUniforms(uniforms);
 }
 
-void VolumetricRender::setRunUniforms() {
+void VolumeObject::setRunUniforms() {
     Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
@@ -98,7 +98,7 @@ void VolumetricRender::setRunUniforms() {
     m_Mesh->setUniforms(uniforms);
 }
 
-void VolumetricRender::run() {
+void VolumeObject::run() {
     if (!m_Mesh)
         return;
 

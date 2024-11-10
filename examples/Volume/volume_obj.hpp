@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 
-class VolumetricRender {
+class VolumeObject {
   protected:
     const glm::mat4 m_ViewMatrix =
         glm::lookAt(glm::vec3(0.0f, 2.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f),
@@ -36,7 +36,7 @@ class VolumetricRender {
     void setRunUniforms();
 
   public:
-    VolumetricRender(const std::string &);
+    VolumeObject(const std::string &);
 
     void setScale(glm::vec3 scale) { m_Scale = scale; }
     void setRotation(glm::vec2 rotation) { m_Rotation = rotation; }

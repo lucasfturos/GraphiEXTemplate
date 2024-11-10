@@ -6,11 +6,11 @@ int main(void) {
         // Examples
         auto modelRender = std::make_shared<ModelRender>(
             "assets/model/Nightshade/Breakdance Freeze Var 2.dae");
-        auto volumetricRender =
-            std::make_shared<VolumetricRender>("assets/model/spot.obj");
+        auto volumeObject =
+            std::make_shared<VolumeObject>("assets/model/spot.obj");
         auto objects = std::make_shared<Objects>();
 
-        if (!modelRender || !volumetricRender || !objects) {
+        if (!modelRender || !volumeObject || !objects) {
             throw std::runtime_error("Failed to initialize render objects.");
             return -1;
         }
@@ -21,7 +21,7 @@ int main(void) {
         auto simpleScene =
             std::make_shared<SimpleScene>(controlPanel, modelRender, objects);
         auto volumetricScene =
-            std::make_shared<VolumetricScene>(controlPanel, volumetricRender);
+            std::make_shared<VolumetricScene>(controlPanel, volumeObject);
 
         if (!controlPanel || !simpleScene || !volumetricScene) {
             throw std::runtime_error("Failed to initialize scenes objects.");
