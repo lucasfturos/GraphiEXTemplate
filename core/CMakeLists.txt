@@ -41,11 +41,6 @@ add_library(Core_lib STATIC
     ${CORE_SOURCES}
 )
 
-target_include_directories(Core_lib PRIVATE
-    ${ASSIMP_INCLUDE_DIRS}
-    ${OPENGL_INCLUDE_DIRS}
-)
-
 target_include_directories(Core_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/
 )
@@ -56,10 +51,10 @@ target_link_libraries(Core_lib PUBLIC
 
 target_link_libraries(Core_lib PRIVATE
     # Assimp
-    ${ASSIMP_LIBRARIES}
+    assimp::assimp
     # OpenGL
     glm::glm
     GLEW::GLEW
     ${CMAKE_DL_LIBS}
-    ${OPENGL_LIBRARIES}
+    OpenGL::OpenGL
 )
