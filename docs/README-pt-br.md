@@ -2,7 +2,7 @@
 
 Este repositório oferece um template para configuração rápida e eficiente de um ambiente de desenvolvimento e teste para modelos 2D e 3D, utilizando OpenGL, SDL2 e ImGui.
 
-O projeto inclui exemplos e funções que permitem a implementação de diversos tipos de visualizações 3D, como renderização volumétrica, animação de modelos, modelos normais e um painel de controle interativo, entre outros recursos.
+O projeto inclui exemplos e funções que permitem a implementação de diversos tipos de visualizações 3D, como renderização volumétrica, animação de modelos, modelos normais, um painel de controle interativo, entre outros recursos.
 
 ## Características
 
@@ -10,8 +10,13 @@ O projeto inclui exemplos e funções que permitem a implementação de diversos
 -   Animação de modelos 3D
 -   Interface de usuário com ImGui
 -   Painel de controle interativo
+-   Sistema de testes unitário
 
-## Requisitos
+## Instalação
+
+Abaixo está a instalação do modelo, bem como o teste dos exemplos.
+
+### Requisitos
 
 -   GCC/G++
 -   CMake
@@ -23,9 +28,41 @@ O projeto inclui exemplos e funções que permitem a implementação de diversos
 -   Doxygen
 -   CTest
 
+### Instruções para Instalar
+
+1. Clone o repositório:
+
+```
+git clone https://github.com/lucasfturos/GraphiEXTemplate.git && cd GraphiEXTemplate
+```
+
+2. Atualize o git submodule
+
+```
+git submodule update --init --recursive
+```
+
+3. Crie o arquivo de build:
+
+```
+cmake -S . -B build
+```
+
+4. Entre no arquivo build e compile o programa:
+
+```
+cd build ; make -j4
+```
+
+5. Execute o programa:
+
+```
+./src/Demo
+```
+
 ## Licença
 
-Este projeto está licenciado sob a licença MIT. Consulte o arquivo LICENSE para mais informações.
+Este projeto está sob a licença MIT. Consulte o arquivo LICENSE para mais informações.
 
 ## Referências
 
