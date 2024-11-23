@@ -12,6 +12,7 @@ class Scene {
     std::shared_ptr<ControlPanel> m_ControlPanel;
 
   public:
+    Scene() = default;
     Scene(std::shared_ptr<ControlPanel> controlPanel)
         : m_ControlPanel(controlPanel) {}
     virtual ~Scene() = default;

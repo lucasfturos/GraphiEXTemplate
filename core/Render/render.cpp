@@ -1,5 +1,8 @@
 #include "render.hpp"
 
+Render::Render(std::shared_ptr<MultiScenesOption> multiScenesOption)
+    : Render(nullptr, multiScenesOption) {}
+
 Render::Render(std::shared_ptr<ControlPanel> controlPanel,
                std::shared_ptr<MultiScenesOption> multiScenesOption)
     : m_Window(nullptr), m_Context(nullptr), m_Quit(false),

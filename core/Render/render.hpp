@@ -53,6 +53,7 @@ class Render {
     void handleEvents();
 
   public:
+    Render(std::shared_ptr<MultiScenesOption>);
     Render(std::shared_ptr<ControlPanel>, std::shared_ptr<MultiScenesOption>);
     ~Render();
 
