@@ -2,6 +2,7 @@
 
 #include "ControlPanel/control_panel.hpp"
 
+#include <SDL2/SDL_events.h>
 #include <memory>
 
 class Scene {
@@ -16,9 +17,12 @@ class Scene {
     Scene(std::shared_ptr<ControlPanel> controlPanel)
         : m_ControlPanel(controlPanel) {}
     virtual ~Scene() = default;
+
     virtual void setup() = 0;
     virtual void update(float /* dt */, glm::mat4 /* projection */) = 0;
     virtual void render() = 0;
+    
+    virtual void handleEvent(const SDL_Event &) {}
     virtual void resetMatrix() {
         m_ViewMatrix = glm::mat4(1.0f);
         m_ModelMatrix = glm::mat4(1.0f);

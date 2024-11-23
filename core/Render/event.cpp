@@ -18,5 +18,9 @@ void Render::handleEvents() {
         default:
             break;
         }
+        
+        auto currentScene = m_MultiScenesOption->getCurrentScene();
+        if (currentScene)
+            currentScene->handleEvent(event);
     }
 }
