@@ -12,6 +12,10 @@ class Texture {
     int m_Width;
     int m_Height;
     int m_Channels;
+    unsigned char *m_ImageData;
+
+    GLenum m_Format;
+    GLenum m_Type;
 
   public:
     Texture(const std::string &imagePath);
@@ -31,6 +35,12 @@ class Texture {
             glDeleteTextures(1, &m_RendererID);
             m_RendererID = other.m_RendererID;
             m_TextureType = other.m_TextureType;
+            m_Width = other.m_Width;
+            m_Height = other.m_Height;
+            m_ImageData = other.m_ImageData;
+            
+            m_Format = other.m_Format;
+            m_Type = other.m_Type;
             other.m_RendererID = 0;
         }
         return *this;
@@ -39,6 +49,10 @@ class Texture {
     int getWidth() const { return m_Width; }
     int getHeight() const { return m_Height; }
     int getChannels() const { return m_Channels; }
+    unsigned char *getImageData() const { return m_ImageData; }
+
+    GLenum getFormat() const { return m_Format; }
+    GLenum getType() const { return m_Type; }
 
     void bind(unsigned int slot = 0) const {
         glActiveTexture(GL_TEXTURE0 + slot);
