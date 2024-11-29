@@ -9,6 +9,10 @@ class Texture {
     GLuint m_RendererID;
     GLenum m_TextureType;
 
+    int m_Width;
+    int m_Height;
+    int m_Channels;
+
   public:
     Texture(const std::string &imagePath);
     Texture(int width, int height, int depth, GLenum format, GLenum type,
@@ -31,6 +35,10 @@ class Texture {
         }
         return *this;
     }
+
+    int getWidth() const { return m_Width; }
+    int getHeight() const { return m_Height; }
+    int getChannels() const { return m_Channels; }
 
     void bind(unsigned int slot = 0) const {
         glActiveTexture(GL_TEXTURE0 + slot);
