@@ -23,15 +23,15 @@ inline int randomInt(int min, int max) {
 class Perlin {
   public:
     Perlin() {
-        ranvec.resize(point_count);
-        for (int i = 0; i < point_count; ++i) {
-            ranvec[i] = glm::normalize(glm::vec3(
+        m_Ranvec.resize(m_PointCount);
+        for (int i = 0; i < m_PointCount; ++i) {
+            m_Ranvec[i] = glm::normalize(glm::vec3(
                 randomDouble(-1, 1), randomDouble(-1, 1), randomDouble(-1, 1)));
         }
 
-        perm_x = perlinGeneratePerm();
-        perm_y = perlinGeneratePerm();
-        perm_z = perlinGeneratePerm();
+        m_PermX = perlinGeneratePerm();
+        m_PermY = perlinGeneratePerm();
+        m_PermZ = perlinGeneratePerm();
     }
 
     double noise(const glm::vec3 &p) const {
@@ -50,9 +50,9 @@ class Perlin {
         for (int di = 0; di < 2; ++di) {
             for (int dj = 0; dj < 2; ++dj) {
                 for (int dk = 0; dk < 2; ++dk) {
-                    c[di][dj][dk] =
-                        ranvec[perm_x[(i + di) & 255] ^ perm_y[(j + dj) & 255] ^
-                               perm_z[(k + dk) & 255]];
+                    c[di][dj][dk] = m_Ranvec[m_PermX[(i + di) & 255] ^
+                                             m_PermY[(j + dj) & 255] ^
+                                             m_PermZ[(k + dk) & 255]];
                 }
             }
         }
@@ -61,28 +61,28 @@ class Perlin {
 
     double turb(const glm::vec3 &p, int depth = 7) const {
         auto accum = 0.0;
-        auto temp_p = p;
+        auto tempP = p;
         auto weight = 1.0;
 
         for (int i = 0; i < depth; ++i) {
-            accum += weight * noise(temp_p);
+            accum += weight * noise(tempP);
             weight *= 0.5;
-            temp_p *= 2.0f;
+            tempP *= 2.0f;
         }
 
         return std::fabs(accum);
     }
 
   private:
-    static const int point_count = 256;
-    std::vector<glm::vec3> ranvec;
-    std::vector<int> perm_x;
-    std::vector<int> perm_y;
-    std::vector<int> perm_z;
+    static const int m_PointCount = 256;
+    std::vector<glm::vec3> m_Ranvec;
+    std::vector<int> m_PermX;
+    std::vector<int> m_PermY;
+    std::vector<int> m_PermZ;
 
     static std::vector<int> perlinGeneratePerm() {
-        std::vector<int> p(point_count);
-        for (int i = 0; i < point_count; ++i) {
+        std::vector<int> p(m_PointCount);
+        for (int i = 0; i < m_PointCount; ++i) {
             p[i] = i;
         }
         permute(p);
@@ -108,11 +108,11 @@ class Perlin {
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 2; ++j) {
                 for (int k = 0; k < 2; ++k) {
-                    glm::vec3 weight_v(u - i, v - j, w - k);
+                    glm::vec3 weightV(u - i, v - j, w - k);
                     accum += (i * uu + (1 - i) * (1 - uu)) *
                              (j * vv + (1 - j) * (1 - vv)) *
                              (k * ww + (1 - k) * (1 - ww)) *
-                             dot(c[i][j][k], weight_v);
+                             dot(c[i][j][k], weightV);
                 }
             }
         }

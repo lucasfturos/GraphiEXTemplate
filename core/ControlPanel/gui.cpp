@@ -1,5 +1,4 @@
 #include "control_panel.hpp"
-#include "imgui.h"
 
 void ControlPanel::initFont() {
     ImGui::GetIO().Fonts->Clear();

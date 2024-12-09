@@ -13,32 +13,32 @@ enum class TransformMode { Rotate, Scale, Translate };
 
 class ControlPanel {
   protected:
-    const int controlPanelWidth = 300;
-    const int controlPanelHeight = 130;
+    const int m_ControlPanelWidth = 300;
+    const int m_ControlPanelHeight = 130;
 
-    const int gizmoWidth = 200;
-    const int gizmoHeight = 200;
+    const int m_GizmoWidth = 200;
+    const int m_GizmoHeight = 200;
 
-    const int gizmoControlWidth = 300;
-    const int gizmoControlHeight = 280;
+    const int m_GizmoControlWidth = 300;
+    const int m_GizmoControlHeight = 280;
 
   private:
-    int sceneOption;
-    float scaleFactor;
-    bool showGizmoWindow;
-    ObjectType objectType;
-    TransformMode currentMode;
+    int m_SceneOption;
+    float m_ScaleFactor;
+    bool m_ShowGizmoWindow;
+    ObjectType m_ObjectType;
+    TransformMode m_CurrentMode;
 
-    glm::vec3 scale;
-    glm::vec2 rotation;
-    glm::vec3 translation;
+    glm::vec3 m_Scale;
+    glm::vec2 m_Rotation;
+    glm::vec3 m_Translation;
 
     std::shared_ptr<MultiScenesOption> m_MultiScenesOption;
 
   private:
-    float bottomControlPanelHeight;
-    std::shared_ptr<FrameBuffer> framebuffer;
-    std::shared_ptr<Mesh<MeshTypes<glm::vec3, GLuint>>> cubeMesh;
+    float m_BottomControlPanelHeight;
+    std::shared_ptr<FrameBuffer> m_Framebuffer;
+    std::shared_ptr<Mesh<MeshTypes<glm::vec3, GLuint>>> m_CubeMesh;
 
     void setupGizmo();
 
@@ -62,11 +62,11 @@ class ControlPanel {
   public:
     ControlPanel(std::shared_ptr<MultiScenesOption>);
 
-    ObjectType getObjectType() { return objectType; }
+    ObjectType getObjectType() { return m_ObjectType; }
 
-    glm::vec3 getScale() const { return scale; }
-    glm::vec2 getRotation() const { return rotation; }
-    glm::vec3 getTranslation() const { return translation; }
+    glm::vec3 getScale() const { return m_Scale; }
+    glm::vec2 getRotation() const { return m_Rotation; }
+    glm::vec3 getTranslation() const { return m_Translation; }
 
     void setup();
     void run();
