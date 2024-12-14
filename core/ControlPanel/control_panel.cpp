@@ -15,8 +15,9 @@ void ControlPanel::setup() {
 
 void ControlPanel::setupGizmo() {
     m_CubeMesh = std::make_shared<Mesh<MeshTypes<glm::vec3, GLuint>>>(
-        cubeVertices, cubeIndices, "assets/shader/Gizmo/vertex.shader",
-        "assets/shader/Gizmo/fragment.shader");
+        cubeVertices, cubeIndices,
+        ShaderPaths{"assets/shader/Gizmo/vertex.shader"},
+        ShaderPaths{"assets/shader/Gizmo/fragment.shader"});
 
     Mesh<MeshTypes<glm::vec3, glm::ivec3>>::VertexBufferLayoutMap layoutMap;
     layoutMap["vertices"] = &LayoutAttribute<GLfloat, 3>::setup;

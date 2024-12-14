@@ -7,7 +7,10 @@
 #include <iostream>
 #include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
+
+using ShaderPaths = std::vector<std::string>;
 
 struct ShaderProgramSource {
     std::string vertexSource;
@@ -20,10 +23,10 @@ class Shader {
     std::unordered_map<std::string, GLint> m_UniformLocationCache;
 
   public:
-    Shader(const std::string &vertexPath, const std::string &fragmentPath)
+    Shader(const ShaderPaths &vertexPaths, const ShaderPaths &fragmentPaths)
         : m_BufferID(0) {
-        std::string vertexSource = loadShader(vertexPath);
-        std::string fragmentSource = loadShader(fragmentPath);
+        std::string vertexSource = loadFilePathsShaders(vertexPaths);
+        std::string fragmentSource = loadFilePathsShaders(fragmentPaths);
         m_BufferID = createShader(vertexSource, fragmentSource);
     }
 
@@ -90,10 +93,58 @@ class Shader {
     }
 
   private:
-    std::string loadShader(const std::string &filepath) {
+    std::string loadFilePathsShaders(const ShaderPaths &filepaths) {
+        std::unordered_set<std::string> includedFiles;
+        std::stringstream combinedSource;
+
+        for (const auto &filepath : filepaths) {
+            combinedSource << loadAndProcessShader(filepath, includedFiles)
+                           << '\n';
+        }
+
+        return combinedSource.str();
+    }
+
+    std::string
+    loadAndProcessShader(const std::string &filepath,
+                         std::unordered_set<std::string> &includedFiles) {
+        if (includedFiles.count(filepath))
+            return "";
+
+        includedFiles.insert(filepath);
+
         std::ifstream file(filepath);
+        if (!file.is_open()) {
+            std::cerr << "Could not open shader file: " << filepath << '\n';
+            return "";
+        }
+
         std::stringstream stream;
-        stream << file.rdbuf();
+        std::string line;
+        std::string directory =
+            filepath.substr(0, filepath.find_last_of("/\\") + 1);
+
+        while (std::getline(file, line)) {
+            if (line.find("#include") == 0) {
+                std::size_t firstQuote = line.find("\"");
+                std::size_t lastQuote = line.find_last_of("\"");
+                if (firstQuote != std::string::npos &&
+                    lastQuote != std::string::npos && lastQuote > firstQuote) {
+                    std::string includePath =
+                        line.substr(firstQuote + 1, lastQuote - firstQuote - 1);
+                    includePath = directory + includePath;
+
+                    stream << loadAndProcessShader(includePath, includedFiles)
+                           << '\n';
+                } else {
+                    std::cerr << "Malformed #include directive: " << line
+                              << '\n';
+                }
+            } else {
+                stream << line << '\n';
+            }
+        }
+
         return stream.str();
     }
 

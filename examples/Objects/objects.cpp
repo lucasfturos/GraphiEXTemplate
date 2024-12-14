@@ -40,8 +40,9 @@ void Objects::updateObject() {
 
 void Objects::createMesh() {
     m_Mesh = std::make_shared<Mesh<Types>>(
-        m_Vertices, m_Indices, "assets/shader/Objects/vertex.shader",
-        "assets/shader/Objects/fragment.shader");
+        m_Vertices, m_Indices,
+        ShaderPaths{"assets/shader/Objects/vertex.shader"},
+        ShaderPaths{"assets/shader/Objects/fragment.shader"});
 
     Mesh<Types>::VertexBufferLayoutMap layoutMap;
     layoutMap["vertices"] = &LayoutAttribute<GLfloat, 3>::setup;

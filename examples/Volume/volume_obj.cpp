@@ -20,8 +20,9 @@ void VolumeObject::loadModel() {
 
 void VolumeObject::setupMesh() {
     m_Mesh = std::make_shared<Mesh<Types>>(
-        cubeVertices, cubeIndices, "assets/shader/VolumeRender/vertex.shader",
-        "assets/shader/VolumeRender/fragment.shader");
+        cubeVertices, cubeIndices,
+        ShaderPaths{"assets/shader/VolumeRender/vertex.shader"},
+        ShaderPaths{"assets/shader/VolumeRender/fragment.shader"});
 
     Mesh<Types>::VertexBufferLayoutMap layoutMap;
     layoutMap["vertices"] = &LayoutAttribute<GLfloat, 3>::setup;

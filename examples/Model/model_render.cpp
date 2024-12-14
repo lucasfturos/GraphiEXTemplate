@@ -28,8 +28,8 @@ void ModelRender::setupMesh() {
     auto texCoords = m_Model->getTexCoords();
     m_Mesh = std::make_shared<Mesh<Types>>(
         m_Vertices, m_Faces, m_Normals, texCoords, m_BoneIDs, m_Weights,
-        "assets/shader/Model/vertex.shader",
-        "assets/shader/Model/fragment.shader");
+        ShaderPaths{"assets/shader/Model/vertex.shader"},
+        ShaderPaths{"assets/shader/Model/fragment.shader"});
 
     Mesh<Types>::VertexBufferLayoutMap layoutMap;
 
