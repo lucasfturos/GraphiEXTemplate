@@ -20,6 +20,7 @@ enum class ObjectType {
     Cylinder,
     Plane,
     Cube,
+    FunctionPlot,
 };
 
 namespace DebugGLM {

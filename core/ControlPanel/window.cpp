@@ -139,8 +139,8 @@ void ControlPanel::mainWindow() {
 }
 
 void ControlPanel::renderObjectTypeSelector() {
-    std::vector<const char *> objectTypeNames = {"None", "Sphere", "Cylinder",
-                                                 "Plane", "Cube"};
+    std::vector<const char *> objectTypeNames = {
+        "None", "Sphere", "Cylinder", "Plane", "Cube", "FunctionPlot"};
     int currentType = static_cast<int>(m_ObjectType);
     if (ImGui::Combo("##comboobject", &currentType, objectTypeNames.data(),
                      objectTypeNames.size())) {

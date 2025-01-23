@@ -2,10 +2,9 @@
 
 #include "Common/util.hpp"
 #include "GLObjects/Mesh/mesh.hpp"
+#include "Objects3D/Integrate.hpp"
 #include "Objects3D/cylinder.hpp"
 #include "Objects3D/sphere.hpp"
-
-#include <memory>
 
 class Objects {
   protected:
@@ -15,6 +14,7 @@ class Objects {
 
   private:
     std::shared_ptr<Cylinder> m_Cylinder;
+    std::shared_ptr<Integrate> m_Integrate;
     std::shared_ptr<Sphere> m_Sphere;
     ObjectType m_ObjectType;
 

@@ -1,9 +1,18 @@
 #include "objects.hpp"
+#include "Common/util.hpp"
 #include "Objects3D/cube.hpp"
 #include "Objects3D/plane.hpp"
 
+inline std::vector<std::function<GLfloat(GLfloat, GLfloat)>> functions = {
+    [](GLfloat x, GLfloat) { return x; },
+    [](GLfloat, GLfloat y) { return y; },
+    [](GLfloat x, GLfloat y) { return x * x + y * y; },
+};
+
 Objects::Objects()
     : m_Cylinder(std::make_shared<Cylinder>(2.0, 0.5, 0.5, 20)),
+      m_Integrate(
+          std::make_shared<Integrate>(functions, -1.0, 1.0, -1.0, 1.0, 50, 30)),
       m_Sphere(std::make_shared<Sphere>(1.0, 20)),
       m_ObjectType(ObjectType::None), m_Time(0.0f) {}
 
@@ -34,6 +43,10 @@ void Objects::updateObject() {
     case ObjectType::Cube:
         m_Vertices = cubeVertices;
         m_Indices = cubeIndices;
+        break;
+    case ObjectType::FunctionPlot:
+        m_Vertices = m_Integrate->getVertices();
+        m_Indices = m_Integrate->getFaces();
         break;
     }
 }
