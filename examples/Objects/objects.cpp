@@ -4,15 +4,19 @@
 #include "Objects3D/plane.hpp"
 
 inline std::vector<std::function<GLfloat(GLfloat, GLfloat)>> functions = {
-    [](GLfloat x, GLfloat) { return x; },
-    [](GLfloat, GLfloat y) { return y; },
-    [](GLfloat x, GLfloat y) { return x * x + y * y; },
+    [](GLfloat u, GLfloat v) {
+        return (1.0 + 0.5 * std::cos(v)) * std::cos(u);
+    },
+    [](GLfloat u, GLfloat v) {
+        return (1.0 + 0.5 * std::cos(v)) * std::sin(u);
+    },
+    [](GLfloat, GLfloat v) { return 0.5 * std::sin(v); },
 };
 
 Objects::Objects()
     : m_Cylinder(std::make_shared<Cylinder>(2.0, 0.5, 0.5, 20)),
-      m_Integrate(
-          std::make_shared<Integrate>(functions, -1.0, 1.0, -1.0, 1.0, 50, 30)),
+      m_Integrate(std::make_shared<Integrate>(functions, 0, 2 * M_PI, 0,
+                                              2 * M_PI, 50, 30)),
       m_Sphere(std::make_shared<Sphere>(1.0, 20)),
       m_ObjectType(ObjectType::None), m_Time(0.0f) {}
 
