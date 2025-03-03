@@ -39,12 +39,19 @@ template <typename Types> void Mesh<Types>::draw() {
 }
 
 template <typename Types>
+void Mesh<Types>::updateVertices(const std::vector<VerticesType> &newVertices) {
+    if (m_VerticesBuffer) {
+        m_VerticesBuffer->updateData(newVertices);
+    }
+}
+
+template <typename Types>
 void Mesh<Types>::updateTexture(const std::vector<float> &data, int width,
                                 int height, int depth,
                                 std::uint32_t textureIndex) {
     if (textureIndex < m_Textures.size() && m_Textures[textureIndex])
-        m_Textures[textureIndex]->updateData(data, width, height, depth, GL_RGBA,
-                                             GL_FLOAT);
+        m_Textures[textureIndex]->updateData(data, width, height, depth,
+                                             GL_RGBA, GL_FLOAT);
 }
 
 template <typename Types>

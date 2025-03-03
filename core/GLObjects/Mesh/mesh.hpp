@@ -114,6 +114,7 @@ template <typename Types> class Mesh {
     void setUniforms(const UniformsMap &);
 
     void draw();
+    void updateVertices(const std::vector<VerticesType> &);
     void updateTexture(const std::vector<float> &, int, int, int,
                        std::uint32_t = 0);
     void setTexture(std::shared_ptr<Texture>);
