@@ -7,12 +7,14 @@ cmake_minimum_required(VERSION 3.4...3.25 FATAL_ERROR)
 set(EXAMPLES_HEADER
     Model/model_render.hpp
     Objects/objects.hpp
+    SoftBodyRender/soft_body_render.hpp
     Volume/volume_obj.hpp
 )
 
 set(EXAMPLES_SOURCE
     Model/model_render.cpp
     Objects/objects.cpp
+    SoftBodyRender/soft_body_render.cpp
     Volume/volume_obj.cpp
 )
 

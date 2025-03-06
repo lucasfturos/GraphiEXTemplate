@@ -1,4 +1,5 @@
 #include "ScenesRender/simple_scene.hpp"
+#include "ScenesRender/softbody_scene.hpp"
 #include "ScenesRender/volumetric_scene.hpp"
 
 int main(void) {
@@ -18,17 +19,21 @@ int main(void) {
         // Scenes render
         auto multiScenesOption = std::make_shared<MultiScenesOption>();
         auto controlPanel = std::make_shared<ControlPanel>(multiScenesOption);
+
         auto simpleScene =
             std::make_shared<SimpleScene>(controlPanel, modelRender, objects);
+        auto softBodyScene = std::make_shared<SoftBodyScene>(controlPanel);
         auto volumetricScene =
             std::make_shared<VolumetricScene>(controlPanel, volumeObject);
 
-        if (!controlPanel || !simpleScene || !volumetricScene) {
+        if (!controlPanel || !simpleScene || !softBodyScene ||
+            !volumetricScene) {
             throw std::runtime_error("Failed to initialize scenes objects.");
             return -1;
         }
 
         // Add Scenes
+        multiScenesOption->addScene(softBodyScene);
         multiScenesOption->addScene(simpleScene);
         multiScenesOption->addScene(volumetricScene);
         multiScenesOption->setCurrentSceneIndex(0);
