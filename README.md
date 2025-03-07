@@ -62,7 +62,7 @@ cd build ; make -j4
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more information.
+This project is licensed under the GPLv3 License. See the LICENSE file for more information.
 
 ## Reference
 
