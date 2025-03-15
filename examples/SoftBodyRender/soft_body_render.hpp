@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common/softbody_effect.hpp"
 #include "GLObjects/Mesh/mesh.hpp"
+#include "Physics/softbody_effect.hpp"
 
 class SoftBodyRender {
   protected:

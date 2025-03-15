@@ -66,6 +66,10 @@ void SoftBodyRender::setupMesh() {
         m_SoftBody->addParticle(vertex);
     }
 
+    for (std::size_t i = 0; i < cubeIndices.size() - 1; ++i) {
+        m_SoftBody->addSpring(cubeIndices[i], cubeIndices[i + 1]);
+    }
+
     m_SoftBody->setBoundingBox(glm::vec3(-m_SizeCornellBox),
                                glm::vec3(m_SizeCornellBox));
 }
@@ -136,7 +140,7 @@ void SoftBodyRender::setRunUniforms() {
 }
 
 void SoftBodyRender::update() {
-    m_SoftBody->setTimeStep(0.05);
+    m_SoftBody->setTimeStep(0.01f);
     m_SoftBody->update();
     std::vector<glm::vec3> newVertices = m_SoftBody->getUpdatedVertices();
     m_Mesh[0]->updateVertices(newVertices);
