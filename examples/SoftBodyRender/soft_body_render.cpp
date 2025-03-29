@@ -4,17 +4,11 @@
 #include <glm/ext/matrix_clip_space.hpp>
 
 SoftBodyRender::SoftBodyRender()
-    : m_SoftBody(std::make_unique<SoftBody>()),
-      m_ProjMatrix(
+    : m_ProjMatrix(
           glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)),
       m_Time(0.0f), m_SizeCornellBox(7.0f) {}
 
 void SoftBodyRender::setup() {
-    setupMesh();
-    update();
-}
-
-void SoftBodyRender::setupMesh() {
     m_Mesh = {
         // Soft-body
         std::make_shared<Mesh<Types>>(
@@ -62,17 +56,6 @@ void SoftBodyRender::setupMesh() {
         if (mesh)
             mesh->setup(layoutMap);
     }
-
-    for (const auto &vertex : cubeVertices) {
-        m_SoftBody->addParticle(vertex);
-    }
-
-    for (std::size_t i = 0; i < cubeIndices.size() - 1; ++i) {
-        m_SoftBody->addSpring(cubeIndices[i], cubeIndices[i + 1]);
-    }
-
-    m_SoftBody->setBoundingBox(glm::vec3(-m_SizeCornellBox),
-                               glm::vec3(m_SizeCornellBox));
 }
 
 void SoftBodyRender::setRunUniforms() {
@@ -91,6 +74,10 @@ void SoftBodyRender::setRunUniforms() {
 
         glm::mat4 mvp = m_ProjMatrix * m_ViewMatrix * model;
         shader->setUniformMat4f("uMVP", mvp);
+    };
+
+    uniformsBodySoft["uTime"] = [this](std::shared_ptr<Shader> shader) {
+        shader->setUniform1f("uTime", m_Time);
     };
 
     m_Mesh[0]->setUniforms(uniformsBodySoft);
@@ -140,18 +127,10 @@ void SoftBodyRender::setRunUniforms() {
     }
 }
 
-void SoftBodyRender::update() {
-    m_SoftBody->setTimeStep(0.01f);
-    m_SoftBody->update();
-    std::vector<glm::vec3> newVertices = m_SoftBody->getUpdatedVertices();
-    m_Mesh[0]->updateVertices(newVertices);
-}
-
 void SoftBodyRender::run() {
     if (m_Mesh.empty())
         return;
 
-    update();
     setRunUniforms();
 
     for (const auto &mesh : m_Mesh) {
