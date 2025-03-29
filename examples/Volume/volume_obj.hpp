@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GLObjects/Mesh/mesh.hpp"
-#include "GLObjects/model.hpp"
+#include "Graphics/Mesh/mesh.hpp"
+#include "Graphics/model.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

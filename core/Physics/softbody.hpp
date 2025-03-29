@@ -14,9 +14,10 @@
  * https://matthias-research.github.io/pages/tenMinutePhysics/09-xpbd.pdf
  * http://www.darwin3d.com/gdm1999.htm
  * https://carmencincotti.com/2022-08-22/the-distance-constraint-of-xpbd/
+ * https://matthias-research.github.io/pages/tenMinutePhysics/index.html
  */
 
-class SoftBodyEffect {
+class SoftBody {
   protected:
     const float eps = 1.0e-3f;
 
@@ -24,7 +25,7 @@ class SoftBodyEffect {
         glm::vec3 position;
         glm::vec3 oldPosition;
         glm::vec3 velocity;
-        float mass;
+        float invMass;
     };
 
     struct Spring {
@@ -59,6 +60,13 @@ class SoftBodyEffect {
         }
     }
 
+    void applyConstraint() {
+        // for (auto &spring : m_Springs) {
+        //     auto &p1 = m_Particles[spring.p1];
+        //     auto &p2 = m_Particles[spring.p2];
+        // }
+    }
+
     void handleCollision(Particle &particle) {
         for (int i = 0; i < 3; ++i) {
             if (particle.position[i] < m_BoundMin[i]) {
@@ -73,10 +81,11 @@ class SoftBodyEffect {
     }
 
   public:
-    SoftBodyEffect() : m_TimeStep(0.01f), m_Gravity({0.0f, -9.81f, 0.0f}) {}
+    SoftBody() : m_TimeStep(0.01f), m_Gravity({0.0f, -9.81f, 0.0f}) {}
 
     void addParticle(const glm::vec3 &position, float mass = 1.0f) {
-        m_Particles.push_back({position, position, glm::vec3(0.0f), mass});
+        float invMass = 1.0f / mass;
+        m_Particles.push_back({position, position, glm::vec3(0.0f), invMass});
     }
 
     void addSpring(int p1, int p2, float stiffness = 100.0f,
@@ -86,7 +95,10 @@ class SoftBodyEffect {
         m_Springs.push_back({p1, p2, restLength, stiffness, damping});
     }
 
-    void update() { integrate(); }
+    void update() {
+        integrate();
+        applyConstraint();
+    }
 
     void setTimeStep(float time = 0.01f) { m_TimeStep = time; }
     void setBoundingBox(const glm::vec3 &min, const glm::vec3 &max) {

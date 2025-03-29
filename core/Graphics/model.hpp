@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/util.hpp"
+#include "Common/Util/assim_glm_convert.hpp"
 #include "Texture/texture.hpp"
 
 #include <assimp/Importer.hpp>

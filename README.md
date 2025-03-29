@@ -33,7 +33,7 @@ Below is the installation of the template, as well as testing of the examples.
 1. Clone the repository:
 
 ```
-git clone https://github.com/lucasfturos/GraphiEXTemplate.git && cd GraphiEXTemplate
+git clone --recursive https://github.com/lucasfturos/GraphiEXTemplate.git && cd GraphiEXTemplate
 ```
 
 2. Update the git submodule

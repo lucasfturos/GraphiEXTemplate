@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Common/util.hpp"
+#include "Graphics/model.hpp"
 #include "bone.hpp"
-#include "model.hpp"
 
 struct AssimpNodeData {
     glm::mat4 transformation;

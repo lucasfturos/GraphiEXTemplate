@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Common/util.hpp"
-#include "GLObjects/Mesh/mesh.hpp"
+#include "Common/Enums/object_type.hpp"
+#include "Graphics/Mesh/mesh.hpp"
 #include "Objects3D/Integrate.hpp"
 #include "Objects3D/cylinder.hpp"
 #include "Objects3D/sphere.hpp"
+
+#include <glm/ext/matrix_transform.hpp>
 
 class Objects {
   protected:

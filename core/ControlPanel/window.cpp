@@ -1,4 +1,5 @@
 #include "control_panel.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 void ControlPanel::gizmoWindow() {
     if (m_ShowGizmoWindow) {

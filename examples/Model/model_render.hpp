@@ -1,8 +1,8 @@
 #pragma once
 
-#include "GLObjects/Mesh/mesh.hpp"
-#include "GLObjects/animator.hpp"
-#include "GLObjects/model.hpp"
+#include "Graphics/Animation/animator.hpp"
+#include "Graphics/Mesh/mesh.hpp"
+#include "Graphics/model.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

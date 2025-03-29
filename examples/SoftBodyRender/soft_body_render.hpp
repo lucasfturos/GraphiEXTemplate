@@ -1,7 +1,8 @@
 #pragma once
 
-#include "GLObjects/Mesh/mesh.hpp"
-#include "Physics/softbody_effect.hpp"
+#include "Graphics/Mesh/mesh.hpp"
+#include "Physics/softbody.hpp"
+#include <glm/ext/matrix_transform.hpp>
 
 class SoftBodyRender {
   protected:
@@ -10,7 +11,7 @@ class SoftBodyRender {
                     glm::vec3(0.0f, 1.0f, 0.0f));
 
   private:
-    std::unique_ptr<SoftBodyEffect> m_SoftBody;
+    std::unique_ptr<SoftBody> m_SoftBody;
 
     glm::mat4 m_ProjMatrix;
     float m_Time;

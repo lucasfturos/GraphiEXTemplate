@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Common/util.hpp"
-#include "interpolation.hpp"
+#include "Common/Math/interpolation.hpp"
+#include "Common/Util/assim_glm_convert.hpp"
 
 #include <assimp/anim.h>
-
-#include <string>
 #include <vector>
 
 class Bone {

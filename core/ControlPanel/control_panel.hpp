@@ -2,14 +2,13 @@
 
 #include "imgui.h"
 
-#include "Common/util.hpp"
-#include "GLObjects/Mesh/mesh.hpp"
-#include "GLObjects/framebuffer.hpp"
+#include "Common/Enums/object_type.hpp"
+#include "Common/Enums/transform_mode.hpp"
+#include "Graphics/Mesh/mesh.hpp"
+#include "Graphics/framebuffer.hpp"
 #include "Scenes/multi_scenes_option.hpp"
 
 #include <memory>
-
-enum class TransformMode { Rotate, Scale, Translate };
 
 class ControlPanel {
   protected:

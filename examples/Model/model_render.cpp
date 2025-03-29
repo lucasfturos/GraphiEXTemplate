@@ -1,5 +1,4 @@
 #include "model_render.hpp"
-#include "GLObjects/model.hpp"
 
 ModelRender::ModelRender(const std::string &filepath)
     : m_Model(std::make_shared<Model>(filepath)),

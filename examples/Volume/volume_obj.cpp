@@ -1,10 +1,11 @@
 #include "volume_obj.hpp"
+#include "Common/Math/volume_generation.hpp"
 #include "Objects3D/cube.hpp"
 
 VolumeObject::VolumeObject(const std::string &filePath)
     : m_Model(std::make_shared<Model>(filePath)),
       m_ProjMatrix(
-          glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)) {}
+          glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 200.0f)) {}
 
 void VolumeObject::setup() {
     loadModel();

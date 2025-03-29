@@ -1,9 +1,10 @@
 #include "soft_body_render.hpp"
 #include "Objects3D/cube.hpp"
 #include "Objects3D/plane.hpp"
+#include <glm/ext/matrix_clip_space.hpp>
 
 SoftBodyRender::SoftBodyRender()
-    : m_SoftBody(std::make_unique<SoftBodyEffect>()),
+    : m_SoftBody(std::make_unique<SoftBody>()),
       m_ProjMatrix(
           glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 100.0f)),
       m_Time(0.0f), m_SizeCornellBox(7.0f) {}

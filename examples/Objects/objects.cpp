@@ -1,5 +1,4 @@
 #include "objects.hpp"
-#include "Common/util.hpp"
 #include "Objects3D/cube.hpp"
 #include "Objects3D/plane.hpp"
 

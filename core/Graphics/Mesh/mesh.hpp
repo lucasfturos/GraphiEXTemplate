@@ -1,9 +1,9 @@
 #pragma once
 
-#include "GLObjects/Texture/texture.hpp"
-#include "GLObjects/index_buffer.hpp"
-#include "GLObjects/shader.hpp"
-#include "GLObjects/vertex_array.hpp"
+#include "Graphics/Shader/shader.hpp"
+#include "Graphics/Texture/texture.hpp"
+#include "Graphics/index_buffer.hpp"
+#include "Graphics/vertex_array.hpp"
 
 #include <functional>
 #include <memory>

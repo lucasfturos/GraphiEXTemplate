@@ -8,9 +8,10 @@ set(CORE_HEADERS
     # ControlPanel
     ControlPanel/control_panel.hpp
     # GLObjects
-    GLObjects/Mesh/mesh.hpp
-    GLObjects/Texture/texture.hpp
-    GLObjects/VBLayout/vertex_buffer_layout.hpp
+    Graphics/Mesh/mesh.hpp
+    Graphics/Shader/shader.hpp
+    Graphics/Texture/texture.hpp
+    Graphics/VBLayout/vertex_buffer_layout.hpp
     # Render
     Render/render.hpp
 )
@@ -22,9 +23,11 @@ set(CORE_SOURCES
     ControlPanel/gui.cpp
     ControlPanel/window.cpp
     # GLObjects
-    GLObjects/Mesh/mesh.cpp
-    GLObjects/Texture/texture.cpp
-    GLObjects/VBLayout/vertex_buffer_layout.cpp
+    Graphics/Mesh/mesh.cpp
+    Graphics/Shader/shader.cpp
+    Graphics/Shader/setters.cpp
+    Graphics/Texture/texture.cpp
+    Graphics/VBLayout/vertex_buffer_layout.cpp
     # Render
     Render/event.cpp
     Render/render.cpp
