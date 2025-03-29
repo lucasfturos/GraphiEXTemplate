@@ -1,4 +1,4 @@
-# GraphiEXTemplate
+# Graphics Extreme Template
 
 This repository provides a template for quickly and efficiently setting up a development and testing environment for 2D and 3D models using OpenGL, SDL2, and ImGui.
 
