@@ -36,7 +36,7 @@ int main(void) {
         multiScenesOption->addScene(softBodyScene);
         multiScenesOption->addScene(simpleScene);
         multiScenesOption->addScene(volumetricScene);
-        multiScenesOption->setCurrentSceneIndex(0);
+        multiScenesOption->setCurrentSceneIndex(2);
 
         // Render
         auto render = std::make_shared<Render>(controlPanel, multiScenesOption);

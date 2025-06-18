@@ -38,7 +38,7 @@ class Texture {
             m_Width = other.m_Width;
             m_Height = other.m_Height;
             m_ImageData = other.m_ImageData;
-            
+
             m_Format = other.m_Format;
             m_Type = other.m_Type;
             other.m_RendererID = 0;
@@ -60,6 +60,22 @@ class Texture {
     }
     void unbind() const { glBindTexture(m_TextureType, 0); }
 
-    void updateData(const std::vector<float> &data, int width, int height,
-                    int depth, GLenum format, GLenum type) const;
+    template <typename T>
+    void updateData(const std::vector<T> &data, int width, int height,
+                    int depth, GLenum format, GLenum type) const {
+        bind();
+        switch (m_TextureType) {
+        case GL_TEXTURE_2D:
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type,
+                            data.data());
+            break;
+        case GL_TEXTURE_3D:
+            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, width, height, depth,
+                            format, type, data.data());
+            break;
+        default:
+            break;
+        }
+        unbind();
+    }
 };

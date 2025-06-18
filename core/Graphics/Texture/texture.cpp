@@ -70,21 +70,3 @@ Texture::Texture(const std::string &imagePath)
 }
 
 Texture::~Texture() { glDeleteTextures(1, &m_RendererID); }
-
-void Texture::updateData(const std::vector<float> &data, int width, int height,
-                         int depth, GLenum format, GLenum type) const {
-    bind();
-    switch (m_TextureType) {
-    case GL_TEXTURE_2D:
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, type,
-                        data.data());
-        break;
-    case GL_TEXTURE_3D:
-        glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, width, height, depth, format,
-                        type, data.data());
-        break;
-    default:
-        break;
-    }
-    unbind();
-}

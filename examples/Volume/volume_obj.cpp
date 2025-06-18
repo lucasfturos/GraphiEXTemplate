@@ -31,18 +31,24 @@ void VolumeObject::setupMesh() {
 }
 
 void VolumeObject::loadTextures() {
-    int num = 69;
-    int width = num;
-    int height = num;
-    int depth = num;
+    int width = 256;
+    int height = 256;
+    int depth = 225;
 
-    std::vector<GLfloat> densityData = VolumeGeneration::generateDensityData(
-        m_ModelVertices, m_ModelFaces, width, height, depth);
-    auto modelTexture = std::make_shared<Texture>(width, height, depth, GL_RED,
-                                                  GL_FLOAT, GL_TEXTURE_3D);
+    std::vector<GLubyte> volumeData(width * height * depth);
+    std::ifstream file("assets/model/data/head256.raw", std::ios::binary);
+    if (file) {
+        file.read(reinterpret_cast<char *>(volumeData.data()),
+                  volumeData.size());
+        file.close();
+    } else {
+        std::cerr << "Erro ao carregar volume!" << std::endl;
+    }
 
-    modelTexture->updateData(densityData, width, height, depth, GL_RED,
-                             GL_FLOAT);
+    auto modelTexture = std::make_shared<Texture>(
+        width, height, depth, GL_RED, GL_UNSIGNED_BYTE, GL_TEXTURE_3D);
+    modelTexture->updateData(volumeData, width, height, depth, GL_RED,
+                             GL_UNSIGNED_BYTE);
 
     int tfWidth = 256;
     std::vector<GLfloat> transferFunctionData =
