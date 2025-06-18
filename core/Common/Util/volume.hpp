@@ -1,8 +1,27 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <fstream>
 #include <glm/glm.hpp>
+#include <iostream>
 #include <vector>
+
+namespace VolumeIO {
+inline std::vector<GLubyte> loadVolumeDataFromFile(const std::string &filePath,
+                                                   int width, int height,
+                                                   int depth) {
+    std::vector<GLubyte> volumeData(width * height * depth);
+    std::ifstream file(filePath, std::ios::binary);
+    if (file) {
+        file.read(reinterpret_cast<char *>(volumeData.data()),
+                  volumeData.size());
+        file.close();
+    } else {
+        std::cerr << "Error loading volume: " << filePath << std::endl;
+    }
+    return volumeData;
+}
+} // namespace VolumeIO
 
 namespace VolumeGeneration {
 

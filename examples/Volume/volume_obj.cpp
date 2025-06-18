@@ -1,5 +1,5 @@
 #include "volume_obj.hpp"
-#include "Common/Math/volume_generation.hpp"
+#include "Common/Util/volume.hpp"
 #include "Objects3D/cube.hpp"
 
 VolumeObject::VolumeObject(const std::string &filePath)
@@ -33,17 +33,10 @@ void VolumeObject::setupMesh() {
 void VolumeObject::loadTextures() {
     int width = 256;
     int height = 256;
-    int depth = 225;
+    int depth = 256;
 
-    std::vector<GLubyte> volumeData(width * height * depth);
-    std::ifstream file("assets/model/data/head256.raw", std::ios::binary);
-    if (file) {
-        file.read(reinterpret_cast<char *>(volumeData.data()),
-                  volumeData.size());
-        file.close();
-    } else {
-        std::cerr << "Erro ao carregar volume!" << std::endl;
-    }
+    auto volumeData = VolumeIO::loadVolumeDataFromFile(
+        "assets/model/data/head256.raw", width, height, depth);
 
     auto modelTexture = std::make_shared<Texture>(
         width, height, depth, GL_RED, GL_UNSIGNED_BYTE, GL_TEXTURE_3D);
