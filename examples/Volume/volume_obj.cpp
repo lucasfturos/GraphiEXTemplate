@@ -44,7 +44,7 @@ void VolumeObject::loadTextures() {
                              GL_UNSIGNED_BYTE);
 
     int tfWidth = 256;
-    std::vector<GLfloat> transferFunctionData =
+    auto transferFunctionData =
         VolumeGeneration::generateTransferFunction(tfWidth);
     auto transferFunctionTexture = std::make_shared<Texture>(
         tfWidth, 1, 1, GL_RGBA, GL_FLOAT, GL_TEXTURE_2D);
@@ -76,7 +76,7 @@ void VolumeObject::setRunUniforms() {
     Mesh<Types>::UniformsMap uniforms;
 
     uniforms["uMVP"] = [this](std::shared_ptr<Shader> shader) {
-        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 model(1.0f);
         model = glm::scale(model, m_Scale * 5.0f);
 
         glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), m_Rotation.x,
