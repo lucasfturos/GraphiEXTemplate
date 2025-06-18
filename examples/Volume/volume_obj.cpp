@@ -44,7 +44,7 @@ void VolumeObject::loadTextures() {
                              GL_UNSIGNED_BYTE);
 
     int tfWidth = 256;
-    std::vector<GLfloat> transferFunctionData =
+    auto transferFunctionData =
         VolumeGeneration::generateTransferFunction(tfWidth);
     auto transferFunctionTexture = std::make_shared<Texture>(
         tfWidth, 1, 1, GL_RGBA, GL_FLOAT, GL_TEXTURE_2D);
